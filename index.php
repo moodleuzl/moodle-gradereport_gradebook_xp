@@ -6,7 +6,7 @@
  * Created Date: 17.11.2022 19:19:13
  * Author: DominikMa, 3urobeat, thePulpo
  * 
- * Last Modified: 29.11.2022 15:24:57
+ * Last Modified: 29.11.2022 15:44:50
  * Modified By: 3urobeat
  */
 
@@ -55,3 +55,5 @@ if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
     echo "Hello User";
 
 }
+
+echo $OUTPUT->footer();
