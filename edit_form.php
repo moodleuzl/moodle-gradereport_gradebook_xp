@@ -14,9 +14,8 @@ class edit_form extends moodleform {
 
         $mform = $this->_form; // Don't forget the underscore!
 
-        $mform->addElement('text', 'email', get_string('email')); // Add elements to your form.
-        $mform->setType('email', PARAM_NOTAGS);                   // Set type of element.
-        $mform->setDefault('email', 'Please enter email');        // Default value.
+        $mform->addElement('text', 'competencyname', get_string('competencyname', 'gradereport_gradebook_xp')); // Add elements to your form.
+        $mform->setType('competencyname', PARAM_NOTAGS);                   // Set type of element.
 
         $this->add_action_buttons();
     }

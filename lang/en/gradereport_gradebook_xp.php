@@ -6,4 +6,5 @@
  * @package gradebook_xp
  */
 $string['pluginname'] = 'Gradebook XP';
+$string['competencyname'] = 'Competency name';
 $string['privacy:metadata'] = 'The Gradebook XP plugin does not store any personal data.';
