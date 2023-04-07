@@ -5,8 +5,6 @@ require_once $CFG->dirroot.'/grade/lib.php';
 //require_once $CFG->dirroot.'/grade/report/lib.php';
 require_once 'edit_form.php';
 
-// TODO: needs to be requiered but throws error (missing id on cancel) FIXED
-//$courseid       = optional_param('id', 2, PARAM_INT);        // Course id.
 $courseid = required_param('id', PARAM_INT);
 $competencyid   = optional_param('$competencyid', 0, PARAM_INT);
 
@@ -47,6 +45,7 @@ if ($mform->is_cancelled()) {
     $recordtoinsert = new stdClass();
     $recordtoinsert->courseid = $fromform->id;
     $recordtoinsert->competencyname = $fromform->competencyname;
+    $recordtoinsert->parent = $fromform->parent;
 
     $DB->insert_record('gradereport_gradebook_xp', $recordtoinsert);
 
@@ -58,7 +57,7 @@ if ($mform->is_cancelled()) {
     // or on the first display of the form.
 }
 
-// BEGIN: sumbit/cancel
+// END: sumbit/cancel
 
 // BEGIN: display
 
