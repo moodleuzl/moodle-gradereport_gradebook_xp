@@ -7,6 +7,7 @@
  */
 $string['pluginname'] = 'Gradebook XP';
 $string['newcompetency'] = 'New competency';
+$string['id'] = 'ID';
 $string['competencyname'] = 'Competency name';
 $string['parent'] = 'Parent';
 $string['missingname'] = 'Missing name. Please enter a valid name.';

@@ -14,7 +14,16 @@ class edit_form extends moodleform {
 
         $mform = $this->_form; // Don't forget the underscore!
 
+        $courseid = required_param('courseid', PARAM_INT);
+        $id = optional_param('id', null, PARAM_INT);
+
+        $current = $DB->get_record('gradereport_gradebook_xp', array('id' => $id));
+
 /// visible elements
+
+        $mform->addElement('static', 'id_display', get_string('id', 'gradereport_gradebook_xp'), $current->id);
+
+
         // comtpetency name
         // Add a new text element
         $mform->addElement('text', 'name', get_string('competencyname', 'gradereport_gradebook_xp')); // Add elements to your form.
@@ -37,6 +46,13 @@ class edit_form extends moodleform {
 
         $mform->addElement('hidden', 'courseid', $COURSE->id);
         $mform->setType('courseid', PARAM_INT);
+
+        // set defaults for editing
+        if ($id){
+            $mform->setDefault('name', $current->name);
+            $mform->setDefault('parentid', $current->parentid);
+        }
+
 
 //-------------------------------------------------------------------------------
         // buttons

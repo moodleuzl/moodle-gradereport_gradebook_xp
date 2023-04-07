@@ -36,6 +36,7 @@ $competencies = $DB->get_records_sql("
     FROM {gradereport_gradebook_xp} c
     LEFT JOIN {gradereport_gradebook_xp} p ON p.id = c.parentid
     WHERE c.courseid = :courseid
+    ORDER BY c.id ASC
 ", ['courseid' => $courseid]);
 
 foreach ($competencies as $competency) {
@@ -62,7 +63,6 @@ $templatecontext = (object)[
     'competencies' => array_values($competencies),
     'editurl' => new moodle_url('/grade/report/gradebook_xp/edit.php'),
     'courseid' => $courseid,
-    'bulkediturl' => new moodle_url('/grade/report/gradebook_xp/bulkedit.php'),
 ];
 //$templatecontext = (object)[
 //    'competencies' => array_values($competencies),
