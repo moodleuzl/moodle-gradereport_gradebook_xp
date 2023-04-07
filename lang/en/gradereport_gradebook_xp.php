@@ -9,5 +9,5 @@ $string['pluginname'] = 'Gradebook XP';
 $string['newcompetency'] = 'New competency';
 $string['competencyname'] = 'Competency name';
 $string['parent'] = 'Parent';
-$string['missingcompetencyname'] = 'Missing competency. Please enter a valid name.';
+$string['missingname'] = 'Missing name. Please enter a valid name.';
 $string['privacy:metadata'] = 'The Gradebook XP plugin does not store any personal data.';

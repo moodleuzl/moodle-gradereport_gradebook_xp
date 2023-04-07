@@ -28,11 +28,11 @@ $context = context_course::instance($course->id);
 //    $parent = $DB->get_record('gradereport_gradebook_xp', ['id' => $competency->parentid]);
 //
 //    $competency->parentid = $parent ? $parent->id : null;
-//    $competency->parentname = $parent ? $parent->competencyname : '';
+//    $competency->parentname = $parent ? $parent->name : '';
 //}
 
 $competencies = $DB->get_records_sql("
-    SELECT c.*, p.competencyname AS parentname
+    SELECT c.*, p.name AS parentname
     FROM {gradereport_gradebook_xp} c
     LEFT JOIN {gradereport_gradebook_xp} p ON p.id = c.parentid
     WHERE c.courseid = :courseid
@@ -49,13 +49,13 @@ foreach ($competencies as $competency) {
 print_grade_page_head($COURSE->id, 'settings', 'gradebook_xp', get_string('pluginname', 'gradereport_gradebook_xp'), false, '');
 
 
-///// Debug message
-//
-//$table_name = 'gradereport_gradebook_xp'; // replace with the actual table name
-//$records = $DB->get_records('gradereport_gradebook_xp', ['courseid' => $courseid]);
-//echo "<pre>";
-//print_r($records);
-//echo "</pre>";
+/// Debug message
+
+$table_name = 'gradereport_gradebook_xp'; // replace with the actual table name
+$records = $DB->get_records('gradereport_gradebook_xp', ['courseid' => $courseid]);
+echo "<pre>";
+print_r($records);
+echo "</pre>";
 
 
 $templatecontext = (object)[

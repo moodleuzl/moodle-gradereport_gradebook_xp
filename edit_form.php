@@ -17,14 +17,14 @@ class edit_form extends moodleform {
 /// visible elements
         // comtpetency name
         // Add a new text element
-        $mform->addElement('text', 'competencyname', get_string('competencyname', 'gradereport_gradebook_xp')); // Add elements to your form.
-        $mform->setType('competencyname', PARAM_NOTAGS);                   // Set type of element.
-        $mform->addRule('competencyname', get_string('missingcompetencyname', 'gradereport_gradebook_xp'), 'required', null, 'server');
+        $mform->addElement('text', 'name', get_string('competencyname', 'gradereport_gradebook_xp')); // Add elements to your form.
+        $mform->setType('name', PARAM_NOTAGS);                   // Set type of element.
+        $mform->addRule('name', get_string('missingname', 'gradereport_gradebook_xp'), 'required', null, 'server');
 
         // parent
         // Get data from db
-        $competencies = $DB->get_records('gradereport_gradebook_xp', ['courseid' => $COURSE->id], '', 'id, competencyname');
-        $competency_options = array_column($competencies, 'competencyname', 'id');
+        $competencies = $DB->get_records('gradereport_gradebook_xp', ['courseid' => $COURSE->id], '', 'id, name');
+        $competency_options = array_column($competencies, 'name', 'id');
         $competency_options = [0 => '---'] + $competency_options; // add empty option
 
 // Add a new select (dropdown) element

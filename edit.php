@@ -45,13 +45,13 @@ if ($mform->is_cancelled()) {
     // Insert the data into the database table.
     $recordtoinsert = new stdClass();
     $recordtoinsert->courseid = $fromform->id;
-    $recordtoinsert->competencyname = $fromform->competencyname;
+    $recordtoinsert->name = $fromform->name;
     // Bypass error when creating competency without parent
-    $recordtoinsert->parent = isset($fromform->parent) ? $fromform->parent : null;
+    $recordtoinsert->parentid = isset($fromform->parent) ? $fromform->parent : null;
     $DB->insert_record('gradereport_gradebook_xp', $recordtoinsert);
 
     // Go back to manage.php page
-    redirect($returnurl, 'You have successfully created the competency: \''.$fromform->competencyname.'\'');
+    redirect($returnurl, 'You have successfully created the competency: \''.$fromform->name.'\'');
 
 } else {
     // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
