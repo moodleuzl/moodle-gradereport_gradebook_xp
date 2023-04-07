@@ -35,6 +35,9 @@ class edit_form extends moodleform {
         $mform->addElement('hidden', 'id', $COURSE->id);
         $mform->setType('id', PARAM_INT);
 
+        $mform->addElement('hidden', 'courseid', $COURSE->id);
+        $mform->setType('courseid', PARAM_INT);
+
 //-------------------------------------------------------------------------------
         // buttons
         $this->add_action_buttons();
