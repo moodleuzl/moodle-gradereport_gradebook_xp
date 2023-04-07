@@ -5,7 +5,8 @@ require_once $CFG->dirroot.'/grade/lib.php';
 //require_once $CFG->dirroot.'/grade/report/lib.php';
 require_once 'edit_form.php';
 
-$courseid = required_param('id', PARAM_INT);
+// This is the requiered url parameter
+$courseid = required_param('courseid', PARAM_INT);
 $competencyid   = optional_param('$competencyid', 0, PARAM_INT);
 
 $url = new moodle_url('/grade/report/gradebook_xp/edit.php', array('id'=>$courseid));
