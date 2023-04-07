@@ -53,7 +53,7 @@ if ($mform->is_cancelled()) {
 } else if ($fromform = $mform->get_data()) {
     //In this case you process validated data. $mform->get_data() returns data posted in form.
 
-    if (!empty($current)) {
+    if (!empty($fromform->id)) {
         $existing_record = $DB->get_record('gradereport_gradebook_xp', array('id' => $fromform->id));
         if ($existing_record) {
             // update the existing record
