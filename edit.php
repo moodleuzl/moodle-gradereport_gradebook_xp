@@ -42,15 +42,24 @@ if ($mform->is_cancelled()) {
 } else if ($fromform = $mform->get_data()) {
     //In this case you process validated data. $mform->get_data() returns data posted in form.
 
-    // Insert the data into the database table.
+    if (!empty($fromform->id)) {
+        $existing_record = $DB->get_record('gradereport_gradebook_xp', array('id' => $fromform->id));
+        if ($existing_record) {
+            // update the existing record
+            $existing_record->name = $fromform->name;
+            $existing_record->parentid = $fromform->parentid;
+            $DB->update_record('gradereport_gradebook_xp', $existing_record);
+            redirect($returnurl, 'You have successfully updated the competency: \''.$fromform->name.'\'');
+        }
+    }
+// if the record does not exist, insert a new one
     $recordtoinsert = new stdClass();
-    $recordtoinsert->courseid = $fromform->id;
+    $recordtoinsert->courseid = $fromform->courseid;
     $recordtoinsert->name = $fromform->name;
     $recordtoinsert->parentid = $fromform->parentid;
     $DB->insert_record('gradereport_gradebook_xp', $recordtoinsert);
-
-    // Go back to manage.php page
     redirect($returnurl, 'You have successfully created the competency: \''.$fromform->name.'\'');
+
 
 } else {
     // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed

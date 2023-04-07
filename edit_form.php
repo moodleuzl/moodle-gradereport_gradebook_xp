@@ -49,6 +49,8 @@ class edit_form extends moodleform {
 
         // set defaults for editing
         if ($id){
+            $mform->setDefault('id', $current->id);
+            $mform->setDefault('courseid', $current->courseid);
             $mform->setDefault('name', $current->name);
             $mform->setDefault('parentid', $current->parentid);
         }
