@@ -7,7 +7,8 @@ require_once 'edit_form.php';
 
 // This is the requiered url parameter
 $courseid = required_param('courseid', PARAM_INT);
-$competencyid   = optional_param('$competencyid', 0, PARAM_INT);
+$id   = optional_param('$id', null, PARAM_INT);
+$action = optional_param('action', null, PARAM_ALPHA);
 
 $url = new moodle_url('/grade/report/gradebook_xp/edit.php', array('id'=>$courseid));
 $PAGE->set_url($url);
@@ -27,6 +28,16 @@ $returnurl = $gpr->get_return_url('manage.php?id='.$courseid);
 
 $heading = get_string('newcompetency', 'gradereport_gradebook_xp');
 
+if ($action == 'delete') {
+    // Handle delete action
+    // You can get the competency ID from the URL parameters using optional_param() function
+    $competencyid = optional_param('id', 0, PARAM_INT);
+    // Then delete the record using the competency ID
+    $DB->delete_records('gradereport_gradebook_xp', array('id' => $competencyid));
+    // Finally, redirect the user back to the manage.php page
+    redirect($returnurl, 'You have successfully deleted the competency.');
+}
+
 // TODO: Create form
 //Instantiate edit_form
 $mform = new edit_form();
@@ -42,7 +53,7 @@ if ($mform->is_cancelled()) {
 } else if ($fromform = $mform->get_data()) {
     //In this case you process validated data. $mform->get_data() returns data posted in form.
 
-    if (!empty($fromform->id)) {
+    if (!empty($current)) {
         $existing_record = $DB->get_record('gradereport_gradebook_xp', array('id' => $fromform->id));
         if ($existing_record) {
             // update the existing record

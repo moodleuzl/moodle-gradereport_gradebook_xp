@@ -5,7 +5,7 @@
             <h5>{{name}}</h5>
             <p>id=[{{id}}]   name={{name}}   parent.id={{parentid}}   parent.name={{parentname}}</p>
             <input type="button" class="btn btn-primary" value="Edit competency" onclick="location.href='{{editurl}}?courseid={{courseid}}&id={{id}}'">
-            <input type="button" class="btn btn-danger local_message_delete_button" value="Delete competency">
+            <input type="button" class="btn btn-danger local_message_delete_button" name="delete-competency" value="Delete competency" onclick="if(confirm('Are you sure you want to delete this competency?')){location.href='{{editurl}}?courseid={{courseid}}&id={{id}}&action=delete'}">
         </div>
     </div>
 {{/competencies}}
