@@ -20,11 +20,10 @@ class edit_form extends moodleform {
         $mform->addRule('competencyname', get_string('missingcompetencyname', 'gradereport_gradebook_xp'), 'required', null, 'server');
 
 
-        $competencies = $DB->get_records('gradereport_gradebook_xp', null, 'competencyname', '*', 0, 0);
-        $competency_names = array_column($competencies, 'competencyname');
+        $competencies = $DB->get_records('gradereport_gradebook_xp', ['courseid' => $COURSE->id]);
+        $competency_options = array_column($competencies, 'competencyname');
 
-        $mform->addElement('select', 'parent', get_string('parent', 'gradereport_gradebook_xp'), $competency_names);
-        $mform->setType('parent', PARAM_NOTAGS);
+        $mform->addElement('select', 'competency', get_string('parent', 'gradereport_gradebook_xp'), $competency_options);
         $mform->setDefault('parent', null);
 
 
