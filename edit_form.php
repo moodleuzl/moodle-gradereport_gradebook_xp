@@ -19,9 +19,27 @@ class edit_form extends moodleform {
 
         $current = $DB->get_record('gradereport_gradebook_xp', array('id' => $id));
 
+
+        if (!empty($current)) {
+            $mform->addElement('static', 'id_display', get_string('id', 'gradereport_gradebook_xp'), $current->id);
+            $competencies = $DB->get_records_sql(
+                "SELECT id, name 
+                FROM {gradereport_gradebook_xp} 
+                WHERE courseid = ? AND id != ? AND parentid != ?
+                ORDER BY id",
+                array($COURSE->id, $current->id, $current->id)
+            );
+        } else {
+            $competencies = $DB->get_records_sql(
+                "SELECT id, name 
+                FROM {gradereport_gradebook_xp} 
+                WHERE courseid = ?
+                ORDER BY id",
+                array($COURSE->id)
+            );
+        }
 /// visible elements
 
-        $mform->addElement('static', 'id_display', get_string('id', 'gradereport_gradebook_xp'), $current->id);
 
 
         // comtpetency name
@@ -32,15 +50,6 @@ class edit_form extends moodleform {
 
         // parent
         // Get data from db
-// parent
-// Get data from db
-        $competencies = $DB->get_records_sql(
-            "SELECT id, name 
-                FROM {gradereport_gradebook_xp} 
-                WHERE courseid = ? AND id != ? AND parentid != ?
-                ORDER BY id",
-                array($COURSE->id, $current->id, $current->id)
-        );
 
         $competency_options = array_column($competencies, 'name', 'id');
         $competency_options = [0 => '---'] + $competency_options; // add empty option
