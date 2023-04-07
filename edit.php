@@ -46,7 +46,6 @@ if ($mform->is_cancelled()) {
     $recordtoinsert = new stdClass();
     $recordtoinsert->courseid = $fromform->id;
     $recordtoinsert->name = $fromform->name;
-    // Bypass error when creating competency without parent
     $recordtoinsert->parentid = $fromform->parentid;
     $DB->insert_record('gradereport_gradebook_xp', $recordtoinsert);
 
