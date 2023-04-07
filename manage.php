@@ -20,7 +20,7 @@ $context = context_course::instance($course->id);
 
 // TODO: Check if user has permission to view this page
 
-$competencies = $DB->get_records('gradereport_gradebook_xp', array('courseid' => $courseid));
+$competencies = $DB->get_records('gradereport_gradebook_xp', ['courseid' => $courseid]);
 
 // BEGIN: display
 
