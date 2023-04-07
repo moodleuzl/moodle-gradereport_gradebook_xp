@@ -32,7 +32,16 @@ class edit_form extends moodleform {
 
         // parent
         // Get data from db
-        $competencies = $DB->get_records('gradereport_gradebook_xp', ['courseid' => $COURSE->id], '', 'id, name');
+// parent
+// Get data from db
+        $competencies = $DB->get_records_sql(
+            "SELECT id, name 
+                FROM {gradereport_gradebook_xp} 
+                WHERE courseid = ? AND id != ? AND parentid != ?
+                ORDER BY id",
+                array($COURSE->id, $current->id, $current->id)
+        );
+
         $competency_options = array_column($competencies, 'name', 'id');
         $competency_options = [0 => '---'] + $competency_options; // add empty option
 
