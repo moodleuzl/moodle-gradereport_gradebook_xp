@@ -42,6 +42,17 @@ if ($mform->is_cancelled()) {
     redirect($returnurl, 'You cancelled the competency form.');
 } else if ($fromform = $mform->get_data()) {
     //In this case you process validated data. $mform->get_data() returns data posted in form.
+
+    // Insert the data into the database table.
+    $recordtoinsert = new stdClass();
+    $recordtoinsert->courseid = $fromform->id;
+    $recordtoinsert->competencyname = $fromform->competencyname;
+
+    $DB->insert_record('gradereport_gradebook_xp', $recordtoinsert);
+
+    // Go back to manage.php page
+    redirect($returnurl, 'You have successfully created the competency: \''.$fromform->competencyname.'\'');
+
 } else {
     // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
     // or on the first display of the form.
