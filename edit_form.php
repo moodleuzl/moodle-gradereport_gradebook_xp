@@ -66,7 +66,7 @@ class edit_form extends moodleform {
         $mform->setType('courseid', PARAM_INT);
 
         // set defaults for editing
-        if ($id){
+        if (!empty($current)){
             $mform->setDefault('id', $current->id);
             $mform->setDefault('courseid', $current->courseid);
             $mform->setDefault('name', $current->name);
