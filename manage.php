@@ -52,11 +52,11 @@ print_grade_page_head($COURSE->id, 'settings', 'gradebook_xp', get_string('plugi
 
 /// Debug message
 
-$table_name = 'gradereport_gradebook_xp'; // replace with the actual table name
-$records = $DB->get_records('gradereport_gradebook_xp', ['courseid' => $courseid]);
-echo "<pre>";
-print_r($records);
-echo "</pre>";
+//$table_name = 'gradereport_gradebook_xp'; // replace with the actual table name
+//$records = $DB->get_records('gradereport_gradebook_xp', ['courseid' => $courseid]);
+//echo "<pre>";
+//print_r($records);
+//echo "</pre>";
 
 
 $templatecontext = (object)[
