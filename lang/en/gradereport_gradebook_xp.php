@@ -7,4 +7,5 @@
  */
 $string['pluginname'] = 'Gradebook XP';
 $string['competencyname'] = 'Competency name';
+$string['newcompetency'] = 'New competency';
 $string['privacy:metadata'] = 'The Gradebook XP plugin does not store any personal data.';
