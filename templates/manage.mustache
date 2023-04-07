@@ -4,11 +4,11 @@
         <div class="card-body">
             <h5>{{competencyname}}</h5>
             <p>id=[{{id}}]   name={{competencyname}}   parent.id={{parentid}}   parent.name={{parentname}}</p>
-            <input type="button" class="btn btn-primary" value="Edit competency" onclick="location.href='{{editurl}}?id={{courseid}}'">
+            <input type="button" class="btn btn-primary" value="Edit competency" onclick="location.href='{{editurl}}?courseid={{courseid}}?id={{id}}'">
             <input type="button" class="btn btn-danger local_message_delete_button" value="Delete competency">
         </div>
     </div>
 {{/competencies}}
 
 <hr>
-<input type="button" class="btn btn-primary" value="Create message" onclick="location.href='{{editurl}}?id={{courseid}}'">
+<input type="button" class="btn btn-primary" value="Create message" onclick="location.href='{{editurl}}?courseid={{courseid}}'">

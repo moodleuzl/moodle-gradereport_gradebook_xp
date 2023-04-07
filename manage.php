@@ -70,7 +70,7 @@ $templatecontext = (object)[
 
 echo $OUTPUT->render_from_template('gradereport_gradebook_xp/manage', $templatecontext);
 
-echo $OUTPUT->single_button(new moodle_url('edit.php', array('id' => $course->id)), get_string('additem',
+echo $OUTPUT->single_button(new moodle_url('edit.php', array('courseid' => $course->id)), get_string('additem',
     'grades'), 'get');
 
 echo $OUTPUT->footer();
