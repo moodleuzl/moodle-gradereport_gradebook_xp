@@ -20,10 +20,22 @@ $context = context_course::instance($course->id);
 
 // TODO: Check if user has permission to view this page
 
+$competencies = $DB->get_records('gradereport_gradebook_xp');
+
+// BEGIN: display
+
 // Print header.
 print_grade_page_head($COURSE->id, 'settings', 'gradebook_xp', get_string('pluginname', 'gradereport_gradebook_xp'), false, '');
+
+$templatecontext = (object)[
+    'competencies' => array_values($competencies),
+];
+
+echo $OUTPUT->render_from_template('gradereport_gradebook_xp/manage', $templatecontext);
 
 echo $OUTPUT->single_button(new moodle_url('edit.php', array('id' => $course->id)), get_string('additem',
     'grades'), 'get');
 
 echo $OUTPUT->footer();
+
+// END: display
