@@ -47,7 +47,7 @@ if ($mform->is_cancelled()) {
     $recordtoinsert->courseid = $fromform->id;
     $recordtoinsert->name = $fromform->name;
     // Bypass error when creating competency without parent
-    $recordtoinsert->parentid = isset($fromform->parent) ? $fromform->parent : null;
+    $recordtoinsert->parentid = $fromform->parentid;
     $DB->insert_record('gradereport_gradebook_xp', $recordtoinsert);
 
     // Go back to manage.php page
