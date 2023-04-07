@@ -17,6 +17,7 @@ class edit_form extends moodleform {
 /// visible elements
         $mform->addElement('text', 'competencyname', get_string('competencyname', 'gradereport_gradebook_xp')); // Add elements to your form.
         $mform->setType('competencyname', PARAM_NOTAGS);                   // Set type of element.
+        $mform->addRule('competencyname', get_string('missingcompetencyname', 'gradereport_gradebook_xp'), 'required', null, 'server');
 
 /// hidden params
         $mform->addElement('hidden', 'id', $COURSE->id);
