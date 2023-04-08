@@ -1,28 +1,30 @@
 <?php
 
+// Check if script is being accessed from Moodle page
 if (!defined('MOODLE_INTERNAL')) {
-    die('Direct access to this script is forbidden.');    ///  It must be included from a Moodle page
+    die('Direct access to this script is forbidden.');
 }
 
-//moodleform is defined in formslib.php
+// Include Moodle form library
 require_once("$CFG->libdir/formslib.php");
 
 class edit_form extends moodleform {
-    //Add elements to form
+
     public function definition() {
         global $COURSE, $DB, $CFG;
 
-        $mform = $this->_form; // Don't forget the underscore!
+        $mform = $this->_form;
 
+        // Get course ID and record ID from parameters
         $courseid = required_param('courseid', PARAM_INT);
         $id = optional_param('id', null, PARAM_INT);
 
+        // Get current record from database (if ID is provided)
         $current = $DB->get_record('gradereport_gradebook_xp', array('id' => $id));
-
-/// visible elements
-        // parent
-        // Get data from db
-        if (!empty($current)) {
+//-------------------------------------------------------------------------------
+        // Get parent options for select element
+        $parent_options = [0 => '---']; // Add empty option
+        if (!empty($current)) { // If record ID is provided
             $parentid = $current->id;
             $sql = "WITH RECURSIVE item_descendants AS (
                 SELECT id, parentid, name
@@ -42,63 +44,53 @@ class edit_form extends moodleform {
             AND id != ?
             ORDER BY id";
             $params = array($parentid, $COURSE->id, $parentid, $parentid);
-        } else {
+            $available_parents = $DB->get_records_sql($sql, $params); // Get parent records
+            $parent_options += array_column($available_parents, 'name', 'id'); // Add parent options to array
+        } else { // If no record ID is provided
             $sql = "SELECT id, name 
             FROM {gradereport_gradebook_xp} 
             WHERE courseid = ?
             ORDER BY id";
             $params = array($COURSE->id);
+            $available_parents = $DB->get_records_sql($sql, $params); // Get all parent records
+            $parent_options += array_column($available_parents, 'name', 'id'); // Add parent options to array
         }
+//-------------------------------------------------------------------------------
+        // Add hidden parameters to the form
 
-        $available_parents = $DB->get_records_sql($sql, $params);
-
-
-
-        $parent_options = array_column($available_parents, 'name', 'id');
-        $parent_options = [0 => '---'] + $parent_options; // add empty option
-
-        // Add a new select (dropdown) element
-        $mform->addElement('select', 'parentid', get_string('parent', 'gradereport_gradebook_xp'), $parent_options);
-
-
-
-        // comtpetency name
-        // Add a new text element
-        $mform->addElement('text', 'name', get_string('competencyname', 'gradereport_gradebook_xp')); // Add elements to your form.
-        $mform->setType('name', PARAM_NOTAGS);                   // Set type of element.
-        $mform->addRule('name', get_string('missingname', 'gradereport_gradebook_xp'), 'required', null, 'server');
-
-
-
-/// hidden params
+        // Add hidden id element to form
         $mform->addElement('hidden', 'id', $COURSE->id);
         $mform->setType('id', PARAM_INT);
 
+        // Add hidden courseid element to form
         $mform->addElement('hidden', 'courseid', $COURSE->id);
         $mform->setType('courseid', PARAM_INT);
+//-------------------------------------------------------------------------------
+        // Add visible parameters to the form
 
-        // set defaults for editing
-        if (!empty($current)){
+        // Add parent select element to form
+        $mform->addElement('select', 'parentid', get_string('parent', 'gradereport_gradebook_xp'), $parent_options);
+
+        // Add competency name text element to form
+        $mform->addElement('text', 'name', get_string('competencyname', 'gradereport_gradebook_xp'));
+        $mform->setType('name', PARAM_NOTAGS);
+//-------------------------------------------------------------------------------
+        // Add rules to the form
+
+        // Add validation rule for competency name text element
+        $mform->addRule('name', get_string('missingname', 'gradereport_gradebook_xp'), 'required', null, 'server');
+//-------------------------------------------------------------------------------
+        // Set defaults for editing if the current record exists
+        if (!empty($current)) {
             $mform->setDefault('id', $current->id);
             $mform->setDefault('courseid', $current->courseid);
             $mform->setDefault('name', $current->name);
             $mform->setDefault('parentid', $current->parentid);
         }
-
-
 //-------------------------------------------------------------------------------
-        // buttons
+        // Add action buttons to the form
         $this->add_action_buttons();
 //-------------------------------------------------------------------------------
-    }
 
-// TODO: Handle Form submit/cancel
-//    function definition_after_data() {
-//
-//    }
-//
-//    //Custom validation should be added here
-//    function validation($data, $files) {
-//        return array();
-//    }
+    }
 }
