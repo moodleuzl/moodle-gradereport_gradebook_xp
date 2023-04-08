@@ -19,26 +19,46 @@ class edit_form extends moodleform {
 
         $current = $DB->get_record('gradereport_gradebook_xp', array('id' => $id));
 
-
-        if (!empty($current)) {
-            $mform->addElement('static', 'id_display', get_string('id', 'gradereport_gradebook_xp'), $current->id);
-            $competencies = $DB->get_records_sql(
-                "SELECT id, name 
-                FROM {gradereport_gradebook_xp} 
-                WHERE courseid = ? AND id != ? AND parentid != ?
-                ORDER BY id",
-                array($COURSE->id, $current->id, $current->id)
-            );
-        } else {
-            $competencies = $DB->get_records_sql(
-                "SELECT id, name 
-                FROM {gradereport_gradebook_xp} 
-                WHERE courseid = ?
-                ORDER BY id",
-                array($COURSE->id)
-            );
-        }
 /// visible elements
+        // parent
+        // Get data from db
+        if (!empty($current)) {
+            $parentid = $current->id;
+            $sql = "WITH RECURSIVE item_descendants AS (
+                SELECT id, parentid, name
+                FROM {gradereport_gradebook_xp}
+                WHERE id = ?
+                UNION
+                SELECT g.id, g.parentid, g.name
+                FROM {gradereport_gradebook_xp} g
+                JOIN item_descendants d ON g.parentid = d.id
+            )
+            SELECT id, name
+            FROM {gradereport_gradebook_xp}
+            WHERE courseid = ? AND id NOT IN (
+                SELECT id FROM item_descendants UNION
+                SELECT ? WHERE parentid IS NULL
+            )
+            AND id != ?
+            ORDER BY id";
+            $params = array($parentid, $COURSE->id, $parentid, $parentid);
+        } else {
+            $sql = "SELECT id, name 
+            FROM {gradereport_gradebook_xp} 
+            WHERE courseid = ?
+            ORDER BY id";
+            $params = array($COURSE->id);
+        }
+
+        $available_parents = $DB->get_records_sql($sql, $params);
+
+
+
+        $parent_options = array_column($available_parents, 'name', 'id');
+        $parent_options = [0 => '---'] + $parent_options; // add empty option
+
+        // Add a new select (dropdown) element
+        $mform->addElement('select', 'parentid', get_string('parent', 'gradereport_gradebook_xp'), $parent_options);
 
 
 
@@ -48,14 +68,6 @@ class edit_form extends moodleform {
         $mform->setType('name', PARAM_NOTAGS);                   // Set type of element.
         $mform->addRule('name', get_string('missingname', 'gradereport_gradebook_xp'), 'required', null, 'server');
 
-        // parent
-        // Get data from db
-
-        $competency_options = array_column($competencies, 'name', 'id');
-        $competency_options = [0 => '---'] + $competency_options; // add empty option
-
-// Add a new select (dropdown) element
-        $mform->addElement('select', 'parentid', get_string('parent', 'gradereport_gradebook_xp'), $competency_options);
 
 
 /// hidden params
