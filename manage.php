@@ -2,23 +2,12 @@
 
 require_once '../../../config.php';
 require_once $CFG->dirroot.'/grade/lib.php';
+require_once 'lib.php';
 
 $courseid = required_param('id', PARAM_INT);        // Course id.
 $userid   = optional_param('userid', $USER->id, PARAM_INT);
 
-$url = new moodle_url('/grade/report/gradebook_xp/manage.php', array('id' => $courseid, 'userid' => $userid));
-$PAGE->set_url($url);
-$PAGE->set_pagelayout('admin');
-
-/// Make sure they can even access this course
-if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-    print_error('invalidcourseid');
-}
-
-require_login($course);
-$context = context_course::instance($course->id);
-
-// TODO: Check if user has permission to view this page
+setup_page($courseid, 'moodle/grade:manage');
 
 
 // TODO: Optimize the following to easily get any field of the parent (like parent.id)

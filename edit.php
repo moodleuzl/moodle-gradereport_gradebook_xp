@@ -4,24 +4,14 @@ require_once '../../../config.php';
 require_once $CFG->dirroot.'/grade/lib.php';
 //require_once $CFG->dirroot.'/grade/report/lib.php';
 require_once 'edit_form.php';
+require_once 'lib.php';
 
 // This is the requiered url parameter
 $courseid = required_param('courseid', PARAM_INT);
 $id   = optional_param('$id', null, PARAM_INT);
 $action = optional_param('action', null, PARAM_ALPHA);
 
-$url = new moodle_url('/grade/report/gradebook_xp/edit.php', array('id'=>$courseid));
-$PAGE->set_url($url);
-$PAGE->set_pagelayout('admin');
-
-/// Make sure they can even access this course
-if (!$course = $DB->get_record('course', array('id'=>$courseid))) {
-    print_error('invalidcourseid');
-}
-
-require_login($course);
-$context = context_course::instance($course->id);
-// TODO: Check if user has permission to view this page
+setup_page($courseid, 'moodle/grade:manage');
 
 $gpr = new grade_plugin_return();
 $returnurl = $gpr->get_return_url('manage.php?id='.$courseid);

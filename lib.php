@@ -16,3 +16,23 @@ function gradereport_gradebook_xp_extend_navigation_course($navigation, $course,
     $name = get_string('pluginname', 'gradereport_gradebook_xp');
     $navigation->add($name, $url, navigation_node::TYPE_COURSE, null, null, new pix_icon('i/competencies', ''));
 }
+
+function setup_page($courseid, $capabililty='moodle/grade:view') {
+    global $PAGE, $DB, $context;
+    // Set page URL and layout
+    $url = new moodle_url('/grade/report/gradebook_xp/edit.php', array('id' => $courseid));
+    if ($courseid !== 0) {
+        $url->param('id', $courseid);
+    }
+    $PAGE->set_url($url);
+    $PAGE->set_pagelayout('standard');
+
+    // Verify user has access to course
+    if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+        print_error('invalidcourseid');
+    }
+
+    require_login($course);
+    $context = context_course::instance($course->id);
+    require_capability($capabililty, $context);    // TODO: Check if user has permission to view this page
+}
