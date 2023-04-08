@@ -1,89 +1,111 @@
 <?php
 
+// Load necessary files
 require_once '../../../config.php';
-require_once $CFG->dirroot.'/grade/lib.php';
-//require_once $CFG->dirroot.'/grade/report/lib.php';
+require_once $CFG->dirroot . '/grade/lib.php';
 require_once 'edit_form.php';
 require_once 'lib.php';
 
-// This is the requiered url parameter
+// Get URL parameters
 $courseid = required_param('courseid', PARAM_INT);
-$id   = optional_param('$id', null, PARAM_INT);
+$id = optional_param('id', null, PARAM_INT);
 $action = optional_param('action', null, PARAM_ALPHA);
 
 setup_page($courseid, 'moodle/grade:manage');
 
+// Get return URL
 $gpr = new grade_plugin_return();
-$returnurl = $gpr->get_return_url('manage.php?id='.$courseid);
+$returnurl = $gpr->get_return_url('manage.php?id=' . $courseid);
 
-$heading = get_string('newcompetency', 'gradereport_gradebook_xp');
+// Set page heading
+//$heading = get_string('name', 'gradereport_gradebook_xp');
 
-if ($action == 'delete') {
-    // Handle delete action
-    // You can get the competency ID from the URL parameters using optional_param() function
-    $competencyid = optional_param('id', 0, PARAM_INT);
-    // Then delete the record using the competency ID
-    $DB->delete_records('gradereport_gradebook_xp', array('id' => $competencyid));
-    // Finally, redirect the user back to the manage.php page
-    redirect($returnurl, 'You have successfully deleted the competency.');
-}
+handle_action($returnurl, $action);
 
-// TODO: Create form
-//Instantiate edit_form
+// Instantiate edit_form
 $mform = new edit_form();
 
-// TODO: Handle Form submit/cancel
-// BEGIN: sumbit/cancel
+process_form_data();
+generate_output();
 
-// Check if form is cancelled
-if ($mform->is_cancelled()) {
-    // Handle form cancel operation
-    // Redirect to manage.php page
-    redirect($returnurl, 'You cancelled the competency form.');
-}
-// If form data is submitted and validated
-else if ($fromform = $mform->get_data()) {
-    // Check if record already exists
-    if (!empty($fromform->id)) {
-        // Get existing record
-        $existing_record = $DB->get_record('gradereport_gradebook_xp', array('id' => $fromform->id));
-        if ($existing_record) {
-            // Update existing record
-            $existing_record->name = $fromform->name;
-            $existing_record->parentid = $fromform->parentid;
-            $DB->update_record('gradereport_gradebook_xp', $existing_record);
-            // Redirect with success message
-            redirect($returnurl, 'You have successfully updated the competency: \''.$fromform->name.'\'');
-        }
+function handle_action(){
+    global $DB, $id, $action, $returnurl, $heading;
+    if ($action == 'delete') {
+        // Handle delete action
+        // Delete record using ID
+        $DB->delete_records(
+            'gradereport_gradebook_xp',
+            array('id' => $id)
+        );
+        // Redirect user to manage.php page
+        redirect($returnurl, 'You have successfully deleted the competency.');
+    } else if ($action == 'edit') {
+        // Handle edit action
+        // Get name using ID
+        $name = $DB->get_field(
+            'gradereport_gradebook_xp',
+            'name',
+            array('id' => $id)
+        );
+        // Change heading in the navbar to current name
+        $heading = $name;
+    } else {
+        // Handle no action (new action for example)
+        // Set page heading
+        $heading = get_string('newcompetency', 'gradereport_gradebook_xp');
     }
-    // If record does not exist, insert a new one
-    $recordtoinsert = new stdClass();
-    $recordtoinsert->courseid = $fromform->courseid;
-    $recordtoinsert->name = $fromform->name;
-    $recordtoinsert->parentid = $fromform->parentid;
-    $DB->insert_record('gradereport_gradebook_xp', $recordtoinsert);
-    // Redirect with success message
-    redirect($returnurl, 'You have successfully created the competency: \''.$fromform->name.'\'');
 }
-// If form is submitted but the data doesn't validate and the form should be redisplayed
-// or on the first display of the form
-else {
-    // No action needed
+function process_form_data() {
+    global $DB, $mform, $returnurl;
+
+    // Check if form is cancelled
+    if ($mform->is_cancelled()) {
+        // Handle form cancel operation
+        // Redirect to manage.php page
+        redirect($returnurl, 'You cancelled the competency form.');
+    }
+    // If form data is submitted and validated
+    else if ($fromform = $mform->get_data()) {
+        // Check if record already exists
+        if (!empty($fromform->id)) {
+            // Get existing record
+            $existing_record = $DB->get_record('gradereport_gradebook_xp', array('id' => $fromform->id));
+            if ($existing_record) {
+                // Update existing record
+                $existing_record->name = $fromform->name;
+                $existing_record->parentid = $fromform->parentid;
+                $DB->update_record('gradereport_gradebook_xp', $existing_record);
+                // Redirect with success message
+                redirect($returnurl, 'You have successfully updated the competency: \''.$fromform->name.'\'');
+            }
+        }
+        // If record does not exist, insert a new one
+        $recordtoinsert = new stdClass();
+        $recordtoinsert->courseid = $fromform->courseid;
+        $recordtoinsert->name = $fromform->name;
+        $recordtoinsert->parentid = $fromform->parentid;
+        $DB->insert_record('gradereport_gradebook_xp', $recordtoinsert);
+        // Redirect with success message
+        redirect($returnurl, 'You have successfully created the competency: \''.$fromform->name.'\'');
+    }
+    // If form is submitted but the data doesn't validate and the form should be redisplayed
+    // or on the first display of the form
+    else {
+        // No action needed
+    }
 }
+function generate_output() {
+    global $PAGE, $heading, $courseid, $mform, $OUTPUT;
 
-// END: sumbit/cancel
+    // add heading to navbar
+    $PAGE->navbar->add($heading);
 
-// BEGIN: display
+    // Print header
+    print_grade_page_head($courseid, 'settings', 'gradebook_xp', $heading, false, false, false);
 
-// add heading to navbar
-$PAGE->navbar->add($heading);
-// Print header
-print_grade_page_head($courseid, 'settings', 'gradebook_xp', $heading, false, false, false);
+    // displays the form
+    $mform->display();
 
-// displays the form
-$mform->display();
-
-// Print footer
-echo $OUTPUT->footer();
-
-// END: display
+    // Print footer
+    echo $OUTPUT->footer();
+}
