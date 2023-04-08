@@ -44,7 +44,7 @@ if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
 //    echo "Hello Admin";
     $gpr = new grade_plugin_return();
     $returnurl = $gpr->get_return_url('manage.php?id='.$courseid);
-    redirect($returnurl, 'You cancelled the competency form.');
+    redirect($returnurl, 'You have been redirected to the manage page.');
 
 
 } else {

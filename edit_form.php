@@ -74,7 +74,7 @@ class edit_form extends moodleform {
         $mform->addElement('select', 'parentid', get_string('parent', 'gradereport_gradebook_xp'), $parent_options);
 
         // Add competency name text element to form
-        $mform->addElement('text', 'name', get_string('competencyname', 'gradereport_gradebook_xp'));
+        $mform->addElement('text', 'name', get_string('name', 'gradereport_gradebook_xp'));
         $mform->setType('name', PARAM_NOTAGS);
 //-------------------------------------------------------------------------------
         // Add rules to the form
