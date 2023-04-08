@@ -59,8 +59,9 @@ $templatecontext = (object)[
 
 echo $OUTPUT->render_from_template('gradereport_gradebook_xp/manage', $templatecontext);
 
-echo $OUTPUT->single_button(new moodle_url('edit.php', array('courseid' => $course->id)), get_string('additem',
-    'grades'), 'get');
+// old button but can still be useful syntax
+//echo $OUTPUT->single_button(new moodle_url('edit.php', array('courseid' => $course->id)), get_string('additem',
+//    'grades'), 'get');
 
 echo $OUTPUT->footer();
 
