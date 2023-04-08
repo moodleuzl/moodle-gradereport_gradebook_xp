@@ -37,17 +37,15 @@ $context = context_course::instance($course->id);
 
 
 // TODO: Check if user has permission to view this page
-
-
-// Print Header which contains links to all other reports etc. Highlight our tab by passing our pluginname as param active_plugin
-print_grade_page_head($courseid, 'report', 'gradebook_xp', get_string('pluginname', 'gradereport_gradebook_xp')); // Function provided by /grade/lib.php
-
-
 // Display admin view or user view
 if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
 
     // Print demo msg for admin
-    echo "Hello Admin";
+//    echo "Hello Admin";
+    $gpr = new grade_plugin_return();
+    $returnurl = $gpr->get_return_url('manage.php?id='.$courseid);
+    redirect($returnurl, 'You cancelled the competency form.');
+
 
 } else {
 
@@ -55,5 +53,11 @@ if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
     echo "Hello User";
 
 }
+
+// Print Header which contains links to all other reports etc. Highlight our tab by passing our pluginname as param active_plugin
+print_grade_page_head($courseid, 'report', 'gradebook_xp', get_string('pluginname', 'gradereport_gradebook_xp')); // Function provided by /grade/lib.php
+
+
+
 
 echo $OUTPUT->footer();
