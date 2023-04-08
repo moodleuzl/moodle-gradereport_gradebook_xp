@@ -10,9 +10,11 @@ require_once("$CFG->libdir/formslib.php");
 
 class edit_form extends moodleform {
 
+    // Add elements to form
     public function definition() {
         global $COURSE, $DB, $CFG;
 
+        // Assign form object to variable
         $mform = $this->_form;
 
         // Get course ID and record ID from parameters
