@@ -45,36 +45,40 @@ $mform = new edit_form();
 // TODO: Handle Form submit/cancel
 // BEGIN: sumbit/cancel
 
-//Form processing and displaying is done here
+// Check if form is cancelled
 if ($mform->is_cancelled()) {
-    //Handle form cancel operation, if cancel button is present on form
-    // Go back to manage.php page
+    // Handle form cancel operation
+    // Redirect to manage.php page
     redirect($returnurl, 'You cancelled the competency form.');
-} else if ($fromform = $mform->get_data()) {
-    //In this case you process validated data. $mform->get_data() returns data posted in form.
-
+}
+// If form data is submitted and validated
+else if ($fromform = $mform->get_data()) {
+    // Check if record already exists
     if (!empty($fromform->id)) {
+        // Get existing record
         $existing_record = $DB->get_record('gradereport_gradebook_xp', array('id' => $fromform->id));
         if ($existing_record) {
-            // update the existing record
+            // Update existing record
             $existing_record->name = $fromform->name;
             $existing_record->parentid = $fromform->parentid;
             $DB->update_record('gradereport_gradebook_xp', $existing_record);
+            // Redirect with success message
             redirect($returnurl, 'You have successfully updated the competency: \''.$fromform->name.'\'');
         }
     }
-// if the record does not exist, insert a new one
+    // If record does not exist, insert a new one
     $recordtoinsert = new stdClass();
     $recordtoinsert->courseid = $fromform->courseid;
     $recordtoinsert->name = $fromform->name;
     $recordtoinsert->parentid = $fromform->parentid;
     $DB->insert_record('gradereport_gradebook_xp', $recordtoinsert);
+    // Redirect with success message
     redirect($returnurl, 'You have successfully created the competency: \''.$fromform->name.'\'');
-
-
-} else {
-    // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
-    // or on the first display of the form.
+}
+// If form is submitted but the data doesn't validate and the form should be redisplayed
+// or on the first display of the form
+else {
+    // No action needed
 }
 
 // END: sumbit/cancel
