@@ -61,7 +61,7 @@ class edit_form extends moodleform {
         // Add hidden parameters to the form
 
         // Add hidden id element to form
-        $mform->addElement('hidden', 'id', $COURSE->id);
+        $mform->addElement('hidden', 'id', $current ? $current->id : 0);
         $mform->setType('id', PARAM_INT);
 
         // Add hidden courseid element to form
