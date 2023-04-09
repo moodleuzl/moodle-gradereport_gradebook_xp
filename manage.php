@@ -36,17 +36,20 @@ foreach ($competencies as $competency) {
 // BEGIN: display
 
 // Print header.
-print_grade_page_head($COURSE->id, 'settings', 'gradebook_xp', get_string('pluginname', 'gradereport_gradebook_xp'), false, '');
+print_grade_page_head($courseid, 'settings', 'gradebook_xp', get_string('pluginname', 'gradereport_gradebook_xp'), false, '');
 
 
-/// Debug message
+/// BEGIN debug
 
-//$table_name = 'gradereport_gradebook_xp'; // replace with the actual table name
-//$records = $DB->get_records('gradereport_gradebook_xp', ['courseid' => $courseid]);
-//echo "<pre>";
-//print_r($records);
-//echo "</pre>";
+$records = $DB->get_records('gradereport_gradebook_xp', ['courseid' => $courseid]);
+$hierarchy = get_child_competencies(0);
+echo "<pre>";
+//print_r($hierarchy);
+echo "</pre>";
+display_hierarchy($hierarchy);
 
+
+// END debug
 
 $templatecontext = (object)[
     'competencies' => array_values($competencies),
@@ -66,3 +69,45 @@ echo $OUTPUT->render_from_template('gradereport_gradebook_xp/manage', $templatec
 echo $OUTPUT->footer();
 
 // END: display
+
+function get_child_competencies($id) {
+    global $DB, $COURSE;
+
+    $competencies = array();
+
+    // Get child competencies and sort by ID
+    $children = $DB->get_records('gradereport_gradebook_xp', array('parentid' => $id, 'courseid' => $COURSE->id), 'id ASC');
+
+    // Convert child competencies to dictionary
+    foreach ($children as $child) {
+        $attributes = get_object_vars($child);
+        $competency = array();
+        foreach ($attributes as $attribute_name => $attribute_value) {
+            $competency[$attribute_name] = $attribute_value;
+        }
+
+        $competency['children'] = get_child_competencies($child->id);
+
+        $competencies[$child->id] = $competency;
+    }
+
+
+    return $competencies;
+}
+
+function display_hierarchy($hierarchy) {
+    echo '<ul>';
+    foreach ($hierarchy as $item) {
+        echo '<li>' . $item['name'];
+        if (!empty($item['children'])) {
+            display_hierarchy($item['children']);
+        }
+        echo '</li>';
+    }
+    echo '</ul>';
+}
+
+function to_json($hierarchy) {
+    $json = json_encode($hierarchy, JSON_PRETTY_PRINT);
+    return $json;
+}
