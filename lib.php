@@ -20,7 +20,7 @@ function gradereport_gradebook_xp_extend_navigation_course($navigation, $course,
 function setup_page($courseid, $capabililty='moodle/grade:view') {
     global $PAGE, $DB, $context;
     // Set page URL and layout
-    $url = new moodle_url('/grade/report/gradebook_xp/edit.php', array('id' => $courseid));
+    $url = new moodle_url('/grade/report/gradebook_xp/'.get_caller_filename(), array('id' => $courseid));
     if ($courseid !== 0) {
         $url->param('id', $courseid);
     }
@@ -35,4 +35,10 @@ function setup_page($courseid, $capabililty='moodle/grade:view') {
     require_login($course);
     $context = context_course::instance($course->id);
     require_capability($capabililty, $context);    // TODO: Check if user has permission to view this page
+}
+
+function get_caller_filename() {
+    $trace = debug_backtrace();
+    $caller = $trace[1];
+    return basename($caller['file']);
 }
