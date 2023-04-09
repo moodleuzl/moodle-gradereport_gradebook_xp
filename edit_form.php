@@ -18,7 +18,7 @@ class edit_form extends moodleform {
         $mform = $this->_form;
 
         // Get course ID and record ID from parameters
-        $courseid = required_param('courseid', PARAM_INT);
+//        $courseid = required_param('courseid', PARAM_INT);
         $id = optional_param('id', null, PARAM_INT);
 
         // Get current record from database (if ID is provided)
