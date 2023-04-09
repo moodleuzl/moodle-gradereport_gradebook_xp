@@ -32,7 +32,7 @@ function handle_action(){
     global $DB, $id, $action, $returnurl, $heading;
     if ($action == 'delete') {
     // Get all children records of the deleted record
-        $children_records = get_children($id);
+        $children_records = get_direct_children($id);
 
         // Update the parentid of all children records to 0
         foreach ($children_records as $child_record) {
@@ -121,6 +121,13 @@ function generate_output() {
     echo $OUTPUT->footer();
 }
 
+function get_direct_children($id) {
+    global $DB;
+
+    $children_records = $DB->get_records('gradereport_gradebook_xp', array('parentid' => $id));
+
+    return $children_records;
+}
 
 function get_children($id) {
     global $DB;
