@@ -61,6 +61,8 @@ function handle_action(){
         $heading = get_string('newcompetency', 'gradereport_gradebook_xp');
     }
 }
+
+
 function handle_action_buttons() {
     global $DB, $mform, $returnurl;
 
