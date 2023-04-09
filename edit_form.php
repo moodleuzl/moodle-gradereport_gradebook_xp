@@ -49,7 +49,8 @@ class edit_form extends moodleform {
             $available_parents = $DB->get_records_sql($sql, $params); // Get parent records
             $parent_options += array_column($available_parents, 'name', 'id'); // Add parent options to array
         } else { // If no record ID is provided
-            $sql = "SELECT id, name 
+//            $sql = "SELECT id, name , description
+            $sql = "SELECT *
             FROM {gradereport_gradebook_xp} 
             WHERE courseid = ?
             ORDER BY id";
@@ -76,6 +77,10 @@ class edit_form extends moodleform {
         // Add competency name text element to form
         $mform->addElement('text', 'name', get_string('name', 'gradereport_gradebook_xp'));
         $mform->setType('name', PARAM_NOTAGS);
+
+        // Add competency descriptionion text element to form
+        $mform->addElement('text', 'description', get_string('name', 'gradereport_gradebook_xp'));
+        $mform->setType('description', PARAM_NOTAGS);
 //-------------------------------------------------------------------------------
         // Add rules to the form
 
@@ -88,6 +93,7 @@ class edit_form extends moodleform {
             $mform->setDefault('courseid', $current->courseid);
             $mform->setDefault('name', $current->name);
             $mform->setDefault('parentid', $current->parentid);
+            $mform->setDefault('description', $current->description);
         }
 //-------------------------------------------------------------------------------
         // Add action buttons to the form

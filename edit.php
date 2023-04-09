@@ -80,8 +80,11 @@ function handle_action_buttons() {
             $existing_record = $DB->get_record('gradereport_gradebook_xp', array('id' => $fromform->id));
             if ($existing_record) {
                 // Update existing record
-                $existing_record->name = $fromform->name;
-                $existing_record->parentid = $fromform->parentid;
+//                $existing_record->name = $fromform->name;
+//                $existing_record->parentid = $fromform->parentid;
+                foreach (get_object_vars($fromform) as $key => $value) {
+                    $existing_record->$key = $value;
+                }
                 $DB->update_record('gradereport_gradebook_xp', $existing_record);
                 // Redirect with success message
                 redirect($returnurl, 'You have successfully updated the competency: \''.$fromform->name.'\'');
@@ -89,9 +92,12 @@ function handle_action_buttons() {
         }
         // If record does not exist, insert a new one
         $recordtoinsert = new stdClass();
-        $recordtoinsert->courseid = $fromform->courseid;
-        $recordtoinsert->name = $fromform->name;
-        $recordtoinsert->parentid = $fromform->parentid;
+//        $recordtoinsert->courseid = $fromform->courseid;
+//        $recordtoinsert->name = $fromform->name;
+//        $recordtoinsert->parentid = $fromform->parentid;
+        foreach (get_object_vars($fromform) as $key => $value) {
+            $recordtoinsert->$key = $value;
+        }
         $DB->insert_record('gradereport_gradebook_xp', $recordtoinsert);
         // Redirect with success message
         redirect($returnurl, 'You have successfully created the competency: \''.$fromform->name.'\'');
