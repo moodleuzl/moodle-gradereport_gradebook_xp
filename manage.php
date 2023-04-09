@@ -1,25 +1,16 @@
 <?php
+require_once('../../../config.php');
+require_once($CFG->dirroot.'/grade/lib.php');
+require_once('lib.php');
 
-require_once '../../../config.php';
-require_once $CFG->dirroot.'/grade/lib.php';
-require_once 'lib.php';
+// Get required and optional parameters
+$courseid = required_param('id', PARAM_INT);
+$userid = optional_param('userid', $USER->id, PARAM_INT);
 
-$courseid = required_param('id', PARAM_INT);        // Course id.
-$userid   = optional_param('userid', $USER->id, PARAM_INT);
-
+// Set up the page
 setup_page($courseid, 'moodle/grade:manage');
 
-
-// TODO: Optimize the following to easily get any field of the parent (like parent.id)
-// This is an old approach without SQL
-//$competencies = $DB->get_records('gradereport_gradebook_xp', ['courseid' => $courseid]);
-//foreach ($competencies as $competency) {
-//    $parent = $DB->get_record('gradereport_gradebook_xp', ['id' => $competency->parentid]);
-//
-//    $competency->parentid = $parent ? $parent->id : null;
-//    $competency->parentname = $parent ? $parent->name : '';
-//}
-
+// Get the competencies for the course and sort by ID
 $competencies = $DB->get_records_sql("
     SELECT c.*, p.name AS parentname
     FROM {gradereport_gradebook_xp} c
@@ -28,73 +19,24 @@ $competencies = $DB->get_records_sql("
     ORDER BY c.id ASC
 ", ['courseid' => $courseid]);
 
-foreach ($competencies as $competency) {
-    $competency->parentid = $competency->parentid ?: null;
-}
-
-
-// BEGIN: display
-
-// Print header.
-print_grade_page_head($courseid, 'settings', 'gradebook_xp', get_string('pluginname', 'gradereport_gradebook_xp'), false, '');
-
-
-/// BEGIN debug
-
-$records = $DB->get_records('gradereport_gradebook_xp', ['courseid' => $courseid]);
-$hierarchy = get_child_competencies(0);
-echo "<pre>";
-//print_r($hierarchy);
-echo "</pre>";
-display_hierarchy($hierarchy);
-
-
-// END debug
-
-$templatecontext = (object)[
-    'competencies' => array_values($competencies),
-    'editurl' => new moodle_url('/grade/report/gradebook_xp/edit.php'),
-    'courseid' => $courseid,
-];
-//$templatecontext = (object)[
-//    'competencies' => array_values($competencies),
-//];
-
-echo $OUTPUT->render_from_template('gradereport_gradebook_xp/manage', $templatecontext);
-
-// old button but can still be useful syntax
-//echo $OUTPUT->single_button(new moodle_url('edit.php', array('courseid' => $course->id)), get_string('additem',
-//    'grades'), 'get');
-
-echo $OUTPUT->footer();
-
-// END: display
-
+// Get the child competencies recursively and sort by ID
 function get_child_competencies($id) {
     global $DB, $COURSE;
 
     $competencies = array();
 
-    // Get child competencies and sort by ID
-    $children = $DB->get_records('gradereport_gradebook_xp', array('parentid' => $id, 'courseid' => $COURSE->id), 'id ASC');
+    $children = $DB->get_records('gradereport_gradebook_xp', ['parentid' => $id, 'courseid' => $COURSE->id], 'id ASC');
 
-    // Convert child competencies to dictionary
     foreach ($children as $child) {
-        $attributes = get_object_vars($child);
-        $competency = array();
-        foreach ($attributes as $attribute_name => $attribute_value) {
-            $competency[$attribute_name] = $attribute_value;
-        }
-
+        $competency = (array) $child;
         $competency['children'] = get_child_competencies($child->id);
-
         $competencies[$child->id] = $competency;
     }
-
 
     return $competencies;
 }
 
+// Display the competency hierarchy recursively
 function display_hierarchy($hierarchy) {
     echo '<ul>';
     foreach ($hierarchy as $item) {
@@ -107,7 +49,20 @@ function display_hierarchy($hierarchy) {
     echo '</ul>';
 }
 
+// Convert the competency hierarchy to JSON
 function to_json($hierarchy) {
     $json = json_encode($hierarchy, JSON_PRETTY_PRINT);
     return $json;
 }
+
+// Render the page
+$templatecontext = (object)[
+    'competencies' => array_values($competencies),
+    'editurl' => new moodle_url('/grade/report/gradebook_xp/edit.php'),
+    'courseid' => $courseid,
+];
+
+print_grade_page_head($courseid, 'settings', 'gradebook_xp', get_string('pluginname', 'gradereport_gradebook_xp'), false, '');
+display_hierarchy(get_child_competencies(0));
+echo $OUTPUT->render_from_template('gradereport_gradebook_xp/manage', $templatecontext);
+echo $OUTPUT->footer();
