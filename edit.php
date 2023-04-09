@@ -20,23 +20,29 @@ $returnurl = $gpr->get_return_url('manage.php?id=' . $courseid);
 // Set page heading
 //$heading = get_string('name', 'gradereport_gradebook_xp');
 
-handle_action($returnurl, $action);
+//handle_action($returnurl, $action);
 
 // Instantiate edit_form
 $mform = new edit_form();
 
-process_form_data();
+handle_action_buttons();
 generate_output();
 
 function handle_action(){
     global $DB, $id, $action, $returnurl, $heading;
     if ($action == 'delete') {
-        // Handle delete action
-        // Delete record using ID
-        $DB->delete_records(
-            'gradereport_gradebook_xp',
-            array('id' => $id)
-        );
+    // Get all children records of the deleted record
+        $children_records = get_children($id);
+
+        // Update the parentid of all children records to 0
+        foreach ($children_records as $child_record) {
+            $child_record->parentid = 0;
+            $DB->update_record('gradereport_gradebook_xp', $child_record);
+        }
+
+// Delete the record using ID
+        $DB->delete_records('gradereport_gradebook_xp', array('id' => $id));
+
         // Redirect user to manage.php page
         redirect($returnurl, 'You have successfully deleted the competency.');
     } else if ($action == 'edit') {
@@ -55,7 +61,7 @@ function handle_action(){
         $heading = get_string('newcompetency', 'gradereport_gradebook_xp');
     }
 }
-function process_form_data() {
+function handle_action_buttons() {
     global $DB, $mform, $returnurl;
 
     // Check if form is cancelled
@@ -92,8 +98,11 @@ function process_form_data() {
     // or on the first display of the form
     else {
         // No action needed
+        handle_action();
     }
 }
+
+
 function generate_output() {
     global $PAGE, $heading, $courseid, $mform, $OUTPUT;
 
@@ -108,4 +117,27 @@ function generate_output() {
 
     // Print footer
     echo $OUTPUT->footer();
+}
+
+
+function get_children($id) {
+    global $DB;
+
+    // Use a recursive SQL query to get all children records of the parent
+    $sql = "WITH RECURSIVE item_descendants AS (
+                SELECT id, parentid, name
+                FROM {gradereport_gradebook_xp}
+                WHERE id = ?
+                UNION
+                SELECT g.id, g.parentid, g.name
+                FROM {gradereport_gradebook_xp} g
+                JOIN item_descendants d ON g.parentid = d.id
+            )
+            SELECT id, name
+            FROM item_descendants
+            WHERE id != ?";
+    $params = array($id, $id);
+    $children_records = $DB->get_records_sql($sql, $params);
+
+    return $children_records;
 }
