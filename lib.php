@@ -42,3 +42,10 @@ function get_caller_filename() {
     $caller = $trace[1];
     return basename($caller['file']);
 }
+
+function debug($value) {
+    echo "<pre>";
+    var_dump($value);
+    echo "</pre>";
+    die;
+}
