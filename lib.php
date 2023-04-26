@@ -9,7 +9,6 @@ defined('MOODLE_INTERNAL') || die;
  * @param stdClass $course The course to object for the report
  * @param stdClass $context The context of the course
  */
-
 function gradereport_gradebook_xp_extend_navigation_course($navigation, $course, $context) {
 
     $url = new moodle_url('/grade/report/gradebook_xp/manage.php', array('id' => $course->id));
@@ -111,7 +110,6 @@ function grade_report_gradebook_xp_add_competency($courseid, $name, $description
         // Insert new record
         $DB->insert_record($table, $competency);
     }
-    
 }
 
 /**
@@ -126,4 +124,49 @@ function grade_report_gradebook_xp_get_competencies($courseid) {
 
     return $competencies;
 }
+
+/**
+ * Add a competency -> assignment connection or overwrite an existing one
+ */
+function grade_report_gradebook_xp_set_competency_connection($courseid, $assignmentid, $competencyid, $weight) {
+    global $DB;
+
+    // Attempt to find matching record in our table
+    $table = "gradereport_gradebook_xp_con";
+    $connection = $DB->get_record($table, ["courseid" => $courseid, "assignmentid" => $assignmentid, "competencyid" => $competencyid]);
+
+    // Update or insert record
+    if ($connection) {
+
+        // Update value
+        $connection->weight = $weight;
+
+        // Update record with new competency
+        $DB->update_record($table, $connection);
+
+    } else {
+
+        // Construct new competency array
+        $connection = array(
+            "courseid" => $courseid,
+            "assignmentid" => $assignmentid,
+            "competencyid" => $competencyid,
+            "weight" => $weight
+        );
+
+        // Insert new record
+        $DB->insert_record($table, $connection);
+    }
+}
+
+/**
+ * Get all competency connections of an assignment
+ * @return array List of competencies connected to this assignment
+ */
+function grade_report_gradebook_xp_get_connections($courseid, $assignmentid) {
+    global $DB;
+
+    $connections = $DB->get_records("gradereport_gradebook_xp_con", ["courseid" => $courseid, "assignmentid" => $assignmentid]);
+
+    return $connections;
 }
