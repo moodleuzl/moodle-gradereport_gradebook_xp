@@ -77,5 +77,53 @@ function grade_report_gradebook_xp_get_course_activities($context, $course, $use
     }
 
     return $return_data;
+}
 
+/**
+ * Add a competency to a course or overwrite an existing one with the same name
+ */
+function grade_report_gradebook_xp_add_competency($courseid, $name, $description) {
+    global $DB;
+
+    // Attempt to find matching record in our table
+    $table = "gradereport_gradebook_xp_com";
+    $competency = $DB->get_record($table, ["courseid" => $courseid, "name" => $name]);
+
+    // Update or insert record
+    if ($competency) {
+
+        // Update values
+        $competency->name = $name;
+        $competency->description = $description;
+
+        // Update record with new competency
+        $DB->update_record($table, $competency);
+
+    } else {
+
+        // Construct new competency array
+        $competency = array(
+            "courseid" => $courseid,
+            "name" => $name,
+            "description" => $description
+        );
+
+        // Insert new record
+        $DB->insert_record($table, $competency);
+    }
+    
+}
+
+/**
+ * Get all competencies of a course
+ * @return array List of matching competencies
+ */
+function grade_report_gradebook_xp_get_competencies($courseid) {
+    global $DB;
+
+    // Get all competencies of this course with all fields. Ignore if no records are found and just return an empty array
+    $competencies = $DB->get_records("gradereport_gradebook_xp_com", ["courseid" => $courseid]);
+
+    return $competencies;
+}
 }
