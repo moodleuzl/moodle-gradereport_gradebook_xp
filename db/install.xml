@@ -17,5 +17,37 @@
                 <KEY NAME="parent_fk" TYPE="foreign" FIELDS="parentid" REFTABLE="gradereport_gradebook_xp" REFFIELDS="id" ONDELETE="CASCADE"/>
             </KEYS>
         </TABLE>
+
+        <!-- Table name limit is 28 chars... -->
+        <TABLE NAME="gradereport_gradebook_xp_com" COMMENT="Stores all competencies bound to a course">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="description" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="com" REFFIELDS="courseid"/> <!-- TODO: I'm not sure if both of these are necessary -->
+                <KEY NAME="name" TYPE="foreign" FIELDS="name" REFTABLE="com" REFFIELDS="name"/>
+            </KEYS>
+        </TABLE>
+
+        <!-- Table name limit is 28 chars... -->
+        <TABLE NAME="gradereport_gradebook_xp_con" COMMENT="Stores all competency to assignment connections and their weight">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="assignmentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="competencyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="weight" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="con" REFFIELDS="courseid"/> <!-- TODO: I'm not sure if these are necessary -->
+                <KEY NAME="assignmentid" TYPE="foreign" FIELDS="assignmentid" REFTABLE="con" REFFIELDS="assignmentid"/>
+                <KEY NAME="competencyid" TYPE="foreign" FIELDS="competencyid" REFTABLE="con" REFFIELDS="competencyid"/>
+            </KEYS>
+        </TABLE>
     </TABLES>
 </XMLDB>
