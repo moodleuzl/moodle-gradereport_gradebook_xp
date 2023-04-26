@@ -80,6 +80,9 @@ function grade_report_gradebook_xp_get_course_activities($context, $course, $use
 
 /**
  * Add a competency to a course or overwrite an existing one with the same name
+ * @param int $courseid ID of the course
+ * @param string $name Name if the competency to add
+ * @param string $description Description of the competency to add
  */
 function grade_report_gradebook_xp_add_competency($courseid, $name, $description) {
     global $DB;
@@ -114,6 +117,7 @@ function grade_report_gradebook_xp_add_competency($courseid, $name, $description
 
 /**
  * Get all competencies of a course
+ * @param int $courseid ID of the course
  * @return array List of matching competencies
  */
 function grade_report_gradebook_xp_get_competencies($courseid) {
@@ -127,6 +131,10 @@ function grade_report_gradebook_xp_get_competencies($courseid) {
 
 /**
  * Add a competency -> assignment connection or overwrite an existing one
+ * @param int $courseid ID of the course
+ * @param int $assignmentid ID of the assignment to connect to
+ * @param int $competencyid ID of the competency to connect
+ * @param int $weight Weight of the competency for this assignment
  */
 function grade_report_gradebook_xp_set_competency_connection($courseid, $assignmentid, $competencyid, $weight) {
     global $DB;
@@ -161,6 +169,8 @@ function grade_report_gradebook_xp_set_competency_connection($courseid, $assignm
 
 /**
  * Get all competency connections of an assignment
+ * @param int $courseid ID of the course
+ * @param int $assignmentid ID of the assignment to connect to
  * @return array List of competencies connected to this assignment
  */
 function grade_report_gradebook_xp_get_connections($courseid, $assignmentid) {
