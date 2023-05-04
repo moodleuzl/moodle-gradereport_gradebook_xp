@@ -26,8 +26,10 @@ class edit_form extends moodleform {
 //-------------------------------------------------------------------------------
         // Get parent options for select element
         $parent_options = [0 => '---']; // Add empty option
+
         if (!empty($current)) { // If record ID is provided
             $parentid = $current->id;
+
             $sql = "WITH RECURSIVE item_descendants AS (
                 SELECT id, parentid, name
                 FROM {gradereport_gradebook_xp_com}
@@ -45,17 +47,21 @@ class edit_form extends moodleform {
             )
             AND id != ?
             ORDER BY id";
+
             $params = array($parentid, $COURSE->id, $parentid, $parentid);
-            $available_parents = $DB->get_records_sql($sql, $params); // Get parent records
+            $available_parents = $DB->get_records_sql($sql, $params);          // Get parent records
             $parent_options += array_column($available_parents, 'name', 'id'); // Add parent options to array
+
         } else { // If no record ID is provided
+
 //            $sql = "SELECT id, name , description
             $sql = "SELECT *
             FROM {gradereport_gradebook_xp_com} 
             WHERE courseid = ?
             ORDER BY id";
+
             $params = array($COURSE->id);
-            $available_parents = $DB->get_records_sql($sql, $params); // Get all parent records
+            $available_parents = $DB->get_records_sql($sql, $params);          // Get all parent records
             $parent_options += array_column($available_parents, 'name', 'id'); // Add parent options to array
         }
 //-------------------------------------------------------------------------------

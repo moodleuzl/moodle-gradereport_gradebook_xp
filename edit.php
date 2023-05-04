@@ -30,8 +30,9 @@ generate_output();
 
 function handle_action(){
     global $DB, $id, $action, $returnurl, $heading;
+
     if ($action == 'delete') {
-    // Get all children records of the deleted record
+        // Get all children records of the deleted record
         $children_records = get_direct_children($id);
 
         // Update the parentid of all children records to 0
@@ -40,11 +41,12 @@ function handle_action(){
             $DB->update_record('gradereport_gradebook_xp_com', $child_record);
         }
 
-// Delete the record using ID
+        // Delete the record using ID
         $DB->delete_records('gradereport_gradebook_xp_com', array('id' => $id));
 
         // Redirect user to preferences.php page
         redirect($returnurl, 'You have successfully deleted the competency.');
+
     } else if ($action == 'edit') {
         // Handle edit action
         // Get name using ID
@@ -53,8 +55,10 @@ function handle_action(){
             'name',
             array('id' => $id)
         );
+
         // Change heading in the navbar to current name
         $heading = $name;
+
     } else {
         // Handle no action (new action for example)
         // Set page heading
@@ -71,42 +75,38 @@ function handle_action_buttons() {
         // Handle form cancel operation
         // Redirect to preferences.php page
         redirect($returnurl, 'You cancelled the competency form.');
-    }
-    // If form data is submitted and validated
-    else if ($fromform = $mform->get_data()) {
+
+    } else if ($fromform = $mform->get_data()) { // If form data is submitted and validated
         // Check if record already exists
         if (!empty($fromform->id)) {
             // Get existing record
             $existing_record = $DB->get_record('gradereport_gradebook_xp_com', array('id' => $fromform->id));
+
             if ($existing_record) {
                 // Update existing record
-//                $existing_record->name = $fromform->name;
-//                $existing_record->parentid = $fromform->parentid;
-                foreach (get_object_vars($fromform) as $key => $value) {
-                    $existing_record->$key = $value;
-                }
+                $existing_record->name = $fromform->name;
+                $existing_record->parentid = $fromform->parentid;
+
                 $DB->update_record('gradereport_gradebook_xp_com', $existing_record);
+
                 // Redirect with success message
                 redirect($returnurl, 'You have successfully updated the competency: \''.$fromform->name.'\'');
             }
         }
+
         // If record does not exist, insert a new one
         $recordtoinsert = new stdClass();
-//        $recordtoinsert->courseid = $fromform->courseid;
-//        $recordtoinsert->name = $fromform->name;
-//        $recordtoinsert->parentid = $fromform->parentid;
-        foreach (get_object_vars($fromform) as $key => $value) {
-            $recordtoinsert->$key = $value;
-        }
+        $recordtoinsert->courseid = $fromform->courseid;
+        $recordtoinsert->name = $fromform->name;
+        $recordtoinsert->parentid = $fromform->parentid;
+
         $DB->insert_record('gradereport_gradebook_xp_com', $recordtoinsert);
+
         // Redirect with success message
         redirect($returnurl, 'You have successfully created the competency: \''.$fromform->name.'\'');
-    }
-    // If form is submitted but the data doesn't validate and the form should be redisplayed
-    // or on the first display of the form
-    else {
-        // No action needed
-        handle_action();
+
+    } else { // If form is submitted but the data doesn't validate and the form should be redisplayed or on the first display of the form
+        handle_action(); // No action needed
     }
 }
 
@@ -127,6 +127,7 @@ function generate_output() {
     echo $OUTPUT->footer();
 }
 
+
 function get_direct_children($id) {
     global $DB;
 
@@ -134,6 +135,7 @@ function get_direct_children($id) {
 
     return $children_records;
 }
+
 
 function get_children($id) {
     global $DB;
@@ -151,6 +153,7 @@ function get_children($id) {
             SELECT id, name
             FROM item_descendants
             WHERE id != ?";
+
     $params = array($id, $id);
     $children_records = $DB->get_records_sql($sql, $params);
 
