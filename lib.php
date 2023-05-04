@@ -11,7 +11,7 @@ defined('MOODLE_INTERNAL') || die;
  */
 function gradereport_gradebook_xp_extend_navigation_course($navigation, $course, $context) {
 
-    $url = new moodle_url('/grade/report/gradebook_xp/manage.php', array('id' => $course->id));
+    $url = new moodle_url('/grade/report/gradebook_xp/preferences.php', array('id' => $course->id));
     $name = get_string('pluginname', 'gradereport_gradebook_xp');
     $navigation->add($name, $url, navigation_node::TYPE_COURSE, null, null, new pix_icon('i/competencies', ''));
 }

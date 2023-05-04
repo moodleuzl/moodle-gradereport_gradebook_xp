@@ -8,7 +8,7 @@ $courseid = required_param('id', PARAM_INT);
 $userid = optional_param('userid', $USER->id, PARAM_INT);
 
 // Set up the page
-setup_page($courseid, 'moodle/grade:manage');
+setup_page($courseid, 'moodle/grade:manage'); // TODO: Does this need to be changed to preferences?
 
 // Get the competencies for the course and sort by ID
 $competencies = $DB->get_records_sql("
@@ -64,5 +64,5 @@ $templatecontext = (object)[
 
 print_grade_page_head($courseid, 'settings', 'gradebook_xp', get_string('pluginname', 'gradereport_gradebook_xp'), false, '');
 display_hierarchy(get_child_competencies(0));
-echo $OUTPUT->render_from_template('gradereport_gradebook_xp/manage', $templatecontext);
+echo $OUTPUT->render_from_template('gradereport_gradebook_xp/preferences', $templatecontext);
 echo $OUTPUT->footer();

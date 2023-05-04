@@ -6,7 +6,7 @@
  * Created Date: 17.11.2022 19:19:13
  * Author: DominikMa, 3urobeat, thePulpo
  * 
- * Last Modified: 26.04.2023 14:57:30
+ * Last Modified: 04.05.2023 16:04:11
  * Modified By: 3urobeat
  */
 
@@ -46,8 +46,8 @@ if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
     echo "Hello Admin";
 
     /* $gpr = new grade_plugin_return();
-    $returnurl = $gpr->get_return_url('manage.php?id='.$courseid);
-    redirect($returnurl, 'You have been redirected to the manage page.'); */
+    $returnurl = $gpr->get_return_url('preferences.php?id='.$courseid);
+    redirect($returnurl, 'You have been redirected to the preferences page.'); */
 
 
 } else {
