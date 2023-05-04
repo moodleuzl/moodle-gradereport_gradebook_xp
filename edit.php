@@ -37,11 +37,11 @@ function handle_action(){
         // Update the parentid of all children records to 0
         foreach ($children_records as $child_record) {
             $child_record->parentid = 0;
-            $DB->update_record('gradereport_gradebook_xp', $child_record);
+            $DB->update_record('gradereport_gradebook_xp_com', $child_record);
         }
 
 // Delete the record using ID
-        $DB->delete_records('gradereport_gradebook_xp', array('id' => $id));
+        $DB->delete_records('gradereport_gradebook_xp_com', array('id' => $id));
 
         // Redirect user to manage.php page
         redirect($returnurl, 'You have successfully deleted the competency.');
@@ -49,7 +49,7 @@ function handle_action(){
         // Handle edit action
         // Get name using ID
         $name = $DB->get_field(
-            'gradereport_gradebook_xp',
+            'gradereport_gradebook_xp_com',
             'name',
             array('id' => $id)
         );
@@ -77,7 +77,7 @@ function handle_action_buttons() {
         // Check if record already exists
         if (!empty($fromform->id)) {
             // Get existing record
-            $existing_record = $DB->get_record('gradereport_gradebook_xp', array('id' => $fromform->id));
+            $existing_record = $DB->get_record('gradereport_gradebook_xp_com', array('id' => $fromform->id));
             if ($existing_record) {
                 // Update existing record
 //                $existing_record->name = $fromform->name;
@@ -85,7 +85,7 @@ function handle_action_buttons() {
                 foreach (get_object_vars($fromform) as $key => $value) {
                     $existing_record->$key = $value;
                 }
-                $DB->update_record('gradereport_gradebook_xp', $existing_record);
+                $DB->update_record('gradereport_gradebook_xp_com', $existing_record);
                 // Redirect with success message
                 redirect($returnurl, 'You have successfully updated the competency: \''.$fromform->name.'\'');
             }
@@ -98,7 +98,7 @@ function handle_action_buttons() {
         foreach (get_object_vars($fromform) as $key => $value) {
             $recordtoinsert->$key = $value;
         }
-        $DB->insert_record('gradereport_gradebook_xp', $recordtoinsert);
+        $DB->insert_record('gradereport_gradebook_xp_com', $recordtoinsert);
         // Redirect with success message
         redirect($returnurl, 'You have successfully created the competency: \''.$fromform->name.'\'');
     }
@@ -130,7 +130,7 @@ function generate_output() {
 function get_direct_children($id) {
     global $DB;
 
-    $children_records = $DB->get_records('gradereport_gradebook_xp', array('parentid' => $id));
+    $children_records = $DB->get_records('gradereport_gradebook_xp_com', array('parentid' => $id));
 
     return $children_records;
 }
@@ -141,11 +141,11 @@ function get_children($id) {
     // Use a recursive SQL query to get all children records of the parent
     $sql = "WITH RECURSIVE item_descendants AS (
                 SELECT id, parentid, name
-                FROM {gradereport_gradebook_xp}
+                FROM {gradereport_gradebook_xp_com}
                 WHERE id = ?
                 UNION
                 SELECT g.id, g.parentid, g.name
-                FROM {gradereport_gradebook_xp} g
+                FROM {gradereport_gradebook_xp_com} g
                 JOIN item_descendants d ON g.parentid = d.id
             )
             SELECT id, name

@@ -13,8 +13,8 @@ setup_page($courseid, 'moodle/grade:manage');
 // Get the competencies for the course and sort by ID
 $competencies = $DB->get_records_sql("
     SELECT c.*, p.name AS parentname
-    FROM {gradereport_gradebook_xp} c
-    LEFT JOIN {gradereport_gradebook_xp} p ON p.id = c.parentid
+    FROM {gradereport_gradebook_xp_com} c
+    LEFT JOIN {gradereport_gradebook_xp_com} p ON p.id = c.parentid
     WHERE c.courseid = :courseid
     ORDER BY c.id ASC
 ", ['courseid' => $courseid]);
@@ -25,7 +25,7 @@ function get_child_competencies($id) {
 
     $competencies = array();
 
-    $children = $DB->get_records('gradereport_gradebook_xp', ['parentid' => $id, 'courseid' => $COURSE->id], 'id ASC');
+    $children = $DB->get_records('gradereport_gradebook_xp_com', ['parentid' => $id, 'courseid' => $COURSE->id], 'id ASC');
 
     foreach ($children as $child) {
         $competency = (array) $child;

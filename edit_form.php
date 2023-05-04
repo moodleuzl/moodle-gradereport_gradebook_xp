@@ -22,7 +22,7 @@ class edit_form extends moodleform {
         $id = optional_param('id', null, PARAM_INT);
 
         // Get current record from database (if ID is provided)
-        $current = $DB->get_record('gradereport_gradebook_xp', array('id' => $id));
+        $current = $DB->get_record('gradereport_gradebook_xp_com', array('id' => $id));
 //-------------------------------------------------------------------------------
         // Get parent options for select element
         $parent_options = [0 => '---']; // Add empty option
@@ -30,15 +30,15 @@ class edit_form extends moodleform {
             $parentid = $current->id;
             $sql = "WITH RECURSIVE item_descendants AS (
                 SELECT id, parentid, name
-                FROM {gradereport_gradebook_xp}
+                FROM {gradereport_gradebook_xp_com}
                 WHERE id = ?
                 UNION
                 SELECT g.id, g.parentid, g.name
-                FROM {gradereport_gradebook_xp} g
+                FROM {gradereport_gradebook_xp_com} g
                 JOIN item_descendants d ON g.parentid = d.id
             )
             SELECT id, name
-            FROM {gradereport_gradebook_xp}
+            FROM {gradereport_gradebook_xp_com}
             WHERE courseid = ? AND id NOT IN (
                 SELECT id FROM item_descendants UNION
                 SELECT ? WHERE parentid IS NULL
@@ -51,7 +51,7 @@ class edit_form extends moodleform {
         } else { // If no record ID is provided
 //            $sql = "SELECT id, name , description
             $sql = "SELECT *
-            FROM {gradereport_gradebook_xp} 
+            FROM {gradereport_gradebook_xp_com} 
             WHERE courseid = ?
             ORDER BY id";
             $params = array($COURSE->id);
