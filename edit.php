@@ -15,7 +15,7 @@ setup_page($courseid, 'moodle/grade:manage');
 
 // Get return URL
 $gpr = new grade_plugin_return();
-$returnurl = $gpr->get_return_url('manage.php?id=' . $courseid);
+$returnurl = $gpr->get_return_url('preferences.php?id=' . $courseid);
 
 // Set page heading
 //$heading = get_string('name', 'gradereport_gradebook_xp');
@@ -30,31 +30,35 @@ generate_output();
 
 function handle_action(){
     global $DB, $id, $action, $returnurl, $heading;
+
     if ($action == 'delete') {
-    // Get all children records of the deleted record
+        // Get all children records of the deleted record
         $children_records = get_direct_children($id);
 
         // Update the parentid of all children records to 0
         foreach ($children_records as $child_record) {
             $child_record->parentid = 0;
-            $DB->update_record('gradereport_gradebook_xp', $child_record);
+            $DB->update_record('gradereport_gradebook_xp_com', $child_record);
         }
 
-// Delete the record using ID
-        $DB->delete_records('gradereport_gradebook_xp', array('id' => $id));
+        // Delete the record using ID
+        $DB->delete_records('gradereport_gradebook_xp_com', array('id' => $id));
 
-        // Redirect user to manage.php page
+        // Redirect user to preferences.php page
         redirect($returnurl, 'You have successfully deleted the competency.');
+
     } else if ($action == 'edit') {
         // Handle edit action
         // Get name using ID
         $name = $DB->get_field(
-            'gradereport_gradebook_xp',
+            'gradereport_gradebook_xp_com',
             'name',
             array('id' => $id)
         );
+
         // Change heading in the navbar to current name
         $heading = $name;
+
     } else {
         // Handle no action (new action for example)
         // Set page heading
@@ -69,44 +73,40 @@ function handle_action_buttons() {
     // Check if form is cancelled
     if ($mform->is_cancelled()) {
         // Handle form cancel operation
-        // Redirect to manage.php page
+        // Redirect to preferences.php page
         redirect($returnurl, 'You cancelled the competency form.');
-    }
-    // If form data is submitted and validated
-    else if ($fromform = $mform->get_data()) {
+
+    } else if ($fromform = $mform->get_data()) { // If form data is submitted and validated
         // Check if record already exists
         if (!empty($fromform->id)) {
             // Get existing record
-            $existing_record = $DB->get_record('gradereport_gradebook_xp', array('id' => $fromform->id));
+            $existing_record = $DB->get_record('gradereport_gradebook_xp_com', array('id' => $fromform->id));
+
             if ($existing_record) {
                 // Update existing record
-//                $existing_record->name = $fromform->name;
-//                $existing_record->parentid = $fromform->parentid;
-                foreach (get_object_vars($fromform) as $key => $value) {
-                    $existing_record->$key = $value;
-                }
-                $DB->update_record('gradereport_gradebook_xp', $existing_record);
+                $existing_record->name = $fromform->name;
+                $existing_record->parentid = $fromform->parentid;
+
+                $DB->update_record('gradereport_gradebook_xp_com', $existing_record);
+
                 // Redirect with success message
                 redirect($returnurl, 'You have successfully updated the competency: \''.$fromform->name.'\'');
             }
         }
+
         // If record does not exist, insert a new one
         $recordtoinsert = new stdClass();
-//        $recordtoinsert->courseid = $fromform->courseid;
-//        $recordtoinsert->name = $fromform->name;
-//        $recordtoinsert->parentid = $fromform->parentid;
-        foreach (get_object_vars($fromform) as $key => $value) {
-            $recordtoinsert->$key = $value;
-        }
-        $DB->insert_record('gradereport_gradebook_xp', $recordtoinsert);
+        $recordtoinsert->courseid = $fromform->courseid;
+        $recordtoinsert->name = $fromform->name;
+        $recordtoinsert->parentid = $fromform->parentid;
+
+        $DB->insert_record('gradereport_gradebook_xp_com', $recordtoinsert);
+
         // Redirect with success message
         redirect($returnurl, 'You have successfully created the competency: \''.$fromform->name.'\'');
-    }
-    // If form is submitted but the data doesn't validate and the form should be redisplayed
-    // or on the first display of the form
-    else {
-        // No action needed
-        handle_action();
+
+    } else { // If form is submitted but the data doesn't validate and the form should be redisplayed or on the first display of the form
+        handle_action(); // No action needed
     }
 }
 
@@ -127,13 +127,15 @@ function generate_output() {
     echo $OUTPUT->footer();
 }
 
+
 function get_direct_children($id) {
     global $DB;
 
-    $children_records = $DB->get_records('gradereport_gradebook_xp', array('parentid' => $id));
+    $children_records = $DB->get_records('gradereport_gradebook_xp_com', array('parentid' => $id));
 
     return $children_records;
 }
+
 
 function get_children($id) {
     global $DB;
@@ -141,16 +143,17 @@ function get_children($id) {
     // Use a recursive SQL query to get all children records of the parent
     $sql = "WITH RECURSIVE item_descendants AS (
                 SELECT id, parentid, name
-                FROM {gradereport_gradebook_xp}
+                FROM {gradereport_gradebook_xp_com}
                 WHERE id = ?
                 UNION
                 SELECT g.id, g.parentid, g.name
-                FROM {gradereport_gradebook_xp} g
+                FROM {gradereport_gradebook_xp_com} g
                 JOIN item_descendants d ON g.parentid = d.id
             )
             SELECT id, name
             FROM item_descendants
             WHERE id != ?";
+
     $params = array($id, $id);
     $children_records = $DB->get_records_sql($sql, $params);
 

@@ -9,10 +9,9 @@ defined('MOODLE_INTERNAL') || die;
  * @param stdClass $course The course to object for the report
  * @param stdClass $context The context of the course
  */
-
 function gradereport_gradebook_xp_extend_navigation_course($navigation, $course, $context) {
 
-    $url = new moodle_url('/grade/report/gradebook_xp/manage.php', array('id' => $course->id));
+    $url = new moodle_url('/grade/report/gradebook_xp/preferences.php', array('id' => $course->id));
     $name = get_string('pluginname', 'gradereport_gradebook_xp');
     $navigation->add($name, $url, navigation_node::TYPE_COURSE, null, null, new pix_icon('i/competencies', ''));
 }
@@ -77,5 +76,107 @@ function grade_report_gradebook_xp_get_course_activities($context, $course, $use
     }
 
     return $return_data;
+}
 
+/**
+ * Add a competency to a course or overwrite an existing one with the same name
+ * @param int $courseid ID of the course
+ * @param string $name Name if the competency to add
+ * @param string $description Description of the competency to add
+ */
+function grade_report_gradebook_xp_add_competency($courseid, $name, $description) {
+    global $DB;
+
+    // Attempt to find matching record in our table
+    $table = "gradereport_gradebook_xp_com";
+    $competency = $DB->get_record($table, ["courseid" => $courseid, "name" => $name]);
+
+    // Update or insert record
+    if ($competency) {
+
+        // Update values
+        $competency->name = $name;
+        $competency->description = $description;
+
+        // Update record with new competency
+        $DB->update_record($table, $competency);
+
+    } else {
+
+        // Construct new competency array
+        $competency = array(
+            "courseid" => $courseid,
+            "name" => $name,
+            "description" => $description
+        );
+
+        // Insert new record
+        $DB->insert_record($table, $competency);
+    }
+}
+
+/**
+ * Get all competencies of a course
+ * @param int $courseid ID of the course
+ * @return array List of matching competencies
+ */
+function grade_report_gradebook_xp_get_competencies($courseid) {
+    global $DB;
+
+    // Get all competencies of this course with all fields. Ignore if no records are found and just return an empty array
+    $competencies = $DB->get_records("gradereport_gradebook_xp_com", ["courseid" => $courseid]);
+
+    return $competencies;
+}
+
+/**
+ * Add a competency -> assignment connection or overwrite an existing one
+ * @param int $courseid ID of the course
+ * @param int $assignmentid ID of the assignment to connect to
+ * @param int $competencyid ID of the competency to connect
+ * @param int $weight Weight of the competency for this assignment
+ */
+function grade_report_gradebook_xp_set_competency_connection($courseid, $assignmentid, $competencyid, $weight) {
+    global $DB;
+
+    // Attempt to find matching record in our table
+    $table = "gradereport_gradebook_xp_con";
+    $connection = $DB->get_record($table, ["courseid" => $courseid, "assignmentid" => $assignmentid, "competencyid" => $competencyid]);
+
+    // Update or insert record
+    if ($connection) {
+
+        // Update value
+        $connection->weight = $weight;
+
+        // Update record with new competency
+        $DB->update_record($table, $connection);
+
+    } else {
+
+        // Construct new competency array
+        $connection = array(
+            "courseid" => $courseid,
+            "assignmentid" => $assignmentid,
+            "competencyid" => $competencyid,
+            "weight" => $weight
+        );
+
+        // Insert new record
+        $DB->insert_record($table, $connection);
+    }
+}
+
+/**
+ * Get all competency connections of an assignment
+ * @param int $courseid ID of the course
+ * @param int $assignmentid ID of the assignment to connect to
+ * @return array List of competencies connected to this assignment
+ */
+function grade_report_gradebook_xp_get_connections($courseid, $assignmentid) {
+    global $DB;
+
+    $connections = $DB->get_records("gradereport_gradebook_xp_con", ["courseid" => $courseid, "assignmentid" => $assignmentid]);
+
+    return $connections;
 }

@@ -8,13 +8,13 @@ $courseid = required_param('id', PARAM_INT);
 $userid = optional_param('userid', $USER->id, PARAM_INT);
 
 // Set up the page
-setup_page($courseid, 'moodle/grade:manage');
+setup_page($courseid, 'moodle/grade:manage'); // TODO: Does this need to be changed to preferences?
 
 // Get the competencies for the course and sort by ID
 $competencies = $DB->get_records_sql("
     SELECT c.*, p.name AS parentname
-    FROM {gradereport_gradebook_xp} c
-    LEFT JOIN {gradereport_gradebook_xp} p ON p.id = c.parentid
+    FROM {gradereport_gradebook_xp_com} c
+    LEFT JOIN {gradereport_gradebook_xp_com} p ON p.id = c.parentid
     WHERE c.courseid = :courseid
     ORDER BY c.id ASC
 ", ['courseid' => $courseid]);
@@ -25,7 +25,7 @@ function get_child_competencies($id) {
 
     $competencies = array();
 
-    $children = $DB->get_records('gradereport_gradebook_xp', ['parentid' => $id, 'courseid' => $COURSE->id], 'id ASC');
+    $children = $DB->get_records('gradereport_gradebook_xp_com', ['parentid' => $id, 'courseid' => $COURSE->id], 'id ASC');
 
     foreach ($children as $child) {
         $competency = (array) $child;
@@ -64,5 +64,5 @@ $templatecontext = (object)[
 
 print_grade_page_head($courseid, 'settings', 'gradebook_xp', get_string('pluginname', 'gradereport_gradebook_xp'), false, '');
 display_hierarchy(get_child_competencies(0));
-echo $OUTPUT->render_from_template('gradereport_gradebook_xp/manage', $templatecontext);
+echo $OUTPUT->render_from_template('gradereport_gradebook_xp/preferences', $templatecontext);
 echo $OUTPUT->footer();

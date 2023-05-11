@@ -6,7 +6,7 @@
  * Created Date: 17.11.2022 19:19:13
  * Author: DominikMa, 3urobeat, thePulpo
  * 
- * Last Modified: 21.03.2023 13:03:12
+ * Last Modified: 04.05.2023 16:04:11
  * Modified By: 3urobeat
  */
 
@@ -43,10 +43,11 @@ $context = context_course::instance($course->id);
 if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
 
     // Print demo msg for admin
-//    echo "Hello Admin";
-    $gpr = new grade_plugin_return();
-    $returnurl = $gpr->get_return_url('manage.php?id='.$courseid);
-    redirect($returnurl, 'You have been redirected to the manage page.');
+    echo "Hello Admin";
+
+    /* $gpr = new grade_plugin_return();
+    $returnurl = $gpr->get_return_url('preferences.php?id='.$courseid);
+    redirect($returnurl, 'You have been redirected to the preferences page.'); */
 
 
 } else {
@@ -65,7 +66,7 @@ print_grade_page_head($courseid, 'report', 'gradebook_xp', get_string('pluginnam
 // Print all activities this course has with the corresponding grades of our user
 echo "<br><br>"; // Make some room below the greeting
 
-$course_activities = grade_report_gradebook_xp_get_course_activities($context, $course, $userid); // Get grades for all assignments of this course
+/* $course_activities = grade_report_gradebook_xp_get_course_activities($context, $course, $userid); // Get grades for all assignments of this course
 
 //echo var_dump($course_activities); // Enable to log raw data
 
@@ -79,6 +80,21 @@ foreach ($course_activities as $key => $child) {
     echo ") = ";
     echo $child["graderaw"]; // Gewichtung dieser Aufgabe auf eine Kompetenz müssen wir speichern und mappen
 
+    echo "<br>";
+} */
+
+
+grade_report_gradebook_xp_add_competency($courseid, "testcomp", "This is a test!");
+//grade_report_gradebook_xp_add_competency($courseid, "testcomp", "This is an updated test!");
+//grade_report_gradebook_xp_add_competency($courseid, "testcomp2", "This is another test!");
+grade_report_gradebook_xp_add_competency($courseid, "testcomp2", "This is another updated test!");
+
+$res = grade_report_gradebook_xp_get_competencies($courseid);
+
+foreach ($res as $key) {
+    echo $key->name;
+    echo ": ";
+    echo $key->description;
     echo "<br>";
 }
 
