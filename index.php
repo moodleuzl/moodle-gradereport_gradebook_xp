@@ -6,7 +6,7 @@
  * Created Date: 17.11.2022 19:19:13
  * Author: DominikMa, 3urobeat, thePulpo
  * 
- * Last Modified: 04.05.2023 16:04:11
+ * Last Modified: 25.05.2023 16:30:22
  * Modified By: 3urobeat
  */
 
@@ -20,7 +20,6 @@
 require_once '../../../config.php';
 require_once './lib.php';
 require_once $CFG->dirroot.'/grade/lib.php';
-require_once $CFG->dirroot.'/grade/report/user/lib.php';
 
 $courseid = optional_param('id', SITEID, PARAM_INT);
 $userid   = optional_param('userid', $USER->id, PARAM_INT);
