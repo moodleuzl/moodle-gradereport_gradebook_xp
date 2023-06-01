@@ -7,6 +7,8 @@
  */
 $string['pluginname'] = 'Gradebook XP';
 $string['newcompetency'] = 'New competency';
+$string['editcompetency'] = 'Edit competency';
+$string['deletecompetency'] = 'Delete competency';
 $string['id'] = 'ID';
 $string['name'] = 'Competency name';
 $string['description'] = 'Competency description';
