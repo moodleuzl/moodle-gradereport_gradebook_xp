@@ -99,5 +99,10 @@ foreach ($res as $key) {
 }
 
 
+echo $OUTPUT->render_from_template('gradereport_gradebook_xp/index', (object) [
+    'data_user' => '[60, 90, 50, 60, 40]',
+    'data_average' => '[60, 70, 60, 70, 60]'
+]);
+
 // Print footer
 echo $OUTPUT->footer();
