@@ -13,6 +13,7 @@ $string['id'] = 'ID';
 $string['name'] = 'Competency name';
 $string['description'] = 'Competency description';
 $string['weight'] = 'Weight';
+$string['connections'] = 'Connections';
 $string['assignments'] = 'Assignments';
 $string['saveconnection'] = 'Save connection';
 $string['parent'] = 'Parent';
