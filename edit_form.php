@@ -12,7 +12,7 @@ class edit_form extends moodleform {
 
     // Add elements to form
     public function definition() {
-        global $COURSE, $DB, $CFG;
+        global $context, $PAGE, $COURSE, $DB, $CFG;
 
         // Assign form object to variable
         $mform = $this->_form;
@@ -85,7 +85,7 @@ class edit_form extends moodleform {
         $mform->setType('name', PARAM_NOTAGS);
 
         // Add competency descriptionion text element to form
-        $mform->addElement('text', 'description', get_string('name', 'gradereport_gradebook_xp'));
+        $mform->addElement('text', 'description', get_string('description', 'gradereport_gradebook_xp'));
         $mform->setType('description', PARAM_NOTAGS);
 //-------------------------------------------------------------------------------
         // Add rules to the form
@@ -105,6 +105,23 @@ class edit_form extends moodleform {
         // Add action buttons to the form
         $this->add_action_buttons();
 //-------------------------------------------------------------------------------
+        // Get all assignments and convert them to an array that only includes the itemnames
+        $assignments = grade_report_gradebook_xp_get_course_activities($context, $COURSE, $id);
 
+        $itemnames = array();
+
+        foreach ($assignments as $key => $child) {
+            if ($child["itemname"]) array_push($itemnames, $child["itemname"]);
+        }
+
+        // Add multiselect with all assignments
+        $mform->addElement('select', 'assignments', get_string('assignments', 'gradereport_gradebook_xp'), $itemnames)->setMultiple(true);
+//-------------------------------------------------------------------------------
+        // Add input box for weight
+        $mform->addElement('text', 'weight', get_string('weight', 'gradereport_gradebook_xp'));
+        $mform->setType('weight', PARAM_INT);
+//-------------------------------------------------------------------------------
+        // Add save button for multiselect
+        $mform->addElement('button', 'saveconnectionbutton', get_string('saveconnection', 'gradereport_gradebook_xp'));
     }
 }
