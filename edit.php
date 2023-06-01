@@ -85,6 +85,7 @@ function handle_action_buttons() {
             if ($existing_record) {
                 // Update existing record
                 $existing_record->name = $fromform->name;
+                $existing_record->description = $fromform->description;
                 $existing_record->parentid = $fromform->parentid;
 
                 $DB->update_record('gradereport_gradebook_xp_com', $existing_record);
@@ -98,6 +99,7 @@ function handle_action_buttons() {
         $recordtoinsert = new stdClass();
         $recordtoinsert->courseid = $fromform->courseid;
         $recordtoinsert->name = $fromform->name;
+        $recordtoinsert->description = $fromform->description;
         $recordtoinsert->parentid = $fromform->parentid;
 
         $DB->insert_record('gradereport_gradebook_xp_com', $recordtoinsert);
