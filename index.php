@@ -6,7 +6,7 @@
  * Created Date: 17.11.2022 19:19:13
  * Author: DominikMa, 3urobeat, thePulpo
  * 
- * Last Modified: 25.05.2023 16:30:22
+ * Last Modified: 01.06.2023 16:14:24
  * Modified By: 3urobeat
  */
 
@@ -87,6 +87,8 @@ grade_report_gradebook_xp_add_competency($courseid, "testcomp", "This is a test!
 //grade_report_gradebook_xp_add_competency($courseid, "testcomp", "This is an updated test!");
 //grade_report_gradebook_xp_add_competency($courseid, "testcomp2", "This is another test!");
 grade_report_gradebook_xp_add_competency($courseid, "testcomp2", "This is another updated test!");
+
+grade_report_gradebook_xp_set_competency_connection($courseid, 2, 2, 90);
 
 $res = grade_report_gradebook_xp_get_competencies($courseid);
 
