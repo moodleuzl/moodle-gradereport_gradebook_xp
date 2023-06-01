@@ -8,7 +8,7 @@ $courseid = required_param('id', PARAM_INT);
 $userid = optional_param('userid', $USER->id, PARAM_INT);
 
 // Set up the page
-setup_page($courseid, 'moodle/grade:manage'); // TODO: Does this need to be changed to preferences?
+setup_page($courseid, 'moodle/grade:manage');
 
 // Get the competencies for the course and sort by ID
 $competencies = $DB->get_records_sql("
@@ -49,16 +49,10 @@ function display_hierarchy($hierarchy) {
     echo '</ul>';
 }
 
-// Convert the competency hierarchy to JSON
-function to_json($hierarchy) {
-    $json = json_encode($hierarchy, JSON_PRETTY_PRINT);
-    return $json;
-}
-
 // Render the page
 $templatecontext = (object)[
-    'competencies' => array_values($competencies),
-    'editurl' => new moodle_url('/grade/report/gradebook_xp/edit.php'),
+    'managecompetenciesurl' => new moodle_url('/grade/report/gradebook_xp/manage_competencies.php'),
+    'manageconnectionsurl' => new moodle_url('/grade/report/gradebook_xp/manage_connections.php'),
     'courseid' => $courseid,
 ];
 

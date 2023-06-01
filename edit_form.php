@@ -12,7 +12,7 @@ class edit_form extends moodleform {
 
     // Add elements to form
     public function definition() {
-        global $COURSE, $DB, $CFG;
+        global $context, $PAGE, $COURSE, $DB, $CFG;
 
         // Assign form object to variable
         $mform = $this->_form;
@@ -85,7 +85,7 @@ class edit_form extends moodleform {
         $mform->setType('name', PARAM_NOTAGS);
 
         // Add competency descriptionion text element to form
-        $mform->addElement('text', 'description', get_string('name', 'gradereport_gradebook_xp'));
+        $mform->addElement('text', 'description', get_string('description', 'gradereport_gradebook_xp'));
         $mform->setType('description', PARAM_NOTAGS);
 //-------------------------------------------------------------------------------
         // Add rules to the form
@@ -102,9 +102,42 @@ class edit_form extends moodleform {
             $mform->setDefault('description', $current->description);
         }
 //-------------------------------------------------------------------------------
+        // Get all assignments and convert them to an array that only includes the itemnames
+        $assignments = grade_report_gradebook_xp_get_course_activities($context, $COURSE, $id); // $id is userid here
+
+        $itemnames = array();
+
+        foreach ($assignments as $key => $child) {
+            if ($child["itemname"]) array_push($itemnames, $child["itemname"]);
+        }
+
+        // Get all existing connections, convert them to strings and push them to an array
+        $connections = grade_report_gradebook_xp_get_connections($COURSE->id, $current->id); // We need the competency id here
+
+        $connectionnames = array();
+
+        foreach ($connections as $key1 => $child1) {
+            $name = '';
+
+            // Iterate over all assignments to find the itemnames of the stored assignmentids 
+            foreach ($assignments as $key2 => $child2) {
+                if ($child2["id"] == $child1->assignmentid) $name = $child2["itemname"];
+            }
+
+            array_push($connectionnames, $name . " | " . $child1->weight); // Concat string, this is done with dots in PHP
+        }
+
+        // Add multiselect with all assignments
+        $mform->addElement('select', 'assignments', get_string('assignments', 'gradereport_gradebook_xp'), $itemnames)->setMultiple(true);
+
+        // Add input box for weight
+        $mform->addElement('text', 'weight', get_string('weight', 'gradereport_gradebook_xp'));
+        $mform->setType('weight', PARAM_INT);
+
+        // Add multiselect with current connections
+        $mform->addElement('select', 'connections', get_string('connections', 'gradereport_gradebook_xp'), $connectionnames)->setMultiple(true);
+//-------------------------------------------------------------------------------
         // Add action buttons to the form
         $this->add_action_buttons();
-//-------------------------------------------------------------------------------
-
     }
 }
