@@ -2,7 +2,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once $CFG->dirroot.'/grade/report/user/lib.php';
+require_once $CFG->dirroot . '/grade/report/user/lib.php';
 
 /**
  * This function extends the navigation with the report items
@@ -11,17 +11,19 @@ require_once $CFG->dirroot.'/grade/report/user/lib.php';
  * @param stdClass $course The course to object for the report
  * @param stdClass $context The context of the course
  */
-function gradereport_gradebook_xp_extend_navigation_course($navigation, $course, $context) {
+function gradereport_gradebook_xp_extend_navigation_course($navigation, $course, $context)
+{
 
     $url = new moodle_url('/grade/report/gradebook_xp/preferences.php', array('id' => $course->id));
     $name = get_string('pluginname', 'gradereport_gradebook_xp');
     $navigation->add($name, $url, navigation_node::TYPE_COURSE, null, null, new pix_icon('i/competencies', ''));
 }
 
-function setup_page($courseid, $capabililty='moodle/grade:view') {
+function setup_page($courseid, $capabililty = 'moodle/grade:view')
+{
     global $PAGE, $DB, $context;
     // Set page URL and layout
-    $url = new moodle_url('/grade/report/gradebook_xp/'.get_caller_filename(), array('id' => $courseid));
+    $url = new moodle_url('/grade/report/gradebook_xp/' . get_caller_filename(), array('id' => $courseid));
     if ($courseid !== 0) {
         $url->param('id', $courseid);
     }
@@ -38,47 +40,104 @@ function setup_page($courseid, $capabililty='moodle/grade:view') {
     require_capability($capabililty, $context);    // TODO: Check if user has permission to view this page
 }
 
-function get_caller_filename() {
+function get_caller_filename()
+{
     $trace = debug_backtrace();
     $caller = $trace[1];
     return basename($caller['file']);
 }
 
-function debug($value) {
+function debug($value)
+{
     echo "<pre>";
-    var_dump($value);
+//    var_dump($value);
+    print_r($value);
     echo "</pre>";
-    die;
 }
 
 /**
- * Gets all activities of a course visible to the user
- * @param context_course $context
- * @param object $course The course object to look at
- * @param int $userid The id of the user
- * @return array Returns an array containing all activities of this course visible to this user. If nothing was found an empty array is returned.
+ * Retrieves all assignments of a course visible to the user.
+ *
+ * @param int $courseid The ID of the course.
+ * @return array An array containing all assignments of the course visible to the user. If nothing is found, an empty array is returned.
  */
-function grade_report_gradebook_xp_get_course_activities($context, $course, $userid) {
-    $return_data = [];
-    
-    if (!empty($course->showgrades)) { // TODO: Do we need this check? Does it check for user perms, if the course allows viewing grades or something else?
+function grade_report_gradebook_xp_get_assignments($courseid)
+{
+    global $DB;
 
-        // Get tracking object
-        $gpr = new grade_plugin_return(array('type'=>'report', 'plugin'=>'user', 'courseid'=>$course->id, 'userid'=>$userid));
-        // Create a report instance
-        $report = new grade_report_user($course->id, $gpr, $context, $userid, false); // viewasuser = false
-        
-        if ($report->fill_table()) { // Fill table with data of all assignments
-    
-            // Add everything grade related we've got
-            $return_data = $report->gradeitemsdata;
+    $assignments = $DB->get_records_sql("
+        SELECT cm.id, cm.course, a.name, a.intro, 'assign' AS module
+        FROM {course_modules} cm
+        INNER JOIN {modules} m ON cm.module = m.id
+        INNER JOIN {assign} a ON cm.instance = a.id
+        WHERE cm.course = ?
+            AND m.name = 'assign'
+        ORDER BY cm.section
+    ", array($courseid));
 
-        }
-
-    }
-
-    return $return_data;
+    return $assignments;
 }
+
+/**
+ * Retrieves all quizzes of a course visible to the user.
+ *
+ * @param int $courseid The ID of the course.
+ * @return array An array containing all quizzes of the course visible to the user. If nothing is found, an empty array is returned.
+ */
+function grade_report_gradebook_xp_get_quizzes($courseid)
+{
+    global $DB;
+
+    $quizzes = $DB->get_records_sql("
+        SELECT cm.id, cm.course, q.name, q.intro, 'quiz' AS module
+        FROM {course_modules} cm
+        INNER JOIN {modules} m ON cm.module = m.id
+        INNER JOIN {quiz} q ON cm.instance = q.id
+        WHERE cm.course = ?
+            AND m.name = 'quiz'
+        ORDER BY cm.section
+    ", array($courseid));
+
+    return $quizzes;
+}
+
+/**
+ * Retrieves all activities (assignments and quizzes) of a course visible to the user.
+ *
+ * @param int $courseid The ID of the course.
+ * @return array An array containing all activities (assignments and quizzes) of the course visible to the user. If nothing is found, an empty array is returned.
+ */
+function grade_report_gradebook_xp_get_activities($courseid)
+{
+//    // Merge the assignments and quizzes into a single array
+//    $activities = array_merge(
+//        grade_report_gradebook_xp_get_assignments($courseid),
+//        grade_report_gradebook_xp_get_quizzes($courseid)
+//    );
+
+    global $DB;
+
+    $activities = $DB->get_records_sql("
+        SELECT cm.id, cm.course, a.name, a.intro, 'assign' AS module, cm.section
+        FROM {course_modules} cm
+        INNER JOIN {modules} m ON cm.module = m.id
+        INNER JOIN {assign} a ON cm.instance = a.id
+        WHERE cm.course = ?
+            AND m.name = 'assign'
+        UNION ALL
+        SELECT cm.id, cm.course, q.name, q.intro, 'quiz' AS module, cm.section
+        FROM {course_modules} cm
+        INNER JOIN {modules} m ON cm.module = m.id
+        INNER JOIN {quiz} q ON cm.instance = q.id
+        WHERE cm.course = ?
+            AND m.name = 'quiz'
+        ORDER BY section, id
+    ", array($courseid, $courseid));
+
+
+    return $activities;
+}
+
 
 /**
  * Add a competency to a course or overwrite an existing one with the same name
@@ -86,7 +145,8 @@ function grade_report_gradebook_xp_get_course_activities($context, $course, $use
  * @param string $name Name if the competency to add
  * @param string $description Description of the competency to add
  */
-function grade_report_gradebook_xp_add_competency($courseid, $name, $description) {
+function grade_report_gradebook_xp_add_competency($courseid, $name, $description)
+{
     global $DB;
 
     // Attempt to find matching record in our table
@@ -122,7 +182,8 @@ function grade_report_gradebook_xp_add_competency($courseid, $name, $description
  * @param int $courseid ID of the course
  * @return array List of matching competencies
  */
-function grade_report_gradebook_xp_get_competencies($courseid) {
+function grade_report_gradebook_xp_get_competencies($courseid)
+{
     global $DB;
 
     // Get all competencies of this course with all fields. Ignore if no records are found and just return an empty array
@@ -138,12 +199,13 @@ function grade_report_gradebook_xp_get_competencies($courseid) {
  * @param int $competencyid ID of the competency to connect
  * @param int $weight Weight of the competency for this assignment
  */
-function grade_report_gradebook_xp_set_competency_connection($courseid, $assignmentid, $competencyid, $weight) {
+function grade_report_gradebook_xp_set_competency_connection($assignmentid, $competencyid, $weight)
+{
     global $DB;
 
     // Attempt to find matching record in our table
     $table = "gradereport_gradebook_xp_con";
-    $connection = $DB->get_record($table, ["courseid" => $courseid, "assignmentid" => $assignmentid, "competencyid" => $competencyid]);
+    $connection = $DB->get_record($table, ["assignmentid" => $assignmentid, "competencyid" => $competencyid]);
 
     // Update or insert record
     if ($connection) {
@@ -158,7 +220,6 @@ function grade_report_gradebook_xp_set_competency_connection($courseid, $assignm
 
         // Construct new competency array
         $connection = array(
-            "courseid" => $courseid,
             "assignmentid" => $assignmentid,
             "competencyid" => $competencyid,
             "weight" => $weight
@@ -175,10 +236,11 @@ function grade_report_gradebook_xp_set_competency_connection($courseid, $assignm
  * @param int $competencyid ID of the competency
  * @return array List of assignments connected to this competency
  */
-function grade_report_gradebook_xp_get_connections($courseid, $competencyid) {
+function grade_report_gradebook_xp_get_connections($competencyid)
+{
     global $DB;
 
-    $connections = $DB->get_records("gradereport_gradebook_xp_con", ["courseid" => $courseid, "competencyid" => $competencyid]);
+    $connections = $DB->get_records("gradereport_gradebook_xp_con", ["competencyid" => $competencyid]);
 
     return $connections;
 }
