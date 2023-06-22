@@ -15,7 +15,7 @@ setup_page($courseid, 'moodle/grade:manage');
 
 // Get return URL
 $gpr = new grade_plugin_return();
-$returnurl = $gpr->get_return_url('preferences.php?id=' . $courseid);
+$returnurl = $gpr->get_return_url('manage_competencies.php?id=' . $courseid);
 
 // Set page heading
 //$heading = get_string('name', 'gradereport_gradebook_xp');
@@ -44,7 +44,7 @@ function handle_action(){
         // Delete the record using ID
         $DB->delete_records('gradereport_gradebook_xp_com', array('id' => $id));
 
-        // Redirect user to preferences.php page
+        // Redirect user to manage_competencies.php page
         redirect($returnurl, 'You have successfully deleted the competency.');
 
     } else if ($action == 'edit') {
@@ -73,7 +73,7 @@ function handle_action_buttons() {
     // Check if form is cancelled
     if ($mform->is_cancelled()) {
         // Handle form cancel operation
-        // Redirect to preferences.php page
+        // Redirect to manage_competencies.php page
         redirect($returnurl, 'You cancelled the competency form.');
 
     } else if ($fromform = $mform->get_data()) { // If form data is submitted and validated
@@ -85,6 +85,7 @@ function handle_action_buttons() {
             if ($existing_record) {
                 // Update existing record
                 $existing_record->name = $fromform->name;
+                $existing_record->description = $fromform->description;
                 $existing_record->parentid = $fromform->parentid;
 
                 $DB->update_record('gradereport_gradebook_xp_com', $existing_record);
@@ -98,6 +99,7 @@ function handle_action_buttons() {
         $recordtoinsert = new stdClass();
         $recordtoinsert->courseid = $fromform->courseid;
         $recordtoinsert->name = $fromform->name;
+        $recordtoinsert->description = $fromform->description;
         $recordtoinsert->parentid = $fromform->parentid;
 
         $DB->insert_record('gradereport_gradebook_xp_com', $recordtoinsert);

@@ -2,6 +2,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+require_once $CFG->dirroot.'/grade/report/user/lib.php';
+
 /**
  * This function extends the navigation with the report items
  *
@@ -132,7 +134,7 @@ function grade_report_gradebook_xp_get_competencies($courseid) {
 /**
  * Add a competency -> assignment connection or overwrite an existing one
  * @param int $courseid ID of the course
- * @param int $assignmentid ID of the assignment to connect to
+ * @param int $assignmentid ID of the assignment to connect
  * @param int $competencyid ID of the competency to connect
  * @param int $weight Weight of the competency for this assignment
  */
@@ -168,15 +170,15 @@ function grade_report_gradebook_xp_set_competency_connection($courseid, $assignm
 }
 
 /**
- * Get all competency connections of an assignment
+ * Get all competency connections of a competency
  * @param int $courseid ID of the course
- * @param int $assignmentid ID of the assignment to connect to
- * @return array List of competencies connected to this assignment
+ * @param int $competencyid ID of the competency
+ * @return array List of assignments connected to this competency
  */
-function grade_report_gradebook_xp_get_connections($courseid, $assignmentid) {
+function grade_report_gradebook_xp_get_connections($courseid, $competencyid) {
     global $DB;
 
-    $connections = $DB->get_records("gradereport_gradebook_xp_con", ["courseid" => $courseid, "assignmentid" => $assignmentid]);
+    $connections = $DB->get_records("gradereport_gradebook_xp_con", ["courseid" => $courseid, "competencyid" => $competencyid]);
 
     return $connections;
 }
