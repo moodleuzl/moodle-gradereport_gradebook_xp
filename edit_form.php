@@ -7,6 +7,7 @@ if (!defined('MOODLE_INTERNAL')) {
 
 // Include Moodle form library
 require_once("$CFG->libdir/formslib.php");
+require_once("db_controller.php");
 
 class edit_form extends moodleform
 {
@@ -20,54 +21,14 @@ class edit_form extends moodleform
         $mform = $this->_form;
 
         // Get course ID and record ID from parameters
-//        $courseid = required_param('courseid', PARAM_INT);
         $id = optional_param('id', null, PARAM_INT);
 
         // Get current record from database (if ID is provided)
         $current = $DB->get_record('gradereport_gradebook_xp_com', array('id' => $id));
-//-------------------------------------------------------------------------------
+
         // Get parent options for select element
-        $parent_options = [0 => '---']; // Add empty option
 
-        if (!empty($current)) { // If record ID is provided
-            $parentid = $current->id;
-
-            $sql = "WITH RECURSIVE item_descendants AS (
-                SELECT id, parentid, name
-                FROM {gradereport_gradebook_xp_com}
-                WHERE id = ?
-                UNION
-                SELECT g.id, g.parentid, g.name
-                FROM {gradereport_gradebook_xp_com} g
-                JOIN item_descendants d ON g.parentid = d.id
-            )
-            SELECT id, name
-            FROM {gradereport_gradebook_xp_com}
-            WHERE courseid = ? AND id NOT IN (
-                SELECT id FROM item_descendants UNION
-                SELECT ? WHERE parentid IS NULL
-            )
-            AND id != ?
-            ORDER BY id";
-
-            $params = array("parentid" => $parentid, $COURSE->id, $parentid, $parentid);
-            $available_parents = $DB->get_records_sql($sql, $params);          // Get parent records
-            $parent_options += array_column($available_parents, 'name', 'id'); // Add parent options to array
-
-        } else { // If no record ID is provided
-
-//            $sql = "SELECT id, name , description
-            $sql = "
-                SELECT *
-                FROM {gradereport_gradebook_xp_com} 
-                WHERE courseid = ?
-                ORDER BY id
-            ";
-
-            $params = array($COURSE->id);
-            $available_parents = $DB->get_records_sql($sql, $params);          // Get all parent records
-            $parent_options += array_column($available_parents, 'name', 'id'); // Add parent options to array
-        }
+        $parent_options = get_parent_options($current->id);
 //-------------------------------------------------------------------------------
         // Add hidden parameters to the form
 
