@@ -19,10 +19,10 @@
 
 require_once '../../../config.php';
 require_once './lib.php';
-require_once $CFG->dirroot.'/grade/lib.php';
+require_once $CFG->dirroot . '/grade/lib.php';
 
 $courseid = optional_param('id', SITEID, PARAM_INT);
-$userid   = optional_param('userid', $USER->id, PARAM_INT);
+$userid = optional_param('userid', $USER->id, PARAM_INT);
 
 $PAGE->set_url(new moodle_url('/grade/report/gradebook_xp/index.php', array('id' => $courseid, 'userid' => $userid)));
 
@@ -60,8 +60,6 @@ if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
 print_grade_page_head($courseid, 'report', 'gradebook_xp', get_string('pluginname', 'gradereport_gradebook_xp')); // Function provided by /grade/lib.php
 
 
-
-
 // Print all activities this course has with the corresponding grades of our user
 echo "<br><br>"; // Make some room below the greeting
 
@@ -88,7 +86,8 @@ grade_report_gradebook_xp_add_competency($courseid, "testcomp", "This is a test!
 //grade_report_gradebook_xp_add_competency($courseid, "testcomp2", "This is another test!");
 grade_report_gradebook_xp_add_competency($courseid, "testcomp2", "This is another updated test!");
 
-grade_report_gradebook_xp_set_competency_connection($courseid, 2, 2, 90);
+grade_report_gradebook_xp_set_competency_connection(70, 1, 50);
+grade_report_gradebook_xp_set_competency_connection(4, 3, 20);
 
 $res = grade_report_gradebook_xp_get_competencies($courseid);
 
