@@ -1,0 +1,64 @@
+<div style="width: 55%; margin: auto">
+<!--<div>-->
+    <canvas id="myChart1"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('myChart1');
+
+    new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['Mathe', 'Bio', 'Informatik', 'Physik', 'Sport'],
+            datasets: [{
+                label: '{{#str}} chart_series_label_user, gradereport_gradebook_xp {{/str}}',
+                data: {{data_user}},
+                borderColor: '#0f6fc5',
+                backgroundColor: '#0f6fc560',
+                borderWidth: 1,
+            },
+                {
+                    label: '{{#str}} chart_series_label_success, gradereport_gradebook_xp {{/str}}',
+                    data: [50, 50, 50, 50, 50],
+                    borderColor: '#e83e8c',
+                    backgroundColor: '#e83e8c60',
+                    borderWidth: 1,
+                },
+                {
+                    label: '{{#str}} chart_series_label_average, gradereport_gradebook_xp {{/str}}',
+                    data: {{data_average}},
+                    borderColor: '#f0ad4e',
+                    backgroundColor: '#f0ad4e60',
+                    borderWidth: 1,
+                }]
+        },
+        options: {
+            scales: {
+                r: {
+                    min: 0,
+                    max: 100,
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'ChartJS'
+                }
+            }
+        }
+    });
+</script>
+
+<!--maybe need to put the script in here for consistency-->
+<!--{{#js}}-->
+<!--    require([-->
+<!--    'https://cdn.jsdelivr.net/npm/chart.js',-->
+<!--&lt;!&ndash;    'core/chart_output_chartjs',&ndash;&gt;-->
+<!--    ], function($, Builder, Output, OutputTable) {-->
+
+<!--Place your Script here!-->
+
+<!--    });-->
+<!--{{/js}}-->
