@@ -5,6 +5,7 @@ require_once '../../../config.php';
 require_once $CFG->dirroot . '/grade/lib.php';
 require_once 'edit_form.php';
 require_once 'lib.php';
+require_once 'db_controller.php';
 
 // Get URL parameters
 $courseid = required_param('courseid', PARAM_INT);
@@ -127,15 +128,6 @@ function generate_output() {
 
     // Print footer
     echo $OUTPUT->footer();
-}
-
-
-function get_direct_children($id) {
-    global $DB;
-
-    $children_records = $DB->get_records('gradereport_gradebook_xp_com', array('parentid' => $id));
-
-    return $children_records;
 }
 
 

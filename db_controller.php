@@ -48,3 +48,10 @@ function get_all_competencies() {
     $competencies = $DB->get_records_sql($sql, $params); // Get all parent records
     return $competencies;
 }
+function get_direct_children($id) {
+    global $DB;
+
+    $children_records = $DB->get_records('gradereport_gradebook_xp_com', array('parentid' => $id));
+
+    return $children_records;
+}
