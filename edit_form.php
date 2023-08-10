@@ -15,7 +15,7 @@ class edit_form extends moodleform
     // Add elements to form
     public function definition()
     {
-        global $context, $PAGE, $COURSE, $DB, $CFG;
+        global $COURSE;
 
         // Assign form object to variable
         $mform = $this->_form;
@@ -24,11 +24,18 @@ class edit_form extends moodleform
         $id = optional_param('id', null, PARAM_INT);
 
         // Get current record from database (if ID is provided)
-        $current = $DB->get_record('gradereport_gradebook_xp_com', array('id' => $id));
+        $current = get_competency($id);
 
         // Get parent options for select element
 
-        $parent_options = get_parent_options($current->id);
+        $parent_options = [0 => '---']; // Initialize with an empty option
+        if (!empty($current)) { // If record ID is provided
+            $availableParents = get_available_parents($current->id);
+        } else { // If no record ID is provided
+            $availableParents = get_all_competencies($current->id);
+        }
+        $parent_options += array_column($availableParents, 'name', 'id'); // Add parent options to array
+
 //-------------------------------------------------------------------------------
         // Add hidden parameters to the form
 
