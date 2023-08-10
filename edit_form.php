@@ -75,7 +75,7 @@ class edit_form extends moodleform
         }
 //-------------------------------------------------------------------------------
         // Retrieve activity records
-        $activityRecords = grade_report_gradebook_xp_get_activities($COURSE->id);
+        $activityRecords = get_all_activities($COURSE->id);
         $activities = array();
 
         // Iterate over activity records and store activity ID and name in the array

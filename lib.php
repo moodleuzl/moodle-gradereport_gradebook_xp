@@ -55,68 +55,6 @@ function debug($value)
     echo "</pre>";
 }
 
-/**
- * Retrieves all assignments of a course visible to the user.
- *
- * @param int $courseid The ID of the course.
- * @return array An array containing all assignments of the course visible to the user. If nothing is found, an empty array is returned.
- */
-function grade_report_gradebook_xp_get_assignments($courseid)
-{
-    global $DB;
-
-    $assignments = $DB->get_records_sql("
-        SELECT cm.id, cm.course, a.name, a.intro, 'assign' AS module
-        FROM {course_modules} cm
-        INNER JOIN {modules} m ON cm.module = m.id
-        INNER JOIN {assign} a ON cm.instance = a.id
-        WHERE cm.course = ?
-            AND m.name = 'assign'
-        ORDER BY cm.section
-    ", array($courseid));
-
-    return $assignments;
-}
-
-/**
- * Retrieves all quizzes of a course visible to the user.
- *
- * @param int $courseid The ID of the course.
- * @return array An array containing all quizzes of the course visible to the user. If nothing is found, an empty array is returned.
- */
-function grade_report_gradebook_xp_get_quizzes($courseid)
-{
-    global $DB;
-
-    $quizzes = $DB->get_records_sql("
-        SELECT cm.id, cm.course, q.name, q.intro, 'quiz' AS module
-        FROM {course_modules} cm
-        INNER JOIN {modules} m ON cm.module = m.id
-        INNER JOIN {quiz} q ON cm.instance = q.id
-        WHERE cm.course = ?
-            AND m.name = 'quiz'
-        ORDER BY cm.section
-    ", array($courseid));
-
-    return $quizzes;
-}
-
-/**
- * Retrieves all activities (assignments and quizzes) of a course visible to the user.
- *
- * @param int $courseid The ID of the course.
- * @return array An array containing all activities (assignments and quizzes) of the course visible to the user. If nothing is found, an empty array is returned.
- */
-function grade_report_gradebook_xp_get_activities($courseid)
-{
-    // Merge the assignments and quizzes into a single array
-    $activities = array_merge(
-        grade_report_gradebook_xp_get_assignments($courseid),
-        grade_report_gradebook_xp_get_quizzes($courseid)
-    );
-
-    return $activities;
-}
 
 
 /**
