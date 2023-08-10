@@ -51,7 +51,7 @@ function get_all_competencies()
     global $COURSE, $DB;
 
     // Get all competencies of this course with all fields. Ignore if no records are found and just return an empty array
-    $competencies = $DB->get_records("gradereport_gradebook_xp_com", array("courseid" => $COURSE->id));
+    $competencies = $DB->get_records("gradereport_gradebook_xp_com", array("courseid" => $COURSE->id), 'id ASC');
 
 
     return $competencies;
@@ -97,7 +97,7 @@ function update_competency($competency)
     $DB->update_record('gradereport_gradebook_xp_com', $competency);
 }
 
-function add_competency($competency)
+function insert_competency($competency)
 {
     global $DB;
 

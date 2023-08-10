@@ -99,7 +99,7 @@ function handle_action_buttons() {
         $competencytoinsert->description = $fromform->description;
         $competencytoinsert->parentid = $fromform->parentid;
 
-        add_competency($competencytoinsert);
+        insert_competency($competencytoinsert);
 
         // Redirect with success message
         redirect($returnurl, 'You have successfully created the competency: \''.$fromform->name.'\'');
