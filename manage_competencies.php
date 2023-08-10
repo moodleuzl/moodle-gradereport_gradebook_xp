@@ -2,6 +2,7 @@
 require_once('../../../config.php');
 require_once($CFG->dirroot.'/grade/lib.php');
 require_once('lib.php');
+require_once ('db_controller.php');
 
 // Get required and optional parameters
 $courseid = required_param('id', PARAM_INT);
@@ -11,13 +12,7 @@ $userid = optional_param('userid', $USER->id, PARAM_INT);
 setup_page($courseid, 'moodle/grade:manage');
 
 // Get the competencies for the course and sort by ID
-$competencies = $DB->get_records_sql("
-    SELECT c.*, p.name AS parentname
-    FROM {gradereport_gradebook_xp_com} c
-    LEFT JOIN {gradereport_gradebook_xp_com} p ON p.id = c.parentid
-    WHERE c.courseid = :courseid
-    ORDER BY c.id ASC
-", ['courseid' => $courseid]);
+$competencies = get_all_competencies();
 
 // Render the page
 $templatecontext = (object)[
