@@ -109,31 +109,11 @@ function grade_report_gradebook_xp_get_quizzes($courseid)
  */
 function grade_report_gradebook_xp_get_activities($courseid)
 {
-//    // Merge the assignments and quizzes into a single array
-//    $activities = array_merge(
-//        grade_report_gradebook_xp_get_assignments($courseid),
-//        grade_report_gradebook_xp_get_quizzes($courseid)
-//    );
-
-    global $DB;
-
-    $activities = $DB->get_records_sql("
-        SELECT cm.id, cm.course, a.name, a.intro, 'assign' AS module, cm.section
-        FROM {course_modules} cm
-        INNER JOIN {modules} m ON cm.module = m.id
-        INNER JOIN {assign} a ON cm.instance = a.id
-        WHERE cm.course = ?
-            AND m.name = 'assign'
-        UNION ALL
-        SELECT cm.id, cm.course, q.name, q.intro, 'quiz' AS module, cm.section
-        FROM {course_modules} cm
-        INNER JOIN {modules} m ON cm.module = m.id
-        INNER JOIN {quiz} q ON cm.instance = q.id
-        WHERE cm.course = ?
-            AND m.name = 'quiz'
-        ORDER BY section, id
-    ", array($courseid, $courseid));
-
+    // Merge the assignments and quizzes into a single array
+    $activities = array_merge(
+        grade_report_gradebook_xp_get_assignments($courseid),
+        grade_report_gradebook_xp_get_quizzes($courseid)
+    );
 
     return $activities;
 }
