@@ -10,6 +10,7 @@ defined('MOODLE_INTERNAL') || die;
  */
 function get_available_parents($currentRecordId) {
     global $COURSE, $DB;
+
     // SQL query to retrieve available parent options for the select element based on the current record's ID.
     $sql = "WITH RECURSIVE item_descendants AS (
                 SELECT id, parentid, name
@@ -31,21 +32,26 @@ function get_available_parents($currentRecordId) {
 
     $params = array($currentRecordId, $COURSE->id, $currentRecordId, $currentRecordId);
     $availableParents = $DB->get_records_sql($sql, $params); // Get parent records
+
     return $availableParents;
 }
 function get_competency($id) {
     global $DB;
+
     $competency = $DB->get_record('gradereport_gradebook_xp_com', array('id' => $id));
+
     return $competency;
 }
 function get_all_competencies() {
     global $COURSE, $DB;
+
     $sql = "SELECT id, name
                 FROM {gradereport_gradebook_xp_com} 
                 WHERE courseid = ?
                 ORDER BY id";
     $params = array($COURSE->id);
     $competencies = $DB->get_records_sql($sql, $params); // Get all parent records
+
     return $competencies;
 }
 function get_direct_children($id) {
