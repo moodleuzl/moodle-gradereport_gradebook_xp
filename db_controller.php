@@ -8,7 +8,8 @@ defined('MOODLE_INTERNAL') || die;
  * @param int|null $currentRecordId The ID of the current record. Pass null if no record ID is available.
  * @return array An array of parent options for the select element.
  */
-function get_available_parents($currentRecordId) {
+function get_available_parents($currentRecordId)
+{
     global $COURSE, $DB;
 
     // SQL query to retrieve available parent options for the select element based on the current record's ID.
@@ -35,14 +36,18 @@ function get_available_parents($currentRecordId) {
 
     return $availableParents;
 }
-function get_competency($id) {
+
+function get_competency($id)
+{
     global $DB;
 
     $competency = $DB->get_record('gradereport_gradebook_xp_com', array('id' => $id));
 
     return $competency;
 }
-function get_all_competencies() {
+
+function get_all_competencies()
+{
     global $COURSE, $DB;
 
     $sql = "SELECT id, name
@@ -54,14 +59,18 @@ function get_all_competencies() {
 
     return $competencies;
 }
-function get_direct_children($id) {
+
+function get_direct_children($id)
+{
     global $DB;
 
     $children_records = $DB->get_records('gradereport_gradebook_xp_com', array('parentid' => $id));
 
     return $children_records;
 }
-function get_all_children($id) {
+
+function get_all_children($id)
+{
     global $DB;
 
     // Use a recursive SQL query to get all children records of the parent
@@ -82,4 +91,25 @@ function get_all_children($id) {
     $children_records = $DB->get_records_sql($sql, $params);
 
     return $children_records;
+}
+
+function update_competency($competency)
+{
+    global $DB;
+
+    $DB->update_record('gradereport_gradebook_xp_com', $competency);
+}
+
+function add_competency($competency)
+{
+    global $DB;
+
+    $DB->insert_record('gradereport_gradebook_xp_com', $competency);
+}
+
+function delete_competency($id)
+{
+    global $DB;
+
+    $DB->delete_records('gradereport_gradebook_xp_com', array('id' => $id));
 }

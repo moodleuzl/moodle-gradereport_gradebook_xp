@@ -30,20 +30,20 @@ handle_action_buttons();
 generate_output();
 
 function handle_action(){
-    global $DB, $id, $action, $returnurl, $heading;
+    global $id, $action, $returnurl, $heading;
 
     if ($action == 'delete') {
-        // Get all children records of the deleted record
-        $children_records = get_direct_children($id);
+        // Get all children competency of the deleted competency
+        $children_competencies = get_direct_children($id);
 
-        // Update the parentid of all children records to 0
-        foreach ($children_records as $child_record) {
-            $child_record->parentid = 0;
-            $DB->update_record('gradereport_gradebook_xp_com', $child_record);
+        // Update the parentid of all children competencies to 0
+        foreach ($children_competencies as $child_competency) {
+            $child_competency->parentid = 0;
+            update_competency($child_competency);
         }
 
-        // Delete the record using ID
-        $DB->delete_records('gradereport_gradebook_xp_com', array('id' => $id));
+        // Delete the competency using ID
+        delete_competency($id);
 
         // Redirect user to manage_competencies.php page
         redirect($returnurl, 'You have successfully deleted the competency.');
@@ -51,11 +51,7 @@ function handle_action(){
     } else if ($action == 'edit') {
         // Handle edit action
         // Get name using ID
-        $name = $DB->get_field(
-            'gradereport_gradebook_xp_com',
-            'name',
-            array('id' => $id)
-        );
+        $name = get_competency($id)->name;
 
         // Change heading in the navbar to current name
         $heading = $name;
@@ -69,7 +65,7 @@ function handle_action(){
 
 
 function handle_action_buttons() {
-    global $DB, $mform, $returnurl;
+    global $mform, $returnurl;
 
     // Check if form is cancelled
     if ($mform->is_cancelled()) {
@@ -78,32 +74,32 @@ function handle_action_buttons() {
         redirect($returnurl, 'You cancelled the competency form.');
 
     } else if ($fromform = $mform->get_data()) { // If form data is submitted and validated
-        // Check if record already exists
+        // Check if competency already exists
         if (!empty($fromform->id)) {
-            // Get existing record
-            $existing_record = $DB->get_record('gradereport_gradebook_xp_com', array('id' => $fromform->id));
+            // Get existing competency
+            $existing_competency = get_competency($fromform->id);
 
-            if ($existing_record) {
-                // Update existing record
-                $existing_record->name = $fromform->name;
-                $existing_record->description = $fromform->description;
-                $existing_record->parentid = $fromform->parentid;
+            if ($existing_competency) {
+                // Update existing competency
+                $existing_competency->name = $fromform->name;
+                $existing_competency->description = $fromform->description;
+                $existing_competency->parentid = $fromform->parentid;
 
-                $DB->update_record('gradereport_gradebook_xp_com', $existing_record);
+                update_competency($existing_competency);
 
                 // Redirect with success message
                 redirect($returnurl, 'You have successfully updated the competency: \''.$fromform->name.'\'');
             }
         }
 
-        // If record does not exist, insert a new one
-        $recordtoinsert = new stdClass();
-        $recordtoinsert->courseid = $fromform->courseid;
-        $recordtoinsert->name = $fromform->name;
-        $recordtoinsert->description = $fromform->description;
-        $recordtoinsert->parentid = $fromform->parentid;
+        // If competency does not exist, insert a new one
+        $competencytoinsert = new stdClass();
+        $competencytoinsert->courseid = $fromform->courseid;
+        $competencytoinsert->name = $fromform->name;
+        $competencytoinsert->description = $fromform->description;
+        $competencytoinsert->parentid = $fromform->parentid;
 
-        $DB->insert_record('gradereport_gradebook_xp_com', $recordtoinsert);
+        add_competency($competencytoinsert);
 
         // Redirect with success message
         redirect($returnurl, 'You have successfully created the competency: \''.$fromform->name.'\'');
