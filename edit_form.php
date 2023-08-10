@@ -88,7 +88,7 @@ class edit_form extends moodleform
         }
 
         // Retrieve connection records
-        $connectionsRecords = grade_report_gradebook_xp_get_connections($current->id);
+        $connectionsRecords = get_connections($current->id);
         $connections = array();
 
         // Iterate over connection records and store connection ID, activity name, and weight in the array

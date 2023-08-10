@@ -19,6 +19,7 @@
 
 require_once '../../../config.php';
 require_once './lib.php';
+require_once 'db_controller.php';
 require_once $CFG->dirroot . '/grade/lib.php';
 
 $courseid = optional_param('id', SITEID, PARAM_INT);
@@ -89,7 +90,7 @@ grade_report_gradebook_xp_add_competency($courseid, "testcomp2", "This is anothe
 grade_report_gradebook_xp_set_competency_connection(70, 1, 50);
 grade_report_gradebook_xp_set_competency_connection(4, 3, 20);
 
-$res = grade_report_gradebook_xp_get_competencies($courseid);
+$res = get_all_competencies();
 
 foreach ($res as $key) {
     echo $key->name;

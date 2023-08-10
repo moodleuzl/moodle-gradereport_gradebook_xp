@@ -173,3 +173,55 @@ function get_all_activities($courseid)
 
     return $activities;
 }
+
+// TODO: connections
+function get_connection($assignmentid, $competencyid) {
+    global $DB;
+
+    // Attempt to find matching record in our table
+    $connection = $DB->get_record("gradereport_gradebook_xp_con", array("assignmentid" => $assignmentid, "competencyid" => $competencyid));
+
+    return $connection;
+}
+
+function insert_connection($connection) {
+    global $DB;
+
+    // Attempt to find matching record in our table
+    $connection = $DB->get_record("gradereport_gradebook_xp_con", array("assignmentid" => $assignmentid, "competencyid" => $competencyid));
+
+    return $connection;
+}
+
+function update_connection($connection) {
+    global $DB;
+
+    // Attempt to find matching record in our table
+    $connection = $DB->update_record("gradereport_gradebook_xp_con", $connection);
+
+    return $connection;
+}
+
+function delete_connection($id) {
+    global $DB;
+
+    // Attempt to find matching record in our table
+    $connection = $DB->delete_records("gradereport_gradebook_xp_con", array('id' => $id));
+
+    return $connection;
+}
+
+/**
+ * Get all competency connections of a competency
+ * @param int $courseid ID of the course
+ * @param int $competencyid ID of the competency
+ * @return array List of assignments connected to this competency
+ */
+function get_connections($competencyid)
+{
+    global $DB;
+
+    $connections = $DB->get_records("gradereport_gradebook_xp_con", array("competencyid" => $competencyid));
+
+    return $connections;
+}

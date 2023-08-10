@@ -79,7 +79,7 @@ function grade_report_gradebook_xp_add_competency($courseid, $name, $description
         $competency->description = $description;
 
         // Update record with new competency
-        $DB->update_record($table, $competency);
+        update_competency($competency);
 
     } else {
 
@@ -91,23 +91,8 @@ function grade_report_gradebook_xp_add_competency($courseid, $name, $description
         );
 
         // Insert new record
-        $DB->insert_record($table, $competency);
+        insert_competency($competency);
     }
-}
-
-/**
- * Get all competencies of a course
- * @param int $courseid ID of the course
- * @return array List of matching competencies
- */
-function grade_report_gradebook_xp_get_competencies($courseid)
-{
-    global $DB;
-
-    // Get all competencies of this course with all fields. Ignore if no records are found and just return an empty array
-    $competencies = $DB->get_records("gradereport_gradebook_xp_com", ["courseid" => $courseid]);
-
-    return $competencies;
 }
 
 /**
@@ -123,7 +108,7 @@ function grade_report_gradebook_xp_set_competency_connection($assignmentid, $com
 
     // Attempt to find matching record in our table
     $table = "gradereport_gradebook_xp_con";
-    $connection = $DB->get_record($table, ["assignmentid" => $assignmentid, "competencyid" => $competencyid]);
+    $connection = get_connection($assignmentid, $competencyid);
 
     // Update or insert record
     if ($connection) {
@@ -132,7 +117,7 @@ function grade_report_gradebook_xp_set_competency_connection($assignmentid, $com
         $connection->weight = $weight;
 
         // Update record with new competency
-        $DB->update_record($table, $connection);
+        update_connection($connection);
 
     } else {
 
@@ -144,21 +129,6 @@ function grade_report_gradebook_xp_set_competency_connection($assignmentid, $com
         );
 
         // Insert new record
-        $DB->insert_record($table, $connection);
+        insert_connection($connection);
     }
-}
-
-/**
- * Get all competency connections of a competency
- * @param int $courseid ID of the course
- * @param int $competencyid ID of the competency
- * @return array List of assignments connected to this competency
- */
-function grade_report_gradebook_xp_get_connections($competencyid)
-{
-    global $DB;
-
-    $connections = $DB->get_records("gradereport_gradebook_xp_con", ["competencyid" => $competencyid]);
-
-    return $connections;
 }
