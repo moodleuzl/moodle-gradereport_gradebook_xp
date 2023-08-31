@@ -32,7 +32,7 @@ class edit_form extends moodleform
         if (!empty($current)) { // If record ID is provided
             $availableParents = get_available_parents($current->id);
         } else { // If no record ID is provided
-            $availableParents = get_all_competencies($current->id);
+            $availableParents = get_all_competencies();
         }
         $parent_options += array_column($availableParents, 'name', 'id'); // Add parent options to array
 
@@ -88,20 +88,21 @@ class edit_form extends moodleform
         }
 
         // Retrieve connection records
-        $connectionsRecords = get_connections($current->id);
         $connections = array();
+        if (!empty($current)) { // If record ID is provided
+            $connectionsRecords = get_connections($current->id);
 
-        // Iterate over connection records and store connection ID, activity name, and weight in the array
-        foreach ($connectionsRecords as $connection) {
-            $connectionId = $connection->id;
-            $connectionWeight = $connection->weight;
-            $activityId = $connection->assignmentid;
-            $activityName = $activities[$activityId];
+            // Iterate over connection records and store connection ID, activity name, and weight in the array
+            foreach ($connectionsRecords as $connection) {
+                $connectionId = $connection->id;
+                $connectionWeight = $connection->weight;
+                $activityId = $connection->assignmentid;
+                $activityName = $activities[$activityId];
 
-            // Store the assignment ID, name, and weight in the array
-            $connections[$connectionId] = $activityName . " | " . $connectionWeight;
+                // Store the assignment ID, name, and weight in the array
+                $connections[$connectionId] = $activityName . " | " . $connectionWeight;
+            }
         }
-
 
         // Create a group for the multiselect elements
         $multiselect_group = array();
