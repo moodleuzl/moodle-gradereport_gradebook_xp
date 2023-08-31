@@ -1,5 +1,4 @@
-<div style="width: 55%; margin: auto">
-<!--<div>-->
+<div style="width: 75%; max-height: 100%; margin: auto">
     <canvas id="myChart1"></canvas>
 </div>
 
@@ -11,7 +10,7 @@
     new Chart(ctx, {
         type: 'radar',
         data: {
-            labels: ['Mathe', 'Bio', 'Informatik', 'Physik', 'Sport'],
+            labels: {{{competencies}}},
             datasets: [{
                 label: '{{#str}} chart_series_label_user, gradereport_gradebook_xp {{/str}}',
                 data: {{data_user}},
@@ -21,7 +20,7 @@
             },
                 {
                     label: '{{#str}} chart_series_label_success, gradereport_gradebook_xp {{/str}}',
-                    data: [50, 50, 50, 50, 50],
+                    data: {{data_success}},
                     borderColor: '#e83e8c',
                     backgroundColor: '#e83e8c60',
                     borderWidth: 1,
@@ -44,7 +43,7 @@
             plugins: {
                 title: {
                     display: true,
-                    text: 'ChartJS'
+                    text: 'Kompetenzen'
                 }
             }
         }
