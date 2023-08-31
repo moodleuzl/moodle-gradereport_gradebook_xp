@@ -188,7 +188,7 @@ function insert_connection($connection) {
     global $DB;
 
     // Attempt to find matching record in our table
-    $connection = $DB->get_record("gradereport_gradebook_xp_con", array("assignmentid" => $assignmentid, "competencyid" => $competencyid));
+    $connection = $DB->get_record("gradereport_gradebook_xp_con", array("assignmentid" => $connection["assignmentid"], "competencyid" => $connection["competencyid"]));
 
     return $connection;
 }
