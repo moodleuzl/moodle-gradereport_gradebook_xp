@@ -3,6 +3,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 require_once $CFG->dirroot . '/grade/report/user/lib.php';
+require_once $CFG->dirroot . '/grade/report/gradebook_xp/db_controller.php';
 
 /**
  * This function extends the navigation with the report items
