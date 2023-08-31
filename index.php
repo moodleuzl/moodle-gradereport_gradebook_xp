@@ -43,7 +43,7 @@ $context = context_course::instance($course->id);
 if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
 
     // Print demo msg for admin
-    echo "Hello Admin";
+    //echo "Hello Admin";
 
     /* $gpr = new grade_plugin_return();
     $returnurl = $gpr->get_return_url('preferences.php?id='.$courseid);
@@ -53,7 +53,7 @@ if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
 } else {
 
     // Print demo msg for user
-    echo "Hello User";
+    //echo "Hello User";
 
 }
 
@@ -82,27 +82,53 @@ foreach ($course_activities as $key => $child) {
 } */
 
 
-grade_report_gradebook_xp_add_competency($courseid, "testcomp", "This is a test!");
-//grade_report_gradebook_xp_add_competency($courseid, "testcomp", "This is an updated test!");
-//grade_report_gradebook_xp_add_competency($courseid, "testcomp2", "This is another test!");
-grade_report_gradebook_xp_add_competency($courseid, "testcomp2", "This is another updated test!");
 
-grade_report_gradebook_xp_set_competency_connection(70, 1, 50);
-grade_report_gradebook_xp_set_competency_connection(4, 3, 20);
+//grade_report_gradebook_xp_add_competency($courseid, 'Java Programmierung', "This is a test!");
+//grade_report_gradebook_xp_add_competency($courseid, 'Gen-Datenbanken', "This is an updated test!");
+//grade_report_gradebook_xp_add_competency($courseid, 'Bioinformatik Algorithmen', "This is another test!");
+//grade_report_gradebook_xp_add_competency($courseid, 'Bioinformatik Konzepte', "This is another updated test!");
+//grade_report_gradebook_xp_add_competency($courseid, 'Wissenschaftliches Arbeiten', "This is another updated test!");
+//
+//grade_report_gradebook_xp_set_competency_connection(70, 1, 50);
+//grade_report_gradebook_xp_set_competency_connection(4, 3, 20);
 
-$res = get_all_competencies();
+$competencies = get_all_competencies();
+$chart_competencies = array();
+foreach ($competencies as $competency) {
+    $chart_competency = array(
+        'name'=>"'".$competency->name."'",
+        'user'=>random_int(0, 100),
+        'average'=>random_int(0, 100),
+        'success'=>50
+    );
+    $chart_competencies[$competency->id] = $chart_competency;
+    # array_push($char_competency_names, $chart_competency['name']);
 
-foreach ($res as $key) {
-    echo $key->name;
-    echo ": ";
-    echo $key->description;
-    echo "<br>";
+    $connections = get_connections($competency->id);
+//    echo $competency->name;
+//    echo "<br>";
+//    echo json_encode($connections);
+//    echo "<br>";
+//    echo "<br>";
+
+//    echo $competency->name;
+//    echo ": ";
+//    echo $competency->description;
+//    echo $competency->id;
+//    echo "<br>";
 }
 
 
+$char_competencies_name = array_map(fn($competency) => $competency['name'], $chart_competencies);
+$char_competencies_user = array_map(fn($competency) => $competency['user'], $chart_competencies);
+$char_competencies_average = array_map(fn($competency) => $competency['average'], $chart_competencies);
+$char_competencies_success = array_map(fn($competency) => $competency['success'], $chart_competencies);
+
 echo $OUTPUT->render_from_template('gradereport_gradebook_xp/index', (object) [
-    'data_user' => '[60, 90, 50, 60, 40]',
-    'data_average' => '[60, 70, 60, 70, 60]'
+    'competencies' => "[".implode(",", $char_competencies_name)."]",
+    'data_user' => "[".implode(",", $char_competencies_user)."]",
+    'data_average' => "[".implode(",", $char_competencies_average)."]",
+    'data_success' => "[".implode(",", $char_competencies_success)."]"
 ]);
 
 // Print footer
