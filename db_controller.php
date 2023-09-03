@@ -187,28 +187,19 @@ function get_connection($assignmentid, $competencyid) {
 function insert_connection($connection) {
     global $DB;
 
-    // Attempt to find matching record in our table
-    $connection = $DB->get_record("gradereport_gradebook_xp_con", array("assignmentid" => $connection["assignmentid"], "competencyid" => $connection["competencyid"]));
-
-    return $connection;
+    $DB->insert_record('gradereport_gradebook_xp_con', $connection);
 }
 
 function update_connection($connection) {
     global $DB;
 
-    // Attempt to find matching record in our table
-    $connection = $DB->update_record("gradereport_gradebook_xp_con", $connection);
-
-    return $connection;
+    $DB->update_record("gradereport_gradebook_xp_con", $connection);
 }
 
 function delete_connection($id) {
     global $DB;
 
-    // Attempt to find matching record in our table
-    $connection = $DB->delete_records("gradereport_gradebook_xp_con", array('id' => $id));
-
-    return $connection;
+    $DB->delete_records("gradereport_gradebook_xp_con", array('id' => $id));
 }
 
 /**
