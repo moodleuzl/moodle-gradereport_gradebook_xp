@@ -108,15 +108,15 @@ class edit_form extends moodleform
         $multiselect_group = array();
 
         // Add multiselect 1 to the group
-        $multiselect_group[] = $mform->createElement('select', 'multiselect1', get_string('assignments', 'gradereport_gradebook_xp'), $activities, array('multiple' => 'multiple'));
+        $multiselect_group[] = $mform->createElement('select', 'multiselect1', get_string('assignments', 'gradereport_gradebook_xp'), $activities, array('multiple' => 'multiple', 'id' => 'id_multiselect1'));
 
 
         // Add move buttons to the group
-        $multiselect_group[] = $mform->createElement('button', 'move_to_multiselect2', '>>');
-        $multiselect_group[] = $mform->createElement('button', 'move_to_multiselect1', '<<');
+        $multiselect_group[] = $mform->createElement('button', 'move_to_multiselect2', '>>', array('id' => 'id_move_to_multiselect2'));
+        $multiselect_group[] = $mform->createElement('button', 'move_to_multiselect1', '<<', array('id' => 'id_move_to_multiselect1'));
 
         // Add multiselect 2 to the group
-        $multiselect_group[] = $mform->createElement('select', 'multiselect2', get_string('assignments', 'gradereport_gradebook_xp'), $connections, array('multiple' => 'multiple'));
+        $multiselect_group[] = $mform->createElement('select', 'multiselect2', get_string('connections', 'gradereport_gradebook_xp'), $connections, array('multiple' => 'multiple', 'id' => 'id_multiselect2'));
 
         // Add the group to the form
         $mform->addGroup($multiselect_group, 'multiselect_group', get_string('assignments', 'gradereport_gradebook_xp'), ' ', false);

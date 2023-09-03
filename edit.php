@@ -7,6 +7,8 @@ require_once 'edit_form.php';
 require_once 'lib.php';
 require_once 'db_controller.php';
 
+$PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp/js/move_multiselect.js'));
+
 // Get URL parameters
 $courseid = required_param('courseid', PARAM_INT);
 $id = optional_param('id', null, PARAM_INT);
