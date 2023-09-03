@@ -64,24 +64,9 @@ print_grade_page_head($courseid, 'report', 'gradebook_xp', get_string('pluginnam
 // Print all activities this course has with the corresponding grades of our user
 echo "<br><br>"; // Make some room below the greeting
 
-/* $course_activities = grade_report_gradebook_xp_get_course_activities($context, $course, $userid); // Get grades for all assignments of this course
+ $course_activities = get_all_activities($courseid); // Get grades for all assignments of this course
 
-//echo var_dump($course_activities); // Enable to log raw data
-
-// Log only interesting stuff (assignment id (name) & grade):
-foreach ($course_activities as $key => $child) {
-    if ($child["itemtype"] == "course") echo "<br>Course total: "; // Course total is included as last element, precede with line break and string
-
-    echo $child["id"]; // ID können wir dann zu unserer Kompetenz mappen um die verschiedenen Kompetenzpunkte für dieses Element zu berechnen
-    echo " (";
-    echo $child["itemname"];
-    echo ") = ";
-    echo $child["graderaw"]; // Gewichtung dieser Aufgabe auf eine Kompetenz müssen wir speichern und mappen
-
-    echo "<br>";
-} */
-
-
+echo debug($course_activities); // Enable to log raw data
 
 //grade_report_gradebook_xp_add_competency($courseid, 'Java Programmierung', "This is a test!");
 //grade_report_gradebook_xp_add_competency($courseid, 'Gen-Datenbanken', "This is an updated test!");
