@@ -66,7 +66,7 @@ echo "<br><br>"; // Make some room below the greeting
 
  $course_activities = get_all_activities($courseid); // Get grades for all assignments of this course
 
-echo debug($course_activities); // Enable to log raw data
+echo debug(get_grades()); // Enable to log raw data
 
 //grade_report_gradebook_xp_add_competency($courseid, 'Java Programmierung', "This is a test!");
 //grade_report_gradebook_xp_add_competency($courseid, 'Gen-Datenbanken', "This is an updated test!");
