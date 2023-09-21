@@ -124,9 +124,6 @@ class edit_form extends moodleform
         // Add input box for weight
         $mform->addElement('text', 'weight', get_string('weight', 'gradereport_gradebook_xp'));
 
-        // Add a submit button
-        $mform->addElement('submit', 'submitbtn', 'Submit');
-
         $mform->setType('weight', PARAM_INT);
 
 //-------------------------------------------------------------------------------
