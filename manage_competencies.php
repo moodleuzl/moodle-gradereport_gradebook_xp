@@ -23,5 +23,6 @@ $templatecontext = (object)[
 ];
 
 print_grade_page_head($courseid, 'settings', 'gradebook_xp', get_string('pluginname', 'gradereport_gradebook_xp'), false, '');
+debug(get_connections(12));
 echo $OUTPUT->render_from_template('gradereport_gradebook_xp/manage_competencies', $templatecontext);
 echo $OUTPUT->footer();
