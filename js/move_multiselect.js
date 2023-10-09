@@ -1,13 +1,28 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     // Get references to DOM elements
     const move_to_multiselect1_btn = document.querySelector('button[name="move_to_multiselect1"]');
     const move_to_multiselect2_btn = document.querySelector('button[name="move_to_multiselect2"]');
     const multiselect1 = document.querySelector('select[name="multiselect1[]"]');
     const multiselect2 = document.querySelector('select[name="multiselect2[]"]');
     const weightInput = document.querySelector('input[name="weight"]');
+    const connectionsInput = document.querySelector('input[name="new_connections"]');
+
+    function updateConnectionsData() {
+        const connectionsData = Array.from(multiselect2.options).map(option => {
+            const data = JSON.parse(option.value);
+            const [name] = option.text.split(' | ');  // Get only the name part
+            return {
+                id: data.id,
+                name: name,
+                weight: data.weight || weightInput.value  // Use stored weight if available
+            };
+        });
+        connectionsInput.value = JSON.stringify(connectionsData);
+        console.log(connectionsData);
+    }
 
     // Add click event listener to the ">>" button
-    move_to_multiselect2_btn.addEventListener('click', function(event) {
+    move_to_multiselect2_btn.addEventListener('click', function (event) {
         // Prevent default button action
         event.preventDefault();
 
@@ -16,19 +31,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Loop through selected options and move them to multiselect2
         selectedOptions.forEach(option => {
-            // Remove option from multiselect1
+            const data = JSON.parse(option.value);  // Parse the JSON value
             option.remove();
 
-            // Clone option object to append to multiselect2
-            const newOption = new Option(`${option.text} | ${weightInput.value}`, option.value);
-
-            // Append new option to multiselect2
+            const newOption = new Option(`${data.name} | ${weightInput.value}`, option.value);
             multiselect2.add(newOption);
         });
+        updateConnectionsData();
     });
 
     // Add click event listener to the "<<" button
-    move_to_multiselect1_btn.addEventListener('click', function(event) {
+    move_to_multiselect1_btn.addEventListener('click', function (event) {
         // Prevent default button action
         event.preventDefault();
 
@@ -37,17 +50,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Loop through selected options and move them back to multiselect1
         selectedOptions.forEach(option => {
-            // Remove option from multiselect2
+            const data = JSON.parse(option.value);  // Parse the JSON value
             option.remove();
 
-            // Remove the weight part of the string
-            const strippedText = option.text.split(' | ')[0];
-
-            // Clone option object to append back to multiselect1
-            const newOption = new Option(strippedText, option.value);
-
-            // Append new option to multiselect1
+            const newOption = new Option(data.name, option.value);  // Only use name for display
             multiselect1.add(newOption);
         });
+        updateConnectionsData();
     });
 });
