@@ -46,6 +46,10 @@ class edit_form extends moodleform
         // Add hidden courseid element to form
         $mform->addElement('hidden', 'courseid', $COURSE->id);
         $mform->setType('courseid', PARAM_INT);
+
+        // Hidden element to store activities array as a JSON string
+        $mform->addElement('hidden', 'new_connections', '');
+        $mform->setType('new_connections', PARAM_RAW);  // Using PARAM_RAW since it'll be a JSON string, but ensure you validate and sanitize the value on server-side before using it.
 //-------------------------------------------------------------------------------
         // Add visible parameters to the form
 
@@ -82,9 +86,8 @@ class edit_form extends moodleform
         foreach ($activityRecords as $activity) {
             $activityId = $activity->id;
             $activityName = $activity->name;
-
-            // Store the activity ID and name in the array
-            $activities[$activityId] = $activityName;
+            $activityValue = json_encode(array('id' => $activityId, 'name' => $activityName));
+            $activities[$activityValue] = $activityName;
         }
 
         // Retrieve connection records
@@ -98,9 +101,8 @@ class edit_form extends moodleform
                 $connectionWeight = $connection->weight;
                 $activityId = $connection->assignmentid;
                 $activityName = $activities[$activityId];
-
-                // Store the assignment ID, name, and weight in the array
-                $connections[$connectionId] = $activityName . " | " . $connectionWeight;
+                $connectionValue = json_encode(array('id' => $connectionId, 'assignmentid' => $activityId, 'weight' => $connectionWeight));
+                $connections[$connectionValue] = $activityName . " | " . $connectionWeight;
             }
         }
 
