@@ -75,7 +75,22 @@ function handle_action_buttons() {
         // Redirect to manage_competencies.php page
         redirect($returnurl, 'You cancelled the competency form.');
 
-    } else if ($fromform = $mform->get_data()) { // If form data is submitted and validated
+    } else if ($fromform = $mform->get_data()) {
+        // If form data is submitted and validated
+
+        if (!empty($fromform->new_connections)) {
+            $connectionsArray = json_decode($fromform->new_connections, true);
+
+            foreach ($connectionsArray as $connection) {
+                $assignmentId = $connection['id'];
+                $connectionWeight = $connection['weight'];
+
+                grade_report_gradebook_xp_set_competency_connection($assignmentId, $fromform->id, $connectionWeight);
+
+                // Process these values as needed
+            }
+        }
+
         // Check if competency already exists
         if (!empty($fromform->id)) {
             // Get existing competency
