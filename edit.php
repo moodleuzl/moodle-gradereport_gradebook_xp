@@ -87,8 +87,15 @@ function handle_action_buttons() {
                 $connectionWeight = $connection['weight'];
 
                 grade_report_gradebook_xp_set_competency_connection($assignmentId, $fromform->id, $connectionWeight);
-
+                $assignmentIds[] = $assignmentId;
                 // Process these values as needed
+            }
+        }
+
+        foreach (get_connections($fromform->id) as $connection){
+            debug($connection);
+            if (!in_array($connection->assignmentid, $assignmentIds)){
+                delete_connection($connection->id);
             }
         }
 
