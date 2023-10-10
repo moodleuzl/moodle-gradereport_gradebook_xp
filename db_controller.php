@@ -158,6 +158,32 @@ function get_all_quizzes($courseid)
 }
 
 /**
+ * Retrieves all vpls of a course visible to the user.
+ *
+ * @param int $courseid The ID of the course.
+ * @return array An array containing all quizzes of the course visible to the user. If nothing is found, an empty array is returned.
+ */
+function get_all_vpls($courseid)
+{
+    global $DB;
+    if (!$DB->get_manager()->table_exists("vpl")) {
+        return array();
+    }
+
+    $quizzes = $DB->get_records_sql("
+        SELECT cm.id, cm.course, v.name, v.intro, 'vpl' AS module
+        FROM {course_modules} cm
+        INNER JOIN {modules} m ON cm.module = m.id
+        INNER JOIN {vpl} v ON cm.instance = v.id
+        WHERE cm.course = ?
+            AND m.name = 'vpl'
+        ORDER BY cm.section, v.name
+    ", array($courseid));
+
+    return $quizzes;
+}
+
+/**
  * Retrieves all activities (assignments and quizzes) of a course visible to the user.
  *
  * @param int $courseid The ID of the course.
