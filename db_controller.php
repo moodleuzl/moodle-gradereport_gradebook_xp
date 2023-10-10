@@ -128,7 +128,7 @@ function get_all_assignments($courseid)
         INNER JOIN {assign} a ON cm.instance = a.id
         WHERE cm.course = ?
             AND m.name = 'assign'
-        ORDER BY cm.section
+        ORDER BY cm.section, a.name
     ", array($courseid));
 
     return $assignments;
@@ -151,7 +151,7 @@ function get_all_quizzes($courseid)
         INNER JOIN {quiz} q ON cm.instance = q.id
         WHERE cm.course = ?
             AND m.name = 'quiz'
-        ORDER BY cm.section
+        ORDER BY cm.section, q.name
     ", array($courseid));
 
     return $quizzes;
