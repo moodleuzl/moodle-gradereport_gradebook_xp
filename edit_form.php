@@ -80,31 +80,35 @@ class edit_form extends moodleform
 //-------------------------------------------------------------------------------
         // Retrieve activity records
         $activityRecords = get_all_activities($COURSE->id);
-        $activities = array();
 
-        // Iterate over activity records and store activity ID and name in the array
-        foreach ($activityRecords as $activity) {
-            $activityId = $activity->id;
-            $activityName = $activity->name;
-            $activityValue = json_encode(array('id' => $activityId, 'name' => $activityName));
-            $activities[$activityValue] = $activityName;
-        }
-
-        // Retrieve connection records
-        $connections = array();
         if (!empty($current)) { // If record ID is provided
             $connectionsRecords = get_connections($current->id);
-
-            // Iterate over connection records and store connection ID, activity name, and weight in the array
-            foreach ($connectionsRecords as $connection) {
-                $connectionId = $connection->id;
-                $connectionWeight = $connection->weight;
-                $activityId = $connection->assignmentid;
-                $activityName = $activities[$activityId];
-                $connectionValue = json_encode(array('id' => $connectionId, 'assignmentid' => $activityId, 'weight' => $connectionWeight));
-                $connections[$connectionValue] = $activityName . " | " . $connectionWeight;
-            }
+        } else {
+            $connectionsRecords = array();
         }
+
+        $activities = array();
+        $connections = array();
+
+        // Iterate over activity records and store activity ID and name in the array
+        foreach ($activityRecords as $activityRecord) {
+            $activityValue = json_encode(array('id' => $activityRecord->id, 'name' => $activityRecord->name));
+            $activities[$activityRecord->id] = array('activityValue' => $activityValue, 'activityName' => $activityRecord->name);
+        }
+
+        foreach ($connectionsRecords as $connectionRecord) {
+            $activity = $activities[$connectionRecord->assignmentid];
+
+            $connectionValue = json_encode(array('id' => $connectionRecord->id, 'assignmentid' => $connectionRecord->assignmentid, 'weight' => $connectionRecord->weight));
+            $connections[$connectionValue] = $activity['activityName'] . " | " . $connectionRecord->weight;
+            unset($activities[$connectionRecord->assignmentid]);
+        }
+
+        $activitiesForm = array();
+        foreach ($activities as $activity) {
+            $activitiesForm[$activity['activityValue']] = $activity['activityName'];
+        }
+        $activities = $activitiesForm;
 
         // Create a group for the multiselect elements
         $multiselect_group = array();
