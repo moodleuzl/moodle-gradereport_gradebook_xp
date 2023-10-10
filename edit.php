@@ -78,8 +78,9 @@ function handle_action_buttons() {
     } else if ($fromform = $mform->get_data()) {
         // If form data is submitted and validated
 
-        if (!empty($fromform->new_connections)) {
-            $connectionsArray = json_decode($fromform->new_connections, true);
+        $assignmentIds = array();
+        if (!empty($fromform->connections)) {
+            $connectionsArray = json_decode($fromform->connections, true);
 
             foreach ($connectionsArray as $connection) {
                 $assignmentId = $connection['id'];

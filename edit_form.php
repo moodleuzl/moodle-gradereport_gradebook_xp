@@ -48,8 +48,8 @@ class edit_form extends moodleform
         $mform->setType('courseid', PARAM_INT);
 
         // Hidden element to store activities array as a JSON string
-        $mform->addElement('hidden', 'new_connections', '');
-        $mform->setType('new_connections', PARAM_RAW);  // Using PARAM_RAW since it'll be a JSON string, but ensure you validate and sanitize the value on server-side before using it.
+        $mform->addElement('hidden', 'connections', '');
+        $mform->setType('connections', PARAM_RAW);  // Using PARAM_RAW since it'll be a JSON string, but ensure you validate and sanitize the value on server-side before using it.
 //-------------------------------------------------------------------------------
         // Add visible parameters to the form
 

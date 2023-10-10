@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const multiselect1 = document.querySelector('select[name="multiselect1[]"]');
     const multiselect2 = document.querySelector('select[name="multiselect2[]"]');
     const weightInput = document.querySelector('input[name="weight"]');
-    const connectionsInput = document.querySelector('input[name="new_connections"]');
+    const connectionsInput = document.querySelector('input[name="connections"]');
 
     function updateConnectionsData() {
         const connectionsData = Array.from(multiselect2.options).map(option => {
