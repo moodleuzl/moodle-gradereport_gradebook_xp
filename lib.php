@@ -134,7 +134,7 @@ function grade_report_gradebook_xp_set_competency_connection($assignmentid, $com
     }
 }
 
-function get_grades() {
+function get_grades($course, $context, $userid) {
     // Get grades for all assignments of this course
     global $OUTPUT;
     if (!empty($course->showgrades)) {
@@ -142,7 +142,7 @@ function get_grades() {
         /// return tracking object
         $gpr = new grade_plugin_return(array('type'=>'report', 'plugin'=>'user', 'courseid'=>$course->id, 'userid'=>$userid));
         // Create a report instance
-        $report = new grade_report_user($course->id, $gpr, $context, $userid, false); // viewasuser = false
+        $report = new gradereport_user\report\user($course->id, $gpr, $context, $userid, false); // viewasuser = false
 
         if ($report->fill_table()) { // Fill table with data of all assignments
             return $report->gradeitemsdata;
