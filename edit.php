@@ -93,7 +93,6 @@ function handle_action_buttons() {
         }
 
         foreach (get_connections($fromform->id) as $connection){
-            debug($connection);
             if (!in_array($connection->assignmentid, $assignmentIds)){
                 delete_connection($connection->id);
             }
