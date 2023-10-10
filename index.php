@@ -65,44 +65,37 @@ print_grade_page_head($courseid, 'report', 'gradebook_xp', get_string('pluginnam
 echo "<br><br>"; // Make some room below the greeting
 
 $course_activities = get_all_activities($courseid); // Get grades for all assignments of this course
-
-echo debug(get_grades($course, $context, $userid)); // Enable to log raw data
-
-//grade_report_gradebook_xp_add_competency($courseid, 'Java Programmierung', "This is a test!");
-//grade_report_gradebook_xp_add_competency($courseid, 'Gen-Datenbanken', "This is an updated test!");
-//grade_report_gradebook_xp_add_competency($courseid, 'Bioinformatik Algorithmen', "This is another test!");
-//grade_report_gradebook_xp_add_competency($courseid, 'Bioinformatik Konzepte', "This is another updated test!");
-//grade_report_gradebook_xp_add_competency($courseid, 'Wissenschaftliches Arbeiten', "This is another updated test!");
-//
-//grade_report_gradebook_xp_set_competency_connection(70, 1, 50);
-//grade_report_gradebook_xp_set_competency_connection(4, 3, 20);
-
+$raw_grades = get_grades($course, $context, $userid);
 $competencies = get_all_competencies();
+
+$grades = array();
+foreach ($raw_grades as $raw_grade) {
+    if (array_key_exists('cmid', $raw_grade)){
+        $grades[$raw_grade['cmid']] = $raw_grade;
+    }
+}
+
+#echo debug($grades); // Enable to log raw data
+#echo debug($competencies); // Enable to log raw data
+
 $chart_competencies = array();
 foreach ($competencies as $competency) {
+    # debug($competency);
+    $competency_total_weight_sum = 0;
+    $competency_weight_sum = 0.0;
+    foreach (get_connections($competency->id) as $connection) {
+        $competency_total_weight_sum += $connection->weight;
+        $grade = $grades[$connection->assignmentid];
+        $competency_weight_sum += $connection->weight * ($grade['graderaw'] / $grade['grademax']);
+    }
+
     $chart_competency = array(
         'name'=>"'".$competency->name."'",
-        'user'=>random_int(0, 100),
-        'average'=>random_int(0, 100),
+        'user'=>$competency_weight_sum / $competency_total_weight_sum * 100,
         'success'=>50
     );
     $chart_competencies[$competency->id] = $chart_competency;
-    # array_push($char_competency_names, $chart_competency['name']);
-
-    $connections = get_connections($competency->id);
-//    echo $competency->name;
-//    echo "<br>";
-//    echo json_encode($connections);
-//    echo "<br>";
-//    echo "<br>";
-
-//    echo $competency->name;
-//    echo ": ";
-//    echo $competency->description;
-//    echo $competency->id;
-//    echo "<br>";
 }
-
 
 $char_competencies_name = array_map(fn($competency) => $competency['name'], $chart_competencies);
 $char_competencies_user = array_map(fn($competency) => $competency['user'], $chart_competencies);
