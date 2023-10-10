@@ -200,7 +200,8 @@ function get_all_activities($courseid)
     // Merge the assignments and quizzes into a single array
     $activities = array_merge(
         get_all_assignments($courseid),
-        get_all_quizzes($courseid)
+        get_all_quizzes($courseid),
+        get_all_vpls($courseid)
     );
 
     return $activities;
