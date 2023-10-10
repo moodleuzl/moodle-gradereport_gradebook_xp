@@ -99,7 +99,7 @@ class edit_form extends moodleform
         foreach ($connectionsRecords as $connectionRecord) {
             $activity = $activities[$connectionRecord->assignmentid];
 
-            $connectionValue = json_encode(array('id' => $connectionRecord->id, 'assignmentid' => $connectionRecord->assignmentid, 'weight' => $connectionRecord->weight));
+            $connectionValue = json_encode(array('id' => $connectionRecord->assignmentid, 'name' => $activity['activityName'], 'weight' => $connectionRecord->weight));
             $connections[$connectionValue] = $activity['activityName'] . " | " . $connectionRecord->weight;
             unset($activities[$connectionRecord->assignmentid]);
         }
