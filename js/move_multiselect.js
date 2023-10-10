@@ -26,6 +26,10 @@ document.addEventListener("DOMContentLoaded", function () {
         // Prevent default button action
         event.preventDefault();
 
+        if (weightInput.value === '' || isNaN(weightInput.value)) {
+            return;
+        }
+
         // Get selected options from multiselect1
         const selectedOptions = Array.from(multiselect1.selectedOptions);
 
