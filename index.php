@@ -88,13 +88,14 @@ foreach ($competencies as $competency) {
         $grade = $grades[$connection->assignmentid];
         $competency_weight_sum += $connection->weight * ($grade['graderaw'] / $grade['grademax']);
     }
-
-    $chart_competency = array(
-        'name'=>"'".$competency->name."'",
-        'user'=>$competency_weight_sum / $competency_total_weight_sum * 100,
-        'success'=>50
-    );
-    $chart_competencies[$competency->id] = $chart_competency;
+    if ($competency_total_weight_sum > 0) {
+        $chart_competency = array(
+            'name' => "'" . $competency->name . "'",
+            'user' => $competency_weight_sum / $competency_total_weight_sum * 100,
+            'success' => 50
+        );
+        $chart_competencies[$competency->id] = $chart_competency;
+    }
 }
 
 $char_competencies_name = array_map(fn($competency) => $competency['name'], $chart_competencies);
