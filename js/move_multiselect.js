@@ -10,16 +10,19 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateConnectionsData() {
         const connectionsData = Array.from(multiselect2.options).map(option => {
             const data = JSON.parse(option.value);
-            const [name] = option.text.split(' | ');  // Get only the name part
+            const split_text = option.text.split(' | ');
+            const name = split_text.slice(0, -1).join(' | ');  // Get only the name part
+            const weight = option.text.split(' | ').pop();  // Get only the weight part
             return {
                 id: data.id,
                 name: name,
-                weight: data.weight || weightInput.value  // Use stored weight if available
+                weight: Number(weight)  // Use stored weight if available
             };
         });
         connectionsInput.value = JSON.stringify(connectionsData);
         console.log(connectionsData);
     }
+    updateConnectionsData();
 
     // Add click event listener to the ">>" button
     move_to_multiselect2_btn.addEventListener('click', function (event) {
