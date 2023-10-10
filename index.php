@@ -106,13 +106,11 @@ foreach ($competencies as $competency) {
 
 $char_competencies_name = array_map(fn($competency) => $competency['name'], $chart_competencies);
 $char_competencies_user = array_map(fn($competency) => $competency['user'], $chart_competencies);
-$char_competencies_average = array_map(fn($competency) => $competency['average'], $chart_competencies);
 $char_competencies_success = array_map(fn($competency) => $competency['success'], $chart_competencies);
 
 echo $OUTPUT->render_from_template('gradereport_gradebook_xp/index', (object) [
     'competencies' => "[".implode(",", $char_competencies_name)."]",
     'data_user' => "[".implode(",", $char_competencies_user)."]",
-    'data_average' => "[".implode(",", $char_competencies_average)."]",
     'data_success' => "[".implode(",", $char_competencies_success)."]"
 ]);
 
