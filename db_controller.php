@@ -120,6 +120,9 @@ function delete_competency($id)
 function get_all_assignments($courseid)
 {
     global $DB;
+    if (!$DB->get_manager()->table_exists("assign")) {
+        return array();
+    }
 
     $assignments = $DB->get_records_sql("
         SELECT cm.id, cm.course, a.name, a.intro, 'assign' AS module
@@ -143,6 +146,9 @@ function get_all_assignments($courseid)
 function get_all_quizzes($courseid)
 {
     global $DB;
+    if (!$DB->get_manager()->table_exists("quiz")) {
+        return array();
+    }
 
     $quizzes = $DB->get_records_sql("
         SELECT cm.id, cm.course, q.name, q.intro, 'quiz' AS module
