@@ -97,11 +97,11 @@ class edit_form extends moodleform
         }
 
         foreach ($connectionsRecords as $connectionRecord) {
-            $activity = $activities[$connectionRecord->assignmentid];
+            $activity = $activities[$connectionRecord->activityid];
 
-            $connectionValue = json_encode(array('id' => $connectionRecord->assignmentid, 'name' => $activity['activityName'], 'weight' => $connectionRecord->weight));
+            $connectionValue = json_encode(array('id' => $connectionRecord->activityid, 'name' => $activity['activityName'], 'weight' => $connectionRecord->weight));
             $connections[$connectionValue] = $activity['activityName'] . " | " . $connectionRecord->weight;
-            unset($activities[$connectionRecord->assignmentid]);
+            unset($activities[$connectionRecord->activityid]);
         }
 
         $activitiesForm = array();
@@ -114,7 +114,7 @@ class edit_form extends moodleform
         $multiselect_group = array();
 
         // Add multiselect 1 to the group
-        $multiselect_group[] = $mform->createElement('select', 'multiselect1', get_string('assignments', 'gradereport_gradebook_xp'), $activities, array('multiple' => 'multiple'));
+        $multiselect_group[] = $mform->createElement('select', 'multiselect1', get_string('activities', 'gradereport_gradebook_xp'), $activities, array('multiple' => 'multiple'));
 
 
         // Add move buttons to the group
@@ -125,7 +125,7 @@ class edit_form extends moodleform
         $multiselect_group[] = $mform->createElement('select', 'multiselect2', get_string('connections', 'gradereport_gradebook_xp'), $connections, array('multiple' => 'multiple'));
 
         // Add the group to the form
-        $mform->addGroup($multiselect_group, 'multiselect_group', get_string('assignments', 'gradereport_gradebook_xp'), ' ', false);
+        $mform->addGroup($multiselect_group, 'multiselect_group', get_string('activities', 'gradereport_gradebook_xp'), ' ', false);
 
         // Add input box for weight
         $mform->addElement('text', 'weight', get_string('weight', 'gradereport_gradebook_xp'));

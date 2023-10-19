@@ -21,16 +21,16 @@
         </TABLE>
 
         <!-- Table name limit is 28 chars... -->
-        <TABLE NAME="gradereport_gradebook_xp_con" COMMENT="Stores all competency to assignment connections and their weight">
+        <TABLE NAME="gradereport_gradebook_xp_con" COMMENT="Stores all competency to activity connections and their weight">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-                <FIELD NAME="assignmentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="activityid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
                 <FIELD NAME="competencyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
                 <FIELD NAME="weight" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-                <KEY NAME="assignmentid" TYPE="foreign" FIELDS="assignmentid" REFTABLE="con" REFFIELDS="assignmentid"/>
+                <KEY NAME="activityid" TYPE="foreign" FIELDS="activityid" REFTABLE="con" REFFIELDS="activityid"/>
                 <KEY NAME="competencyid" TYPE="foreign" FIELDS="competencyid" REFTABLE="con" REFFIELDS="competencyid"/>
             </KEYS>
         </TABLE>

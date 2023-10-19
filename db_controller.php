@@ -190,14 +190,14 @@ function get_all_vpls($courseid)
 }
 
 /**
- * Retrieves all activities (assignments and quizzes) of a course visible to the user.
+ * Retrieves all activities of a course visible to the user.
  *
  * @param int $courseid The ID of the course.
- * @return array An array containing all activities (assignments and quizzes) of the course visible to the user. If nothing is found, an empty array is returned.
+ * @return array An array containing all activities of the course visible to the user. If nothing is found, an empty array is returned.
  */
 function get_all_activities($courseid)
 {
-    // Merge the assignments and quizzes into a single array
+    // Merge all activities into a single array
     $activities = array_merge(
         get_all_assignments($courseid),
         get_all_quizzes($courseid),
@@ -208,11 +208,11 @@ function get_all_activities($courseid)
 }
 
 // TODO: connections
-function get_connection($assignmentid, $competencyid) {
+function get_connection($activityid, $competencyid) {
     global $DB;
 
     // Attempt to find matching record in our table
-    $connection = $DB->get_record("gradereport_gradebook_xp_con", array("assignmentid" => $assignmentid, "competencyid" => $competencyid));
+    $connection = $DB->get_record("gradereport_gradebook_xp_con", array("activityid" => $activityid, "competencyid" => $competencyid));
 
     return $connection;
 }
@@ -239,7 +239,7 @@ function delete_connection($id) {
  * Get all competency connections of a competency
  * @param int $courseid ID of the course
  * @param int $competencyid ID of the competency
- * @return array List of assignments connected to this competency
+ * @return array List of activities connected to this competency
  */
 function get_connections($competencyid)
 {

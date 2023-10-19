@@ -78,22 +78,22 @@ function handle_action_buttons() {
     } else if ($fromform = $mform->get_data()) {
         // If form data is submitted and validated
 
-        $assignmentIds = array();
+        $activityIds = array();
         if (!empty($fromform->connections)) {
             $connectionsArray = json_decode($fromform->connections, true);
 
             foreach ($connectionsArray as $connection) {
-                $assignmentId = $connection['id'];
+                $activityId = $connection['id'];
                 $connectionWeight = $connection['weight'];
 
-                grade_report_gradebook_xp_set_competency_connection($assignmentId, $fromform->id, $connectionWeight);
-                $assignmentIds[] = $assignmentId;
+                grade_report_gradebook_xp_set_competency_connection($activityId, $fromform->id, $connectionWeight);
+                $activityIds[] = $activityId;
                 // Process these values as needed
             }
         }
 
         foreach (get_connections($fromform->id) as $connection){
-            if (!in_array($connection->assignmentid, $assignmentIds)){
+            if (!in_array($connection->activityid, $activityIds)){
                 delete_connection($connection->id);
             }
         }

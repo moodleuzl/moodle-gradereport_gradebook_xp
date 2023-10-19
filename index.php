@@ -64,7 +64,7 @@ print_grade_page_head($courseid, 'report', 'gradebook_xp', get_string('pluginnam
 // Print all activities this course has with the corresponding grades of our user
 echo "<br><br>"; // Make some room below the greeting
 
-$course_activities = get_all_activities($courseid); // Get grades for all assignments of this course
+$course_activities = get_all_activities($courseid); // Get grades for all activities of this course
 $raw_grades = get_grades($course, $context, $userid);
 $competencies = get_all_competencies();
 
@@ -85,7 +85,7 @@ foreach ($competencies as $competency) {
     $competency_weight_sum = 0.0;
     foreach (get_connections($competency->id) as $connection) {
         $competency_total_weight_sum += $connection->weight;
-        $grade = $grades[$connection->assignmentid];
+        $grade = $grades[$connection->activityid];
         $competency_weight_sum += $connection->weight * ($grade['graderaw'] / $grade['grademax']);
     }
     if ($competency_total_weight_sum > 0) {

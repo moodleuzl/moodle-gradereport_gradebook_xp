@@ -97,19 +97,19 @@ function grade_report_gradebook_xp_add_competency($courseid, $name, $description
 }
 
 /**
- * Add a competency -> assignment connection or overwrite an existing one
+ * Add a competency -> activity connection or overwrite an existing one
  * @param int $courseid ID of the course
- * @param int $assignmentid ID of the assignment to connect
+ * @param int $activityid ID of the activity to connect
  * @param int $competencyid ID of the competency to connect
- * @param int $weight Weight of the competency for this assignment
+ * @param int $weight Weight of the competency for this activity
  */
-function grade_report_gradebook_xp_set_competency_connection($assignmentid, $competencyid, $weight)
+function grade_report_gradebook_xp_set_competency_connection($activityid, $competencyid, $weight)
 {
     global $DB;
 
     // Attempt to find matching record in our table
     $table = "gradereport_gradebook_xp_con";
-    $connection = get_connection($assignmentid, $competencyid);
+    $connection = get_connection($activityid, $competencyid);
 
     // Update or insert record
     if ($connection) {
@@ -124,7 +124,7 @@ function grade_report_gradebook_xp_set_competency_connection($assignmentid, $com
 
         // Construct new competency array
         $connection = array(
-            "assignmentid" => $assignmentid,
+            "activityid" => $activityid,
             "competencyid" => $competencyid,
             "weight" => $weight
         );
@@ -135,7 +135,7 @@ function grade_report_gradebook_xp_set_competency_connection($assignmentid, $com
 }
 
 function get_grades($course, $context, $userid) {
-    // Get grades for all assignments of this course
+    // Get grades for all activities of this course
     global $OUTPUT;
     if (!empty($course->showgrades)) {
 
@@ -144,7 +144,7 @@ function get_grades($course, $context, $userid) {
         // Create a report instance
         $report = new gradereport_user\report\user($course->id, $gpr, $context, $userid, false); // viewasuser = false
 
-        if ($report->fill_table()) { // Fill table with data of all assignments
+        if ($report->fill_table()) { // Fill table with data of all activities
             return $report->gradeitemsdata;
         }
     }
