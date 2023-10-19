@@ -61,7 +61,7 @@ class edit_form extends moodleform
         $mform->setType('name', PARAM_NOTAGS);
 
         // Add competency descriptionion text element to form
-        $mform->addElement('textarea', 'description', get_string('description', 'gradereport_gradebook_xp'), array('rows' => 4, 'cols' => 50));
+        $mform->addElement('textarea', 'description', get_string('description', 'gradereport_gradebook_xp'));
         $mform->setType('description', PARAM_TEXT);
 //-------------------------------------------------------------------------------
         // Add rules to the form
