@@ -54,20 +54,20 @@ class edit_form extends moodleform
         // Add visible parameters to the form
 
         // Add parent select element to form
-        $mform->addElement('select', 'parentid', get_string('parent', 'gradereport_gradebook_xp'), $parent_options);
+        $mform->addElement('select', 'parentid', get_string('parent', 'gradereport_gradebook_xp_admin'), $parent_options);
 
         // Add competency name text element to form
-        $mform->addElement('text', 'name', get_string('name', 'gradereport_gradebook_xp'));
+        $mform->addElement('text', 'name', get_string('name', 'gradereport_gradebook_xp_admin'));
         $mform->setType('name', PARAM_NOTAGS);
 
         // Add competency descriptionion text element to form
-        $mform->addElement('textarea', 'description', get_string('description', 'gradereport_gradebook_xp'));
+        $mform->addElement('textarea', 'description', get_string('description', 'gradereport_gradebook_xp_admin'));
         $mform->setType('description', PARAM_TEXT);
 //-------------------------------------------------------------------------------
         // Add rules to the form
 
         // Add validation rule for competency name text element
-        $mform->addRule('name', get_string('missingname', 'gradereport_gradebook_xp'), 'required', null, 'server');
+        $mform->addRule('name', get_string('missingname', 'gradereport_gradebook_xp_admin'), 'required', null, 'server');
 //-------------------------------------------------------------------------------
         // Set defaults for editing if the current record exists
         if (!empty($current)) {
@@ -114,7 +114,7 @@ class edit_form extends moodleform
         $multiselect_group = array();
 
         // Add multiselect 1 to the group
-        $multiselect_group[] = $mform->createElement('select', 'multiselect1', get_string('activities', 'gradereport_gradebook_xp'), $activities, array('multiple' => 'multiple'));
+        $multiselect_group[] = $mform->createElement('select', 'multiselect1', get_string('activities', 'gradereport_gradebook_xp_admin'), $activities, array('multiple' => 'multiple'));
 
 
         // Add move buttons to the group
@@ -122,13 +122,13 @@ class edit_form extends moodleform
         $multiselect_group[] = $mform->createElement('button', 'move_to_multiselect1', '<<');
 
         // Add multiselect 2 to the group
-        $multiselect_group[] = $mform->createElement('select', 'multiselect2', get_string('connections', 'gradereport_gradebook_xp'), $connections, array('multiple' => 'multiple'));
+        $multiselect_group[] = $mform->createElement('select', 'multiselect2', get_string('connections', 'gradereport_gradebook_xp_admin'), $connections, array('multiple' => 'multiple'));
 
         // Add the group to the form
-        $mform->addGroup($multiselect_group, 'multiselect_group', get_string('activities', 'gradereport_gradebook_xp'), ' ', false);
+        $mform->addGroup($multiselect_group, 'multiselect_group', get_string('activities', 'gradereport_gradebook_xp_admin'), ' ', false);
 
         // Add input box for weight
-        $mform->addElement('text', 'weight', get_string('weight', 'gradereport_gradebook_xp'));
+        $mform->addElement('text', 'weight', get_string('weight', 'gradereport_gradebook_xp_admin'));
 
         $mform->setType('weight', PARAM_INT);
 

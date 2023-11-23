@@ -17,12 +17,12 @@ $competencies = get_all_competencies();
 // Render the page
 $templatecontext = (object)[
     'competencies' => array_values($competencies),
-    'gobackurl' => new moodle_url('/grade/report/gradebook_xp/preferences.php'),
-    'editurl' => new moodle_url('/grade/report/gradebook_xp/edit.php'),
+    'gobackurl' => new moodle_url('/grade/report/gradebook_xp_admin/preferences.php'),
+    'editurl' => new moodle_url('/grade/report/gradebook_xp_admin/edit.php'),
     'courseid' => $courseid,
 ];
 
-print_grade_page_head($courseid, 'settings', 'gradebook_xp', get_string('pluginname', 'gradereport_gradebook_xp'), false, '');
+print_grade_page_head($courseid, 'settings', 'gradebook_xp_admin', get_string('pluginname', 'gradereport_gradebook_xp'), false, '');
 
-echo $OUTPUT->render_from_template('gradereport_gradebook_xp/manage_competencies', $templatecontext);
+echo $OUTPUT->render_from_template('gradereport_gradebook_xp_admin/manage_competencies', $templatecontext);
 echo $OUTPUT->footer();

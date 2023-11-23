@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Strings for component 'gradebook_xp', language 'en'
+ * Strings for component 'gradebook_xp_admin', language 'en'
  *
- * @package gradebook_xp
+ * @package gradebook_xp_admin
  */
-$string['pluginname'] = 'Gradebook XP';
+$string['pluginname'] = 'Gradebook XP Admin';
 $string['newcompetency'] = 'New competency';
 $string['editcompetency'] = 'Edit competency';
 $string['deletecompetency'] = 'Delete competency';

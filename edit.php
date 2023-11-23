@@ -7,7 +7,7 @@ require_once 'edit_form.php';
 require_once 'lib.php';
 require_once 'db_controller.php';
 
-$PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp/js/move_multiselect.js'));
+$PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp_admin/js/move_multiselect.js'));
 
 // Get URL parameters
 $courseid = required_param('courseid', PARAM_INT);
@@ -21,7 +21,7 @@ $gpr = new grade_plugin_return();
 $returnurl = $gpr->get_return_url('manage_competencies.php?id=' . $courseid);
 
 // Set page heading
-//$heading = get_string('name', 'gradereport_gradebook_xp');
+//$heading = get_string('name', 'gradereport_gradebook_xp_admin');
 
 //handle_action($returnurl, $action);
 
@@ -61,7 +61,7 @@ function handle_action(){
     } else {
         // Handle no action (new action for example)
         // Set page heading
-        $heading = get_string('newcompetency', 'gradereport_gradebook_xp');
+        $heading = get_string('newcompetency', 'gradereport_gradebook_xp_admin');
     }
 }
 
@@ -86,7 +86,7 @@ function handle_action_buttons() {
                 $activityId = $connection['id'];
                 $connectionWeight = $connection['weight'];
 
-                grade_report_gradebook_xp_set_competency_connection($activityId, $fromform->id, $connectionWeight);
+                grade_report_gradebook_xp_admin_set_competency_connection($activityId, $fromform->id, $connectionWeight);
                 $activityIds[] = $activityId;
                 // Process these values as needed
             }
@@ -141,7 +141,7 @@ function generate_output() {
     $PAGE->navbar->add($heading);
 
     // Print header
-    print_grade_page_head($courseid, 'settings', 'gradebook_xp', $heading, false, false, false);
+    print_grade_page_head($courseid, 'settings', 'gradebook_xp_admin', $heading, false, false, false);
 
     // displays the form
     $mform->display();

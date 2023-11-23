@@ -3,28 +3,13 @@
 defined('MOODLE_INTERNAL') || die;
 
 require_once $CFG->dirroot . '/grade/report/user/lib.php';
-require_once $CFG->dirroot . '/grade/report/gradebook_xp/db_controller.php';
+require_once $CFG->dirroot . '/grade/report/gradebook_xp_admin/db_controller.php';
 
-/**
- * This function extends the navigation with the report items
- *
- * @param navigation_node $navigation The navigation node to extend
- * @param stdClass $course The course to object for the report
- * @param stdClass $context The context of the course
- */
-function gradereport_gradebook_xp_extend_navigation_course($navigation, $course, $context)
-{
-
-    $url = new moodle_url('/grade/report/gradebook_xp/preferences.php', array('id' => $course->id));
-    $name = get_string('pluginname', 'gradereport_gradebook_xp');
-    $navigation->add($name, $url, navigation_node::TYPE_COURSE, null, null, new pix_icon('i/competencies', ''));
-}
-
-function setup_page($courseid, $capabililty = 'moodle/grade:view')
+function gradereport_gradebook_xp_admin_setup_page($courseid, $capabililty = 'moodle/grade:view')
 {
     global $PAGE, $DB, $context;
     // Set page URL and layout
-    $url = new moodle_url('/grade/report/gradebook_xp/' . get_caller_filename(), array('id' => $courseid));
+    $url = new moodle_url('/grade/report/gradebook_xp_admin/' . gradereport_gradebook_xp_admin_get_caller_filename(), array('id' => $courseid));
     if ($courseid !== 0) {
         $url->param('id', $courseid);
     }
@@ -39,16 +24,17 @@ function setup_page($courseid, $capabililty = 'moodle/grade:view')
     require_login($course);
     $context = context_course::instance($course->id);
     require_capability($capabililty, $context);    // TODO: Check if user has permission to view this page
+    $PAGE->set_context($context);
 }
 
-function get_caller_filename()
+function gradereport_gradebook_xp_admin_get_caller_filename()
 {
     $trace = debug_backtrace();
     $caller = $trace[1];
     return basename($caller['file']);
 }
 
-function debug($value)
+function grade_report_gradebook_xp_admin_debug($value)
 {
     echo "<pre>";
 //    var_dump($value);
@@ -57,14 +43,13 @@ function debug($value)
 }
 
 
-
 /**
  * Add a competency to a course or overwrite an existing one with the same name
  * @param int $courseid ID of the course
  * @param string $name Name if the competency to add
  * @param string $description Description of the competency to add
  */
-function grade_report_gradebook_xp_add_competency($courseid, $name, $description)
+function gradereport_gradebook_xp_admin_add_competency($courseid, $name, $description)
 {
     global $DB;
 
@@ -103,7 +88,7 @@ function grade_report_gradebook_xp_add_competency($courseid, $name, $description
  * @param int $competencyid ID of the competency to connect
  * @param int $weight Weight of the competency for this activity
  */
-function grade_report_gradebook_xp_set_competency_connection($activityid, $competencyid, $weight)
+function gradereport_gradebook_xp_admin_set_competency_connection($activityid, $competencyid, $weight)
 {
     global $DB;
 
@@ -134,13 +119,14 @@ function grade_report_gradebook_xp_set_competency_connection($activityid, $compe
     }
 }
 
-function get_grades($course, $context, $userid) {
+function gradereport_gradebook_xp_admin_get_grades($course, $context, $userid)
+{
     // Get grades for all activities of this course
     global $OUTPUT;
     if (!empty($course->showgrades)) {
 
         /// return tracking object
-        $gpr = new grade_plugin_return(array('type'=>'report', 'plugin'=>'user', 'courseid'=>$course->id, 'userid'=>$userid));
+        $gpr = new grade_plugin_return(array('type' => 'report', 'plugin' => 'user', 'courseid' => $course->id, 'userid' => $userid));
         // Create a report instance
         $report = new gradereport_user\report\user($course->id, $gpr, $context, $userid, false); // viewasuser = false
 

@@ -1,14 +1,15 @@
 <?php
 require_once('../../../config.php');
 require_once($CFG->dirroot.'/grade/lib.php');
-require_once('lib.php');
+require_once('./lib.php');
 
 // Get required and optional parameters
 $courseid = required_param('id', PARAM_INT);
 $userid = optional_param('userid', $USER->id, PARAM_INT);
 
 // Set up the page
-setup_page($courseid, 'moodle/grade:manage');
+gradereport_gradebook_xp_admin_setup_page($courseid, 'moodle/grade:manage');
+$PAGE->navbar->add(get_string('preferences'));
 
 // Get the competencies for the course and sort by ID
 $competencies = $DB->get_records_sql("
@@ -51,12 +52,12 @@ function display_hierarchy($hierarchy) {
 
 // Render the page
 $templatecontext = (object)[
-    'managecompetenciesurl' => new moodle_url('/grade/report/gradebook_xp/manage_competencies.php'),
-    'manageconnectionsurl' => new moodle_url('/grade/report/gradebook_xp/manage_connections.php'),
+    'managecompetenciesurl' => new moodle_url('/grade/report/gradebook_xp_admin/manage_competencies.php'),
+    'manageconnectionsurl' => new moodle_url('/grade/report/gradebook_xp_admin/manage_connections.php'),
     'courseid' => $courseid,
 ];
 
-print_grade_page_head($courseid, 'settings', 'gradebook_xp', get_string('pluginname', 'gradereport_gradebook_xp'), false, '');
+print_grade_page_head($courseid, 'settings', 'gradebook_xp_admin', get_string('pluginname', 'gradereport_gradebook_xp_admin'), false, '');
 display_hierarchy(get_child_competencies(0));
-echo $OUTPUT->render_from_template('gradereport_gradebook_xp/preferences', $templatecontext);
+echo $OUTPUT->render_from_template('gradereport_gradebook_xp_admin/preferences', $templatecontext);
 echo $OUTPUT->footer();

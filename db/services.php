@@ -3,14 +3,14 @@
 /**
  * Gradebook XP external functions and service definitions.
  *
- * @package gradebook_xp
+ * @package gradebook_xp_admin
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 // Example
-// 'gradebook_xp_get_course_grades' => array(
-//     'classname' => 'gradebook_xp_external',
+// 'gradebook_xp_admin_get_course_grades' => array(
+//     'classname' => 'gradebook_xp_admin_external',
 //     'methodname' => 'get_course_grades',
 //     'description' => 'Get the given user courses final grades',
 //     'type' => 'read',

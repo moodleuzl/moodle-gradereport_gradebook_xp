@@ -2,7 +2,7 @@
 
 /*
  * File: index.php
- * Project: gradebook_xp
+ * Project: gradebook_xp_admin
  * Created Date: 17.11.2022 19:19:13
  * Author: DominikMa, 3urobeat, thePulpo
  * 
@@ -12,65 +12,36 @@
 
 
 /**
- * The gradebook_xp report
+ * The gradebook_xp_admin report
  *
- * @package gradebook_xp
+ * @package gradebook_xp_admin
  */
 
 require_once '../../../config.php';
 require_once './lib.php';
-require_once 'db_controller.php';
+require_once './db_controller.php';
 require_once $CFG->dirroot . '/grade/lib.php';
 
 $courseid = optional_param('id', SITEID, PARAM_INT);
 $userid = optional_param('userid', $USER->id, PARAM_INT);
 
-$PAGE->set_url(new moodle_url('/grade/report/gradebook_xp/index.php', array('id' => $courseid, 'userid' => $userid)));
-
-
-// Check if user is trying to visit our page with an invalid course id and display error message
-if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-    print_error('invalidcourseid');
-}
-
-require_login(null, false);
-$PAGE->set_course($course);
-$context = context_course::instance($course->id);
-
-
-// TODO: Check if user has permission to view this page
-// Display admin view or user view
-if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
-
-    // Print demo msg for admin
-    //echo "Hello Admin";
-
-    /* $gpr = new grade_plugin_return();
-    $returnurl = $gpr->get_return_url('preferences.php?id='.$courseid);
-    redirect($returnurl, 'You have been redirected to the preferences page.'); */
-
-
-} else {
-
-    // Print demo msg for user
-    //echo "Hello User";
-
-}
+gradereport_gradebook_xp_admin_setup_page($courseid, 'moodle/grade:view');
+$PAGE->navbar->add(get_string('view'));
 
 // Print Header which contains links to all other reports etc. Highlight our tab by passing our pluginname as param active_plugin
-print_grade_page_head($courseid, 'report', 'gradebook_xp', get_string('pluginname', 'gradereport_gradebook_xp')); // Function provided by /grade/lib.php
+print_grade_page_head($courseid, 'report', 'gradebook_xp_admin', get_string('pluginname', 'gradereport_gradebook_xp_admin')); // Function provided by /grade/lib.php
 
 
 // Print all activities this course has with the corresponding grades of our user
 echo "<br><br>"; // Make some room below the greeting
 
 $course_activities = get_all_activities($courseid); // Get grades for all activities of this course
-$raw_grades = get_grades($course, $context, $userid);
+$raw_grades = gradereport_gradebook_xp_admin_get_grades($COURSE, $context, $userid);
 $competencies = get_all_competencies();
 
 $grades = array();
 foreach ($raw_grades as $raw_grade) {
-    if (array_key_exists('cmid', $raw_grade)){
+    if (array_key_exists('cmid', $raw_grade)) {
         $grades[$raw_grade['cmid']] = $raw_grade;
     }
 }
@@ -102,10 +73,10 @@ $char_competencies_name = array_map(fn($competency) => $competency['name'], $cha
 $char_competencies_user = array_map(fn($competency) => $competency['user'], $chart_competencies);
 $char_competencies_success = array_map(fn($competency) => $competency['success'], $chart_competencies);
 
-echo $OUTPUT->render_from_template('gradereport_gradebook_xp/index', (object) [
-    'competencies' => "[".implode(",", $char_competencies_name)."]",
-    'data_user' => "[".implode(",", $char_competencies_user)."]",
-    'data_success' => "[".implode(",", $char_competencies_success)."]"
+echo $OUTPUT->render_from_template('gradereport_gradebook_xp_admin/index', (object)[
+    'competencies' => "[" . implode(",", $char_competencies_name) . "]",
+    'data_user' => "[" . implode(",", $char_competencies_user) . "]",
+    'data_success' => "[" . implode(",", $char_competencies_success) . "]"
 ]);
 
 // Print footer
