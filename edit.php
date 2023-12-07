@@ -14,7 +14,7 @@ $courseid = required_param('courseid', PARAM_INT);
 $id = optional_param('id', null, PARAM_INT);
 $action = optional_param('action', null, PARAM_ALPHA);
 
-setup_page($courseid, 'moodle/grade:manage');
+gradereport_gradebook_xp_admin_setup_page($courseid, 'moodle/grade:manage');
 
 // Get return URL
 $gpr = new grade_plugin_return();

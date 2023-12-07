@@ -9,7 +9,7 @@ $courseid = required_param('id', PARAM_INT);
 $userid = optional_param('userid', $USER->id, PARAM_INT);
 
 // Set up the page
-setup_page($courseid, 'moodle/grade:manage');
+gradereport_gradebook_xp_admin_setup_page($courseid, 'moodle/grade:manage');
 
 // Get the competencies for the course and sort by ID
 $competencies = get_all_competencies();
@@ -17,7 +17,7 @@ $competencies = get_all_competencies();
 // Render the page
 $templatecontext = (object)[
     'competencies' => array_values($competencies),
-    'gobackurl' => new moodle_url('/grade/report/gradebook_xp_admin/preferences.php'),
+    'gobackurl' => new moodle_url('/grade/report/gradebook_xp_admin/index.php'),
     'editurl' => new moodle_url('/grade/report/gradebook_xp_admin/edit.php'),
     'courseid' => $courseid,
 ];
