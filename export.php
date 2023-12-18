@@ -8,6 +8,12 @@ require_once('./db_controller.php');
 $courseid = required_param('id', PARAM_INT);
 $userid = optional_param('userid', $USER->id, PARAM_INT);
 
+if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+    throw new \moodle_exception('invalidcourseid');
+}
+require_login($course);
+$context = context_course::instance($course->id);
+
 $records = $DB->get_records_sql('SELECT * FROM {gradereport_gradebook_xp_com}');
 
 header('Content-Type: text/csv');
