@@ -5,6 +5,20 @@ defined('MOODLE_INTERNAL') || die;
 require_once $CFG->dirroot . '/grade/report/user/lib.php';
 require_once $CFG->dirroot . '/grade/report/gradebook_xp_admin/db_controller.php';
 
+/**
+ * Set up a page for the 'gradebook_xp' report in Moodle.
+ *
+ * This function sets the page URL, layout, and verifies user access before displaying the report.
+ *
+ * @param int $courseid The ID of the course for which the report is being generated.
+ * @param string $capability The capability required to view the report. Defaults to 'moodle/grade:view'.
+ *
+ * @global moodle_page $PAGE The global page object.
+ * @global moodle_database $DB The global database object.
+ * @global context_course $context The global context object.
+ *
+ * @throws moodle_exception If the course ID is invalid.
+ */
 function gradereport_gradebook_xp_admin_setup_page($courseid, $capabililty = 'moodle/grade:view')
 {
     global $PAGE, $DB, $context;
@@ -27,6 +41,14 @@ function gradereport_gradebook_xp_admin_setup_page($courseid, $capabililty = 'mo
     $PAGE->set_context($context);
 }
 
+/**
+ * Get the filename of the calling script in the 'gradebook_xp' report context.
+ *
+ * This function retrieves the filename of the script that calls it within the context
+ * of the 'gradebook_xp' report. It uses debug_backtrace to inspect the call stack.
+ *
+ * @return string The filename of the calling script.
+ */
 function gradereport_gradebook_xp_admin_get_caller_filename()
 {
     $trace = debug_backtrace();
@@ -34,6 +56,16 @@ function gradereport_gradebook_xp_admin_get_caller_filename()
     return basename($caller['file']);
 }
 
+/**
+ * Output a formatted and human-readable representation of a variable for debugging purposes.
+ *
+ * This function prints a preformatted and human-readable representation of the given variable
+ * for debugging purposes. It uses print_r to display the variable's contents.
+ *
+ * @param mixed $value The variable to be debugged.
+ *
+ * @return void
+ */
 function grade_report_gradebook_xp_admin_debug($value)
 {
     echo "<pre>";
@@ -44,10 +76,22 @@ function grade_report_gradebook_xp_admin_debug($value)
 
 
 /**
- * Add a competency to a course or overwrite an existing one with the same name
- * @param int $courseid ID of the course
- * @param string $name Name if the competency to add
- * @param string $description Description of the competency to add
+ * Add or update a competency entry for the 'gradebook_xp' report in Moodle.
+ *
+ * This function checks if a competency with the given name already exists for the specified course.
+ * If it exists, the competency is updated with the new name and description. If not, a new competency
+ * entry is inserted into the database.
+ *
+ * @param int $courseid The ID of the course for which the competency is being added or updated.
+ * @param string $name The name of the competency.
+ * @param string $description The description of the competency.
+ *
+ * @return void
+ *
+ * @throws dml_exception
+ *
+ * @global moodle_database $DB The global database object.
+ *
  */
 function gradereport_gradebook_xp_admin_add_competency($courseid, $name, $description)
 {
@@ -83,7 +127,6 @@ function gradereport_gradebook_xp_admin_add_competency($courseid, $name, $descri
 
 /**
  * Add a competency -> activity connection or overwrite an existing one
- * @param int $courseid ID of the course
  * @param int $activityid ID of the activity to connect
  * @param int $competencyid ID of the competency to connect
  * @param int $weight Weight of the competency for this activity
@@ -116,22 +159,5 @@ function gradereport_gradebook_xp_admin_set_competency_connection($activityid, $
 
         // Insert new record
         insert_connection($connection);
-    }
-}
-
-function gradereport_gradebook_xp_admin_get_grades($course, $context, $userid)
-{
-    // Get grades for all activities of this course
-    global $OUTPUT;
-    if (!empty($course->showgrades)) {
-
-        /// return tracking object
-        $gpr = new grade_plugin_return(array('type' => 'report', 'plugin' => 'user', 'courseid' => $course->id, 'userid' => $userid));
-        // Create a report instance
-        $report = new gradereport_user\report\user($course->id, $gpr, $context, $userid, false); // viewasuser = false
-
-        if ($report->fill_table()) { // Fill table with data of all activities
-            return $report->gradeitemsdata;
-        }
     }
 }
