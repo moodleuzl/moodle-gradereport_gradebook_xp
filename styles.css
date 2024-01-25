@@ -1,0 +1,6 @@
+#id_multiselect1,
+#id_multiselect2{
+    resize: vertical;
+    min-width: 150px;
+    min-height: 200px;
+}
