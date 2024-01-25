@@ -84,9 +84,9 @@ function handle_action_buttons() {
 
             foreach ($connectionsArray as $connection) {
                 $activityId = $connection['id'];
-                $connectionWeight = $connection['weight'];
+                $connectionLevel = $connection['level'];
 
-                gradereport_gradebook_xp_admin_set_competency_connection($activityId, $fromform->id, $connectionWeight);
+                gradereport_gradebook_xp_admin_set_competency_connection($activityId, $fromform->id, $connectionLevel);
                 $activityIds[] = $activityId;
                 // Process these values as needed
             }

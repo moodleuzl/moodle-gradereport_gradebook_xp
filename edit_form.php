@@ -99,8 +99,8 @@ class edit_form extends moodleform
         foreach ($connectionsRecords as $connectionRecord) {
             $activity = $activities[$connectionRecord->activityid];
 
-            $connectionValue = json_encode(array('id' => $connectionRecord->activityid, 'name' => $activity['activityName'], 'weight' => $connectionRecord->weight));
-            $connections[$connectionValue] = $activity['activityName'] . " | " . $connectionRecord->weight;
+            $connectionValue = json_encode(array('id' => $connectionRecord->activityid, 'name' => $activity['activityName'], 'level' => $connectionRecord->level));
+            $connections[$connectionValue] = $activity['activityName'] . " | " . $connectionRecord->level;
             unset($activities[$connectionRecord->activityid]);
         }
 
@@ -127,10 +127,10 @@ class edit_form extends moodleform
         // Add the group to the form
         $mform->addGroup($multiselect_group, 'multiselect_group', get_string('activities', 'gradereport_gradebook_xp_admin'), ' ', false);
 
-        // Add input box for weight
-        $mform->addElement('text', 'weight', get_string('weight', 'gradereport_gradebook_xp_admin'));
+        // Add input box for level
+        $mform->addElement('text', 'level', get_string('level', 'gradereport_gradebook_xp_admin'));
 
-        $mform->setType('weight', PARAM_INT);
+        $mform->setType('level', PARAM_INT);
 
 //-------------------------------------------------------------------------------
         // Add action buttons to the form
