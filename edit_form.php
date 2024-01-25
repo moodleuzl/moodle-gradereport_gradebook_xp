@@ -132,6 +132,9 @@ class edit_form extends moodleform
 
         $mform->setType('level', PARAM_INT);
 
+        //Add dropdown menu for Max Competency Level (from 1 to 10) <- will change after calculation is complete!
+        $mform->addElement('select', 'maxcomlvl', get_string('maxcomlvl', 'gradereport_gradebook_xp_admin'), range(1, 10));
+
 //-------------------------------------------------------------------------------
         // Add action buttons to the form
         $this->add_action_buttons();
