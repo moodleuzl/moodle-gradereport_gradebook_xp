@@ -14,15 +14,20 @@ if (!$course = $DB->get_record('course', array('id' => $courseid))) {
 require_login($course);
 $context = context_course::instance($course->id);
 
-$records = $DB->get_records_sql('SELECT * FROM {gradereport_gradebook_xp_com}');
+//$records = $DB->get_records_sql('SELECT * FROM {gradereport_gradebook_xp_com}');
+$records = $DB->get_records('gradereport_gradebook_xp_com');
 
 header('Content-Type: text/csv');
 header('Content-Disposition: attachment; filename="export.csv"');
 
 $output = fopen('php://output', 'w');
 
-// Determine the headers
-$headers = array('column1', 'column2', 'column3'); // Replace with actual column names
+// Extract column names
+$table_columns = $DB->get_columns('gradereport_gradebook_xp_com');
+$headers = array();
+foreach ($table_columns as $column) {
+    $headers[] = $column->name;
+}
 
 // Write the headers to the CSV
 fputcsv($output, $headers);
