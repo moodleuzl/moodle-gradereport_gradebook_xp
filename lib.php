@@ -19,9 +19,9 @@ require_once $CFG->dirroot . '/grade/report/gradebook_xp_admin/db_controller.php
  *
  * @throws moodle_exception If the course ID is invalid.
  */
-function gradereport_gradebook_xp_admin_setup_page($courseid, $capabililty = 'moodle/grade:view')
+function gradereport_gradebook_xp_admin_setup_page($courseid, $capabililty = 'moodle/grade:manage')
 {
-    global $PAGE, $DB, $context;
+    global $PAGE, $CFG, $DB, $context;
     // Set page URL and layout
     $url = new moodle_url('/grade/report/gradebook_xp_admin/' . gradereport_gradebook_xp_admin_get_caller_filename(), array('id' => $courseid));
     if ($courseid !== 0) {
@@ -29,6 +29,9 @@ function gradereport_gradebook_xp_admin_setup_page($courseid, $capabililty = 'mo
     }
     $PAGE->set_url($url);
     $PAGE->set_pagelayout('standard');
+
+    $PAGE->requires->jquery();
+    $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp_admin/js/change_active_tab.js'));
 
     // Verify user has access to course
     if (!$course = $DB->get_record('course', array('id' => $courseid))) {
