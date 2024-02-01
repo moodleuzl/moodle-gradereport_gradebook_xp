@@ -78,6 +78,7 @@ class edit_form extends moodleform
             $mform->setDefault('name', $current->name);
             $mform->setDefault('parentid', $current->parentid);
             $mform->setDefault('description', $current->description);
+            $mform->setDefault('maxcomlvl', $current->maxcomlvl);
         }
 //-------------------------------------------------------------------------------
         // Retrieve activity records
@@ -118,7 +119,7 @@ class edit_form extends moodleform
         //Add Max Competency Level Input
         // Add Max Competency Level Input to the group
         $maxcomlvl_group[] = $mform->createElement('text', 'maxcomlvl', get_string('maxcomlvl', 'gradereport_gradebook_xp_admin'));
-        $mform->setType('maxcomlvl', PARAM_INT);
+        $mform->setType('maxcomlvl', PARAM_INT); //TODO: sanitize input
 
         // Add the confirmation button to the group
         $maxcomlvl_group[] = $mform->createElement('html', '<button type="button" id="confirm_button" class="btn btn-primary">Confirm</button>');
