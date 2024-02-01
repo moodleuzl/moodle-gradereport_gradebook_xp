@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="grade/report/gradebook_xp_admin/db" VERSION="20220922" COMMENT="XMLDB file for Moodle grade/report/gradebook_xp_admin"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+    <TABLES>
+        <!-- Table name limit is 28 chars... -->
+        <TABLE NAME="gradereport_gradebook_xp_com" COMMENT="Stores all competencies bound to a course">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="parentid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+                <FIELD NAME="description" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="com" REFFIELDS="courseid"/> <!-- TODO: I'm not sure if both of these are necessary -->
+                <KEY NAME="name" TYPE="foreign" FIELDS="name" REFTABLE="com" REFFIELDS="name"/>
+            </KEYS>
+        </TABLE>
+
+        <!-- Table name limit is 28 chars... -->
+        <TABLE NAME="gradereport_gradebook_xp_con" COMMENT="Stores all competency to activity connections and their weight">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="activityid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="competencyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="weight" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="activityid" TYPE="foreign" FIELDS="activityid" REFTABLE="con" REFFIELDS="activityid"/>
+                <KEY NAME="competencyid" TYPE="foreign" FIELDS="competencyid" REFTABLE="con" REFFIELDS="competencyid"/>
+            </KEYS>
+        </TABLE>
+    </TABLES>
+</XMLDB>
