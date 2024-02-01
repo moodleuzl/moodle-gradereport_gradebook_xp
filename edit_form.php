@@ -145,7 +145,7 @@ class edit_form extends moodleform
 
         // Add Dropdown Menu for level (ranging from 1 to max_lvl)
         $dropdown = $mform->addElement('select', 'level', get_string('level', 'gradereport_gradebook_xp_admin'), range(1,'maxcomlvl'), array());
-        $dropdown->freeze();
+        //$dropdown->freeze();
 
 //-------------------------------------------------------------------------------
         // Add action buttons to the form
