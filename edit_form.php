@@ -63,6 +63,8 @@ class edit_form extends moodleform
         // Add competency descriptionion text element to form
         $mform->addElement('textarea', 'description', get_string('description', 'gradereport_gradebook_xp_admin'));
         $mform->setType('description', PARAM_TEXT);
+
+
 //-------------------------------------------------------------------------------
         // Add rules to the form
 
@@ -110,6 +112,20 @@ class edit_form extends moodleform
         }
         $activities = $activitiesForm;
 
+        //Add Group for MaxComLvl
+        $maxcomlvl_group = array();
+
+        //Add Max Competency Level Input
+        // Add Max Competency Level Input to the group
+        $maxcomlvl_group[] = $mform->createElement('text', 'maxcomlvl', get_string('maxcomlvl', 'gradereport_gradebook_xp_admin'));
+        $mform->setType('maxcomlvl', PARAM_INT);
+
+        // Add the confirmation button to the group
+        $maxcomlvl_group[] = $mform->createElement('html', '<button type="button" id="confirm_button" class="btn btn-primary">Confirm</button>');
+
+        // Add the group to the form
+        $mform->addGroup($maxcomlvl_group, 'maxcomlvl_group', get_string('maxcomlvl', 'gradereport_gradebook_xp_admin'), ' ', false);
+
         // Create a group for the multiselect elements
         $multiselect_group = array();
 
@@ -127,13 +143,9 @@ class edit_form extends moodleform
         // Add the group to the form
         $mform->addGroup($multiselect_group, 'multiselect_group', get_string('activities', 'gradereport_gradebook_xp_admin'), ' ', false);
 
-        // Add input box for level
-        $mform->addElement('text', 'level', get_string('level', 'gradereport_gradebook_xp_admin'));
-
-        $mform->setType('level', PARAM_INT);
-
-        //Add dropdown menu for Max Competency Level (from 1 to 10) <- will change after calculation is complete!
-        $mform->addElement('select', 'maxcomlvl', get_string('maxcomlvl', 'gradereport_gradebook_xp_admin'), range(1, 10));
+        // Add Dropdown Menu for level (ranging from 1 to max_lvl)
+        $dropdown = $mform->addElement('select', 'level', get_string('level', 'gradereport_gradebook_xp_admin'), range(1,'maxcomlvl'), array());
+        $dropdown->freeze();
 
 //-------------------------------------------------------------------------------
         // Add action buttons to the form

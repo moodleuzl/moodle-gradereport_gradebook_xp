@@ -30,3 +30,4 @@ $string['privacy:metadata'] = 'The Gradebook XP plugin does not store any person
 $string['export'] = 'Export';
 $string['import'] = 'Import';
 $string['maxcomlvl'] = 'Max Competency Level';
+$string['confirm'] = 'Confirm';
