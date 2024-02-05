@@ -1,15 +1,13 @@
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('confirm_button').addEventListener('click', function() {
-        const user_input = document.getElementById('id_maxcomlvl').value;
-        const dropdown_menu = document.getElementById('id_level');
-        dropdown_menu.innerHTML = ''; // Clear previous options
-        for (let i = 1; i <= user_input; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.text = i;
-            dropdown_menu.appendChild(option);
+document.getElementById("id_maxcomlvl").addEventListener("input", function() {
+    const input = this.value.trim();
+    const dropdown = document.getElementById("id_level");
+    dropdown.innerHTML = ""; // Clear existing options
+
+    if (!isNaN(input) && input > 0 && input <= 999) {
+        for (var i = 1; i <= input; i++) {
+            dropdown.options.add(new Option("" + i, "option" + i));
         }
-        // Show the dropdown and submit button
-        document.getElementById('id_level').classList.remove('hidden');
-    });
+    } else {
+        dropdown.options.add(new Option("Please select a valid Max Competency Level", "default"));
+    }
 });
