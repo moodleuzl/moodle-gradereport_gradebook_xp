@@ -70,6 +70,7 @@ class edit_form extends moodleform
 
         // Add validation rule for competency name text element
         $mform->addRule('name', get_string('missingname', 'gradereport_gradebook_xp_admin'), 'required', null, 'server');
+        //$mform->addRule('maxcomlvl', get_string('missingnam', 'gradereport_gradebook_xp_admin'), 'required', null, 'server');
 //-------------------------------------------------------------------------------
         // Set defaults for editing if the current record exists
         if (!empty($current)) {
@@ -120,9 +121,6 @@ class edit_form extends moodleform
         // Add Max Competency Level Input to the group
         $maxcomlvl_group[] = $mform->createElement('text', 'maxcomlvl', get_string('maxcomlvl', 'gradereport_gradebook_xp_admin'));
         $mform->setType('maxcomlvl', PARAM_INT); //TODO: sanitize input
-
-        // Add the confirmation button to the group
-        $maxcomlvl_group[] = $mform->createElement('html', '<button type="button" id="confirm_button" class="btn btn-primary">Confirm</button>');
 
         // Add the group to the form
         $mform->addGroup($maxcomlvl_group, 'maxcomlvl_group', get_string('maxcomlvl', 'gradereport_gradebook_xp_admin'), ' ', false);
