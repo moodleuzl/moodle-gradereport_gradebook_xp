@@ -5,7 +5,7 @@ document.getElementById("id_maxcomlvl").addEventListener("input", function() {
 
     if (!isNaN(input) && input > 0 && input <= 999) {
         for (var i = 1; i <= input; i++) {
-            dropdown.options.add(new Option("" + i, "option" + i));
+            dropdown.options.add(new Option("" + i, "" + i));
         }
     } else {
         dropdown.options.add(new Option("Please select a valid Max Competency Level", "default"));

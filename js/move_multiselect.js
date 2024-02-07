@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const move_to_multiselect2_btn = document.querySelector('button[name="move_to_multiselect2"]');
     const multiselect1 = document.querySelector('select[name="multiselect1[]"]');
     const multiselect2 = document.querySelector('select[name="multiselect2[]"]');
-    const levelInput = document.querySelector('input[name="level"]');
+    const levelInput = document.querySelector('#id_level');
     const connectionsInput = document.querySelector('input[name="connections"]');
 
     function updateConnectionsData() {
