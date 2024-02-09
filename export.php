@@ -14,9 +14,12 @@ if (!$course = $DB->get_record('course', array('id' => $courseid))) {
 require_login($course);
 $context = context_course::instance($course->id);
 
+$table_com = 'gradereport_gradebook_xp_com';
+$table_con = 'gradereport_gradebook_xp_con';
+
 // Generate CSV file, get the filename returned by generate_csv function
-$table1_csv = generate_csv('gradereport_gradebook_xp_com', sys_get_temp_dir() . '/test1.csv');
-$table2_csv = generate_csv('gradereport_gradebook_xp_con', sys_get_temp_dir() . '/test2.csv');
+$table1_csv = generate_csv($table_com, sys_get_temp_dir() . '/test1.csv');
+$table2_csv = generate_csv($table_con, sys_get_temp_dir() . '/test2.csv');
 
 // Create a zip archive
 $zip = new ZipArchive();
@@ -26,8 +29,8 @@ $temp_zip_file = sys_get_temp_dir() . '/exported_data.zip';
 $zip->open($temp_zip_file, ZipArchive::CREATE);
 
 // Add CSV file to the zip archive
-$zip->addFile($table1_csv, 'table1.csv');;
-$zip->addFile($table2_csv, 'table2.csv');
+$zip->addFile($table1_csv, $table_com . '.csv');;
+$zip->addFile($table2_csv, $table_con . '.csv');
 
 
 // Close the zip archive
