@@ -64,13 +64,24 @@ class edit_form extends moodleform
         $mform->addElement('textarea', 'description', get_string('description', 'gradereport_gradebook_xp_admin'));
         $mform->setType('description', PARAM_TEXT);
 
+        // Add competency max level input element to form
+        $mform->addElement('text', 'maxcomlvl', get_string('maxcomlvl', 'gradereport_gradebook_xp_admin'));
+        $mform->setType('maxcomlvl', PARAM_NOTAGS);
+
 
 //-------------------------------------------------------------------------------
         // Add rules to the form
 
         // Add validation rule for competency name text element
         $mform->addRule('name', get_string('missingname', 'gradereport_gradebook_xp_admin'), 'required', null, 'server');
-        //$mform->addRule('maxcomlvl', get_string('missingnam', 'gradereport_gradebook_xp_admin'), 'required', null, 'server');
+        $mform->addRule('name', get_string('strexceedslimit100', 'gradereport_gradebook_xp_admin'), 'maxlength', 100, 'server');
+
+        $mform->addRule('description', get_string('strexceedslimit255','gradereport_gradebook_xp_admin'), 'maxlength', 255, 'server');
+
+        $mform->addRule('maxcomlvl', get_string('missinginput', 'gradereport_gradebook_xp_admin'), 'required', null, 'server');
+        $mform->addRule('maxcomlvl', get_string('nonNumericError', 'gradereport_gradebook_xp_admin'), 'numeric', null, 'server');
+        $mform->addRule('maxcomlvl', get_string('strupto999', 'gradereport_gradebook_xp_admin'), 'maxlength', 3, 'server');
+
 //-------------------------------------------------------------------------------
         // Set defaults for editing if the current record exists
         if (!empty($current)) {
@@ -114,17 +125,6 @@ class edit_form extends moodleform
         }
         $activities = $activitiesForm;
 
-        //Add Group for MaxComLvl
-        $maxcomlvl_group = array();
-
-        //Add Max Competency Level Input
-        // Add Max Competency Level Input to the group
-        $maxcomlvl_group[] = $mform->createElement('text', 'maxcomlvl', get_string('maxcomlvl', 'gradereport_gradebook_xp_admin'));
-        $mform->setType('maxcomlvl', PARAM_INT); //TODO: sanitize input
-
-        // Add the group to the form
-        $mform->addGroup($maxcomlvl_group, 'maxcomlvl_group', get_string('maxcomlvl', 'gradereport_gradebook_xp_admin'), ' ', false);
-
         // Create a group for the multiselect elements
         $multiselect_group = array();
 
@@ -143,8 +143,7 @@ class edit_form extends moodleform
         $mform->addGroup($multiselect_group, 'multiselect_group', get_string('activities', 'gradereport_gradebook_xp_admin'), ' ', false);
 
         // Add Dropdown Menu for level (ranging from 1 to max_lvl)
-        $dropdown = $mform->addElement('select', 'level', get_string('level', 'gradereport_gradebook_xp_admin'), range(1,'maxcomlvl'), array());
-        //$dropdown->freeze();
+        $mform->addElement('select', 'level', get_string('level', 'gradereport_gradebook_xp_admin'), range(1,'maxcomlvl'), array());
 
 //-------------------------------------------------------------------------------
         // Add action buttons to the form
