@@ -18,8 +18,8 @@ $table_com = 'gradereport_gradebook_xp_com';
 $table_con = 'gradereport_gradebook_xp_con';
 
 // Generate CSV file, get the filename returned by generate_csv function
-$table1_csv = generate_csv($table_com, sys_get_temp_dir() . '/test1.csv');
-$table2_csv = generate_csv($table_con, sys_get_temp_dir() . '/test2.csv');
+$table1_csv = generate_csv($table_com, sys_get_temp_dir() . '/' . $table_com . '.csv');
+$table2_csv = generate_csv($table_con, sys_get_temp_dir() . '/' . $table_con . '.csv');
 
 // Create a zip archive
 $zip = new ZipArchive();
