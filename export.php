@@ -38,9 +38,11 @@ if ($zip->close() !== TRUE) {
     die("Failed to close zip archive");
 }
 
+$filename = $courseid . "_gradebook_xp.zip";
+
 // Serve the zip file to the user
 header("Content-type: application/zip");
-header("Content-Disposition: attachment; filename=$temp_zip_file");
+header("Content-Disposition: attachment; filename=$filename");
 header("Pragma: no-cache");
 header("Expires: 0");
 readfile($temp_zip_file);
