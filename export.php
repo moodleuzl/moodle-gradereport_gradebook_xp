@@ -29,7 +29,7 @@ $temp_zip_file = sys_get_temp_dir() . '/exported_data.zip';
 $zip->open($temp_zip_file, ZipArchive::CREATE);
 
 // Add CSV file to the zip archive
-$zip->addFile($table1_csv, $table_com . '.csv');;
+$zip->addFile($table1_csv, $table_com . '.csv');
 $zip->addFile($table2_csv, $table_con . '.csv');
 
 
