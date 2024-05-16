@@ -8,6 +8,7 @@ require_once 'lib.php';
 require_once 'db_controller.php';
 
 $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp_admin/js/move_multiselect.js'));
+$PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp_admin/js/change_level.js'));
 
 // Get URL parameters
 $courseid = required_param('courseid', PARAM_INT);
@@ -84,9 +85,9 @@ function handle_action_buttons() {
 
             foreach ($connectionsArray as $connection) {
                 $activityId = $connection['id'];
-                $connectionWeight = $connection['weight'];
+                $connectionLevel = $connection['level'];
 
-                gradereport_gradebook_xp_admin_set_competency_connection($activityId, $fromform->id, $connectionWeight);
+                gradereport_gradebook_xp_admin_set_competency_connection($activityId, $fromform->id, $connectionLevel);
                 $activityIds[] = $activityId;
                 // Process these values as needed
             }
@@ -108,6 +109,7 @@ function handle_action_buttons() {
                 $existing_competency->name = $fromform->name;
                 $existing_competency->description = $fromform->description;
                 $existing_competency->parentid = $fromform->parentid;
+                $existing_competency->maxcomlvl = $fromform->maxcomlvl;
 
                 update_competency($existing_competency);
 
@@ -122,6 +124,7 @@ function handle_action_buttons() {
         $competencytoinsert->name = $fromform->name;
         $competencytoinsert->description = $fromform->description;
         $competencytoinsert->parentid = $fromform->parentid;
+        $competencytoinsert->maxcomlvl = $fromform->maxcomlvl;
 
         insert_competency($competencytoinsert);
 

@@ -132,9 +132,9 @@ function gradereport_gradebook_xp_admin_add_competency($courseid, $name, $descri
  * Add a competency -> activity connection or overwrite an existing one
  * @param int $activityid ID of the activity to connect
  * @param int $competencyid ID of the competency to connect
- * @param int $weight Weight of the competency for this activity
+ * @param int $level Level of the competency for this activity
  */
-function gradereport_gradebook_xp_admin_set_competency_connection($activityid, $competencyid, $weight)
+function gradereport_gradebook_xp_admin_set_competency_connection($activityid, $competencyid, $level)
 {
     global $DB;
 
@@ -146,7 +146,7 @@ function gradereport_gradebook_xp_admin_set_competency_connection($activityid, $
     if ($connection) {
 
         // Update value
-        $connection->weight = $weight;
+        $connection->level = $level;
 
         // Update record with new competency
         update_connection($connection);
@@ -157,7 +157,7 @@ function gradereport_gradebook_xp_admin_set_competency_connection($activityid, $
         $connection = array(
             "activityid" => $activityid,
             "competencyid" => $competencyid,
-            "weight" => $weight
+            "level" => $level
         );
 
         // Insert new record

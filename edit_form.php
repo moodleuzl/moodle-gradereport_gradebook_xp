@@ -63,11 +63,25 @@ class edit_form extends moodleform
         // Add competency descriptionion text element to form
         $mform->addElement('textarea', 'description', get_string('description', 'gradereport_gradebook_xp_admin'));
         $mform->setType('description', PARAM_TEXT);
+
+        // Add competency max level input element to form
+        $mform->addElement('text', 'maxcomlvl', get_string('maxcomlvl', 'gradereport_gradebook_xp_admin'));
+        $mform->setType('maxcomlvl', PARAM_NOTAGS);
+
+
 //-------------------------------------------------------------------------------
         // Add rules to the form
 
         // Add validation rule for competency name text element
         $mform->addRule('name', get_string('missingname', 'gradereport_gradebook_xp_admin'), 'required', null, 'server');
+        $mform->addRule('name', get_string('strexceedslimit100', 'gradereport_gradebook_xp_admin'), 'maxlength', 100, 'server');
+
+        $mform->addRule('description', get_string('strexceedslimit255','gradereport_gradebook_xp_admin'), 'maxlength', 255, 'server');
+
+        $mform->addRule('maxcomlvl', get_string('missinginput', 'gradereport_gradebook_xp_admin'), 'required', null, 'server');
+        $mform->addRule('maxcomlvl', get_string('nonNumericError', 'gradereport_gradebook_xp_admin'), 'numeric', null, 'server');
+        $mform->addRule('maxcomlvl', get_string('strupto999', 'gradereport_gradebook_xp_admin'), 'maxlength', 3, 'server');
+
 //-------------------------------------------------------------------------------
         // Set defaults for editing if the current record exists
         if (!empty($current)) {
@@ -76,6 +90,7 @@ class edit_form extends moodleform
             $mform->setDefault('name', $current->name);
             $mform->setDefault('parentid', $current->parentid);
             $mform->setDefault('description', $current->description);
+            $mform->setDefault('maxcomlvl', $current->maxcomlvl);
         }
 //-------------------------------------------------------------------------------
         // Retrieve activity records
@@ -99,8 +114,8 @@ class edit_form extends moodleform
         foreach ($connectionsRecords as $connectionRecord) {
             $activity = $activities[$connectionRecord->activityid];
 
-            $connectionValue = json_encode(array('id' => $connectionRecord->activityid, 'name' => $activity['activityName'], 'weight' => $connectionRecord->weight));
-            $connections[$connectionValue] = $activity['activityName'] . " | " . $connectionRecord->weight;
+            $connectionValue = json_encode(array('id' => $connectionRecord->activityid, 'name' => $activity['activityName'], 'level' => $connectionRecord->level));
+            $connections[$connectionValue] = $activity['activityName'] . " | " . $connectionRecord->level;
             unset($activities[$connectionRecord->activityid]);
         }
 
@@ -127,10 +142,8 @@ class edit_form extends moodleform
         // Add the group to the form
         $mform->addGroup($multiselect_group, 'multiselect_group', get_string('activities', 'gradereport_gradebook_xp_admin'), ' ', false);
 
-        // Add input box for weight
-        $mform->addElement('text', 'weight', get_string('weight', 'gradereport_gradebook_xp_admin'));
-
-        $mform->setType('weight', PARAM_INT);
+        // Add Dropdown Menu for level (ranging from 1 to max_lvl)
+        $mform->addElement('select', 'level', get_string('level', 'gradereport_gradebook_xp_admin'), range(1,'maxcomlvl'), array());
 
 //-------------------------------------------------------------------------------
         // Add action buttons to the form

@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const move_to_multiselect2_btn = document.querySelector('button[name="move_to_multiselect2"]');
     const multiselect1 = document.querySelector('select[name="multiselect1[]"]');
     const multiselect2 = document.querySelector('select[name="multiselect2[]"]');
-    const weightInput = document.querySelector('input[name="weight"]');
+    const levelInput = document.querySelector('#id_level');
     const connectionsInput = document.querySelector('input[name="connections"]');
 
     function updateConnectionsData() {
@@ -12,11 +12,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = JSON.parse(option.value);
             const split_text = option.text.split(' | ');
             const name = split_text.slice(0, -1).join(' | ');  // Get only the name part
-            const weight = option.text.split(' | ').pop();  // Get only the weight part
+            const level = option.text.split(' | ').pop();  // Get only the level part
             return {
                 id: data.id,
                 name: name,
-                weight: Number(weight)  // Use stored weight if available
+                level: Number(level)  // Use stored level if available
             };
         });
         connectionsInput.value = JSON.stringify(connectionsData);
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Prevent default button action
         event.preventDefault();
 
-        if (weightInput.value === '' || isNaN(weightInput.value)) {
+        if (levelInput.value === '' || isNaN(levelInput.value)) {
             return;
         }
 
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = JSON.parse(option.value);  // Parse the JSON value
             option.remove();
 
-            const newOption = new Option(`${data.name} | ${weightInput.value}`, option.value);
+            const newOption = new Option(`${data.name} | ${levelInput.value}`, option.value);
             multiselect2.add(newOption);
         });
         updateConnectionsData();
