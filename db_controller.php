@@ -249,3 +249,79 @@ function get_connections($competencyid)
 
     return $connections;
 }
+
+/**
+ * Get all activity names associated with a competency and its sub-competencies recursively.
+ *
+ * @param int $competencyid The ID of the competency.
+ * @return array An array containing the names of activities associated with the competency and its sub-competencies.
+ */
+function get_competency_activities($competencyid) {
+    global $DB;
+
+    // Initialize an empty array to store activity names
+    $activityNames = array();
+
+    // Get all connections of the specified competency and its sub-competencies recursively
+    $connections = get_connections_recursive($competencyid);
+
+    // Extract unique activity IDs from connections
+    $activityIds = array_unique(array_column($connections, 'activityid'));
+
+    // Retrieve activity details (such as name) based on the activity IDs
+    foreach ($activityIds as $activityId) {
+        // Retrieve activity details from the appropriate table (assign, quiz, vpl, etc.)
+        $activityDetails = get_activity_details($activityId);
+        if ($activityDetails) {
+            // Add activity name to the array
+            $activityNames[] = $activityDetails;
+        }
+    }
+
+    return $activityNames;
+}
+
+/**
+ * Get all connections of a competency and its sub-competencies recursively.
+ *
+ * @param int $competencyid The ID of the competency.
+ * @return array An array containing all connections of the competency and its sub-competencies.
+ */
+function get_connections_recursive($competencyid) {
+    global $DB;
+
+    // Initialize an empty array to store connections
+    $allConnections = array();
+
+    // Get connections of the current competency
+    $connections = get_connections($competencyid);
+
+    // Add connections to the array
+    $allConnections = array_merge($allConnections, $connections);
+
+    // Recursively get connections of child competencies
+    $children = get_direct_children($competencyid);
+    foreach ($children as $child) {
+        $allConnections = array_merge($allConnections, get_connections_recursive($child->id));
+    }
+
+    return $allConnections;
+}
+
+
+/**
+ * Get activity details based on the activity ID.
+ *
+ * @param int $activityId The ID of the activity.
+ * @return stdClass|null The details of the activity, or null if not found.
+ */
+function get_activity_details($activityId) {
+    global $courseid;
+
+    $course_activities = get_all_activities($courseid);
+    foreach ($course_activities as $activity) {
+        if ($activity->id == $activityId) {
+            return $activity;
+        }
+    }
+}
