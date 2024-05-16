@@ -26,7 +26,7 @@ class import_form extends moodleform
         $mform->addElement('hidden', 'id', $courseid);
         $mform->setType('id', PARAM_INT);
 
-        $mform->addElement('filepicker', 'userfile', get_string('file'), null, array('accepted_types' => '.csv'));
+        $mform->addElement('filepicker', 'userfile', get_string('file'), null, array('accepted_types' => '.zip'));
         $mform->addElement('submit', 'submitbutton', get_string('import'));
     }
 }
