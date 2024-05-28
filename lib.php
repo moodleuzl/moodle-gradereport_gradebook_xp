@@ -164,3 +164,43 @@ function gradereport_gradebook_xp_admin_set_competency_connection($activityid, $
         insert_connection($connection);
     }
 }
+
+/**
+ * Get all competencies hierarchy.
+ *
+ * This function retrieves the hierarchical structure of all competencies for a specified course.
+ * It uses recursion to build the competency tree and returns an array representing the hierarchy.
+ *
+ * @param int|null $courseId The ID of the course whose competencies are being retrieved. Defaults to null, which means
+ * the current course will be used.
+ *
+ * @return array An array representing the hierarchical structure of all competencies for the specified course.
+ * @throws dml_exception
+ */
+function get_all_competencies_hierarchy(int $courseId = null): array
+{
+    global $COURSE;
+
+    if (is_null($courseId)) {
+        $courseId = $COURSE->id;
+    }
+
+    // Get all competencies of the specified course with their parent IDs
+    $competencies = get_all_competencies($courseId);
+
+    // Function to recursively build hierarchy
+    function get_hierarchy($competencies, $parentId = 0): array
+    {
+        $hierarchy = array();
+        foreach ($competencies as $competency) {
+            if ($competency->parentid == $parentId) {
+                $competency->subCompetencies = get_hierarchy($competencies, $competency->id);
+                $hierarchy[$competency->id] = $competency;
+            }
+        }
+        return $hierarchy;
+    }
+
+    // Build hierarchy
+    return get_hierarchy($competencies);
+}
