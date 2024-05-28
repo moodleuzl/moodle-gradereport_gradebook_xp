@@ -249,36 +249,37 @@ function get_connections($competencyid)
 
     return $connections;
 }
-
 /**
- * Get all activity names associated with a competency and its sub-competencies recursively.
+ * Get all activity details (name and level) associated with a competency and its sub-competencies recursively.
  *
  * @param int $competencyid The ID of the competency.
- * @return array An array containing the names of activities associated with the competency and its sub-competencies.
+ * @return array An array of objects containing the activity ID, name, and level.
  */
 function get_competency_activities($competencyid) {
-    global $DB;
+    global $DB, $courseid;
 
-    // Initialize an empty array to store activity names
-    $activityNames = array();
+    // Initialize an empty array to store activity details
+    $activityDetailsArray = array();
 
     // Get all connections of the specified competency and its sub-competencies recursively
     $connections = get_connections_recursive($competencyid);
 
-    // Extract unique activity IDs from connections
-    $activityIds = array_unique(array_column($connections, 'activityid'));
+    // Iterate over connections to get activity details
+    foreach ($connections as $connection) {
+        $activityId = $connection->activityid;
+        $level = $connection->level;
 
-    // Retrieve activity details (such as name) based on the activity IDs
-    foreach ($activityIds as $activityId) {
         // Retrieve activity details from the appropriate table (assign, quiz, vpl, etc.)
         $activityDetails = get_activity_details($activityId);
         if ($activityDetails) {
-            // Add activity name to the array
-            $activityNames[] = $activityDetails;
+            // Add level to the activity details
+            $activityDetails->level = $level;
+            // Add activity details to the array
+            $activityDetailsArray[] = $activityDetails;
         }
     }
 
-    return $activityNames;
+    return $activityDetailsArray;
 }
 
 /**
@@ -308,7 +309,6 @@ function get_connections_recursive($competencyid) {
     return $allConnections;
 }
 
-
 /**
  * Get activity details based on the activity ID.
  *
@@ -321,7 +321,11 @@ function get_activity_details($activityId) {
     $course_activities = get_all_activities($courseid);
     foreach ($course_activities as $activity) {
         if ($activity->id == $activityId) {
-            return $activity;
+            $activityDetails = new stdClass();
+            $activityDetails->id = $activity->id;
+            $activityDetails->name = $activity->name;
+            return $activityDetails;
         }
     }
+    return null;
 }
