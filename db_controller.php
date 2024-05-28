@@ -37,24 +37,38 @@ function get_available_parents($currentRecordId)
     return $availableParents;
 }
 
+/**
+ * Retrieves the details of a competency based on its ID.
+ *
+ * @param int $id The ID of the competency to retrieve.
+ * @return array|false An associative array containing the competency's details if found, false otherwise.
+ * @throws dml_exception
+ */
 function get_competency($id)
 {
     global $DB;
 
-    $competency = $DB->get_record('gradereport_gradebook_xp_com', array('id' => $id));
-
-    return $competency;
+    // Attempt to retrieve the competency details from the database
+    return $DB->get_record('gradereport_gradebook_xp_com', array('id' => $id));
 }
 
-function get_all_competencies()
+/**
+ * Retrieves all competencies of a course.
+ *
+ * @param int|null $courseId Optional. Pass null for the current course, or specify another course ID to retrieve its competencies.
+ * @return array An associative array containing details of all competencies in the specified course. If no records are found, an empty array is returned.
+ * @throws dml_exception
+ */
+function get_all_competencies($courseId = null)
 {
     global $COURSE, $DB;
 
+    if (is_null($courseId)) {
+        $courseId = $COURSE->id;
+    }
+
     // Get all competencies of this course with all fields. Ignore if no records are found and just return an empty array
-    $competencies = $DB->get_records("gradereport_gradebook_xp_com", array("courseid" => $COURSE->id), 'id ASC');
-
-
-    return $competencies;
+    return $DB->get_records("gradereport_gradebook_xp_com", array("courseid" => $courseId), 'id ASC');
 }
 
 function get_direct_children($id)
