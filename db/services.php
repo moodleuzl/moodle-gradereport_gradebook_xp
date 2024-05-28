@@ -8,15 +8,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// Example
-// 'gradebook_xp_admin_get_course_grades' => array(
-//     'classname' => 'gradebook_xp_admin_external',
-//     'methodname' => 'get_course_grades',
-//     'description' => 'Get the given user courses final grades',
-//     'type' => 'read',
-//     'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
-// )
-
 $functions = array(
 
 );
