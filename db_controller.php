@@ -293,6 +293,11 @@ function get_competency_activities($competencyid) {
         }
     }
 
+    // Sort the array by level in descending order
+    usort($activityDetailsArray, function($a, $b) {
+        return $b->level - $a->level;
+    });
+
     return $activityDetailsArray;
 }
 
