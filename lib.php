@@ -171,6 +171,7 @@ function get_hierarchy($competencies, $parentId = 0): array
     foreach ($competencies as $competency) {
         if ($competency->parentid == $parentId) {
             $competency->subCompetencies = get_hierarchy($competencies, $competency->id);
+            $competency->connections = get_connections($competency->id);
             $hierarchy[$competency->id] = $competency;
         }
     }
