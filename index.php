@@ -13,7 +13,7 @@ gradereport_gradebook_xp_admin_setup_page($courseid, 'moodle/grade:manage');
 $PAGE->navbar->add(get_string('preferences'));
 
 // Get the competencies for the course and sort by ID
-$competencies = get_all_competencies_hierarchy($courseid);
+$competencies = get_competencies_hierarchy($courseid);
 
 // Display the competency hierarchy recursively
 function display_hierarchy($competencies) {
