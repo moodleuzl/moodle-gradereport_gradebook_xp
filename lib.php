@@ -165,18 +165,37 @@ function gradereport_gradebook_xp_admin_set_competency_connection($activityid, $
     }
 }
 
+/**
+ * Recursively constructs a hierarchical structure of competencies.
+ *
+ * @param array $competencies An array of competency objects.
+ * @param int $parentId The parent ID to start building the hierarchy from. Defaults to 0.
+ * @return array The hierarchical structure of competencies.
+ */
 function get_hierarchy($competencies, $parentId = 0): array
 {
+    // Initialize an empty array to store the hierarchy
     $hierarchy = array();
+
+    // Iterate through each competency
     foreach ($competencies as $competency) {
+        // Check if the competency's parent ID matches the given parent ID
         if ($competency->parentid == $parentId) {
+            // Recursively call get_hierarchy to retrieve sub-competencies
             $competency->subCompetencies = get_hierarchy($competencies, $competency->id);
+
+            // Retrieve connections for the current competency
             $competency->connections = get_connections($competency->id);
+
+            // Add the competency to the hierarchy array
             $hierarchy[$competency->id] = $competency;
         }
     }
+
+    // Return the hierarchical structure
     return $hierarchy;
 }
+
 
 /**
  * Get all competencies hierarchy.
