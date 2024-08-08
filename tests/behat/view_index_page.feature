@@ -19,7 +19,7 @@ Feature: View Gradebook XP Admin index page
   Scenario: View Gradebook XP Admin index page
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
-    And I navigate to Gradebook XP Admin in "Course 1"
+    And I navigate to "View > Gradebook XP Admin" in the course gradebook
     Then I should see "Gradebook XP Admin"
     And I should see "Manage Competencies"
     And I should see "Export"
