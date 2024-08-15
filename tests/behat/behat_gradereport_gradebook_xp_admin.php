@@ -70,9 +70,5 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
 
         // Click the delete button
         $deleteButton->click();
-
-        // Accept the alert
-        $driver = $this->getSession()->getDriver();
-        $driver->getWebDriverSession()->accept_alert();
     }
 }
