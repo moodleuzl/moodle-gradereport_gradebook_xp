@@ -14,6 +14,11 @@ Feature: View Gradebook XP Admin index page
     And the following "course enrolments" exist:
       | user     | course | role           |
       | teacher1 | C1     | editingteacher |
+    And the following competencies in my plugin exist:
+      | courseid  | name         | parentid | description     | maxcomlvl |
+      | C1        | MyCompetency1  | 0        | MyDescription1  | 10        |
+      | C1        | MyCompetency2  | 0        | MyDescription2  | 5         |
+      | C1        | MyCompetency3  | 0        | MyDescription3  | 2         |
 
   @javascript
   Scenario: View Gradebook XP Admin index page
@@ -21,6 +26,6 @@ Feature: View Gradebook XP Admin index page
     And I am on "Course 1" course homepage
     And I navigate to "View > Gradebook XP Admin" in the course gradebook
     Then I should see "Gradebook XP Admin"
-    And I should see "Manage Competencies"
-    And I should see "Export"
-    And I should see "Import"
+    And I should see "MyCompetency1"
+    And I should see "MyCompetency2"
+    And I should see "MyCompetency3"
