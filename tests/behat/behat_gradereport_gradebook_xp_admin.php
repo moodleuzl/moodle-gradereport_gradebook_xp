@@ -6,6 +6,7 @@ require_once(__DIR__ . '/../../../../tests/behat/behat_grade.php');
 
 use Behat\Mink\Exception\ExpectationException as ExpectationException;
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Exception\ElementNotFoundException;
 
 class behat_gradereport_gradebook_xp_admin extends behat_base {
     /**
@@ -52,5 +53,26 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
             throw new Exception("The field '{$field}' for competency '{$competency}' contains '{$competencySection->getText()}', expected '{$value}'");
         }
     }
+    /**
+     * @When I click on the "Delete competency" button for :competency and confirm the deletion
+     */
+    public function iClickOnTheDeleteCompetencyButtonForAndConfirmTheDeletion($competency)
+    {
+        // Find the delete button associated with the competency
+        $deleteButton = $this->getSession()->getPage()->find(
+            'xpath',
+            "//h4[contains(text(), '{$competency}')]/following-sibling::input[@value='Delete competency']"
+        );
 
+        if (null === $deleteButton) {
+            throw new ElementNotFoundException($this->getSession()->getDriver(), "button", "text", "Delete competency for {$competency}");
+        }
+
+        // Click the delete button
+        $deleteButton->click();
+
+        // Accept the alert
+        $driver = $this->getSession()->getDriver();
+        $driver->getWebDriverSession()->accept_alert();
+    }
 }

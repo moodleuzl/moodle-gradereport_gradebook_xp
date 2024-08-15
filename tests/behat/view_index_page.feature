@@ -1,4 +1,4 @@
-@grade @gradereport_gradebook_xp_admin @javascript
+@grade @gradereport_gradebook_xp_admin
 Feature: View Gradebook XP Admin index page
   In order to verify the Gradebook XP Admin index page is displayed correctly
   As an editing teacher
@@ -20,6 +20,7 @@ Feature: View Gradebook XP Admin index page
       | C1        | MyCompetency2  | 0        | MyDescription2  | 5         |
       | C1        | MyCompetency3  | 0        | MyDescription3  | 2         |
 
+  @javascript
   Scenario: View index page
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
@@ -29,6 +30,7 @@ Feature: View Gradebook XP Admin index page
     And I should see "MyCompetency2"
     And I should see "MyCompetency3"
 
+  @javascript
   Scenario: View manage_competencies page
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
@@ -57,3 +59,18 @@ Feature: View Gradebook XP Admin index page
     And the "Name" field should contain "MyCompetency3" for competency "MyCompetency3"
     And the "Parent Name" field should contain "" for competency "MyCompetency3"
     And the "Description" field should contain "MyDescription3" for competency "MyCompetency3"
+
+  @javascript
+  Scenario: Delete a competency
+    Given I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    And I navigate to "View > Gradebook XP Admin" in the course gradebook
+    Then I should see "Gradebook XP Admin"
+    Then I click on "Manage Competencies" "button"
+    Then I should see "List of competencies"
+
+    And I should see "MyCompetency1"
+
+    When I click on the "Delete competency" button for "MyCompetency1" and confirm the deletion
+
+    Then I should not see "MyCompetency1"
