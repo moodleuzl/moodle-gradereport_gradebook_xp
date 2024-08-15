@@ -34,11 +34,23 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
         }
     }
     /**
-     * Helper function to get course ID by full name
+     * @Then /^the "(?P<field>[^"]*)" field should contain "(?P<value>[^"]*)" for competency "(?P<competency>[^"]*)"$/
      */
-    private function get_course_id_by_fullname($fullname) {
-        global $DB;
-        $course = $DB->get_record('course', ['fullname' => $fullname], 'id', MUST_EXIST);
-        return $course->id;
+    public function theFieldShouldContainForCompetency($field, $value, $competency) {
+        // Locate the specific competency section first
+        $competencySection = $this->getSession()->getPage()->find(
+            'xpath',
+            "//h4[contains(text(), '{$competency}')]/following-sibling::table//td[strong[contains(text(), '{$field}:')]]/following-sibling::td"
+        );
+
+        if (null === $competencySection) {
+            throw new Exception("Field '{$field}' for competency '{$competency}' not found on the page");
+        }
+
+        // Check if the field within the competency section contains the expected value.
+        if ($competencySection->getText() !== $value) {
+            throw new Exception("The field '{$field}' for competency '{$competency}' contains '{$competencySection->getText()}', expected '{$value}'");
+        }
     }
+
 }

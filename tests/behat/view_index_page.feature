@@ -1,4 +1,4 @@
-@grade @gradereport_gradebook_xp_admin
+@grade @gradereport_gradebook_xp_admin @javascript
 Feature: View Gradebook XP Admin index page
   In order to verify the Gradebook XP Admin index page is displayed correctly
   As an editing teacher
@@ -20,8 +20,7 @@ Feature: View Gradebook XP Admin index page
       | C1        | MyCompetency2  | 0        | MyDescription2  | 5         |
       | C1        | MyCompetency3  | 0        | MyDescription3  | 2         |
 
-  @javascript
-  Scenario: View Gradebook XP Admin index page
+  Scenario: View index page
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I navigate to "View > Gradebook XP Admin" in the course gradebook
@@ -29,3 +28,32 @@ Feature: View Gradebook XP Admin index page
     And I should see "MyCompetency1"
     And I should see "MyCompetency2"
     And I should see "MyCompetency3"
+
+  Scenario: View manage_competencies page
+    Given I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    And I navigate to "View > Gradebook XP Admin" in the course gradebook
+    Then I should see "Gradebook XP Admin"
+    Then I click on "Manage Competencies" "button"
+    Then I should see "List of competencies"
+
+    And I should see "MyCompetency1"
+    And the "Parent ID" field should contain "0" for competency "MyCompetency1"
+    And the "Max Level" field should contain "10" for competency "MyCompetency1"
+    And the "Name" field should contain "MyCompetency1" for competency "MyCompetency1"
+    And the "Parent Name" field should contain "" for competency "MyCompetency1"
+    And the "Description" field should contain "MyDescription1" for competency "MyCompetency1"
+
+    And I should see "MyCompetency2"
+    And the "Parent ID" field should contain "0" for competency "MyCompetency2"
+    And the "Max Level" field should contain "5" for competency "MyCompetency2"
+    And the "Name" field should contain "MyCompetency2" for competency "MyCompetency2"
+    And the "Parent Name" field should contain "" for competency "MyCompetency2"
+    And the "Description" field should contain "MyDescription2" for competency "MyCompetency2"
+
+    And I should see "MyCompetency2"
+    And the "Parent ID" field should contain "0" for competency "MyCompetency3"
+    And the "Max Level" field should contain "2" for competency "MyCompetency3"
+    And the "Name" field should contain "MyCompetency3" for competency "MyCompetency3"
+    And the "Parent Name" field should contain "" for competency "MyCompetency3"
+    And the "Description" field should contain "MyDescription3" for competency "MyCompetency3"
