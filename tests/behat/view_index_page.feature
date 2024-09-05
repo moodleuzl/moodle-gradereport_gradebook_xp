@@ -86,9 +86,10 @@ Feature: View Gradebook XP Admin index page
     Then I click on "Manage Competencies" "button"
     Then I should see "List of competencies"
     When I click on the "Edit competency" button for "MyCompetency1"
-    And I fill in "Competency name" with "EditedCompetency"
-    And I fill in "Competency description" with "EditedCompetencyDescription"
-    And I fill in "Max Competency Level" with "8"
+    And I set the following fields to these values:
+      | Competency name         | EditedCompetency             |
+      | Competency description  | EditedCompetencyDescription  |
+      | Max Competency Level    | 8                            |
     And I click on "Save changes" "button"
     Then I should see "You have successfully updated the competency: 'EditedCompetency'"
     And I should see "EditedCompetency"
