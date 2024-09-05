@@ -69,9 +69,10 @@ Feature: View Gradebook XP Admin index page
     Then I click on "Manage Competencies" "button"
     Then I should see "List of competencies"
     When I click on "Add competency" "button"
-    And I fill in "Competency name" with "NewCompetency"
-    And I fill in "Competency description" with "NewCompetencyDescription"
-    And I fill in "Max Competency Level" with "7"
+    And I set the following fields to these values:
+      | Competency name         | NewCompetency             |
+      | Competency description  | NewCompetencyDescription  |
+      | Max Competency Level    | 7                         |
     And I click on "Save changes" "button"
     Then I should see "You have successfully created the competency: 'NewCompetency'"
     And I should see "NewCompetency"
