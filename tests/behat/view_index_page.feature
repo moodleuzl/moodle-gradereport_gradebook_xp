@@ -110,3 +110,13 @@ Feature: View Gradebook XP Admin index page
 
     Then I should see "You have successfully deleted the competency."
     And I should not see "MyCompetency1"
+
+  @javascript @mytest
+  Scenario: Export plugin data
+    Given I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    And I navigate to "View > Gradebook XP Admin" in the course gradebook
+    Then I should see "Gradebook XP Admin"
+
+    When I click on "Export" "button"
+    Then following "Export" should download between "0" and "5000" bytes
