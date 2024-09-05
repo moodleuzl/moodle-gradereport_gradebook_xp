@@ -144,7 +144,7 @@ function generate_output() {
     $PAGE->navbar->add($heading);
 
     // Print header
-    print_grade_page_head($courseid, 'settings', 'gradebook_xp_admin', $heading, false, false, false);
+    print_grade_page_head($courseid, 'report', 'gradebook_xp_admin', $heading, false, false, false);
 
     // displays the form
     $mform->display();
