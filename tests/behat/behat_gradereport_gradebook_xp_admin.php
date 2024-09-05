@@ -56,8 +56,7 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
     /**
      * @When I click on the "Delete competency" button for :competency and confirm the deletion
      */
-    public function iClickOnTheDeleteCompetencyButtonForAndConfirmTheDeletion($competency)
-    {
+    public function iClickOnTheDeleteCompetencyButtonForAndConfirmTheDeletion($competency) {
         // Find the delete button associated with the competency
         $deleteButton = $this->getSession()->getPage()->find(
             'xpath',
