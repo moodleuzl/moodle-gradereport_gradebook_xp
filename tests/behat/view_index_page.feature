@@ -61,6 +61,22 @@ Feature: View Gradebook XP Admin index page
     And the "Description" field should contain "MyDescription3" for competency "MyCompetency3"
 
   @javascript
+  Scenario: Add a competency
+    Given I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    And I navigate to "View > Gradebook XP Admin" in the course gradebook
+    Then I should see "Gradebook XP Admin"
+    Then I click on "Manage Competencies" "button"
+    Then I should see "List of competencies"
+    When I click on "Add competency" "button"
+    And I fill in "Competency name" with "NewCompetency"
+    And I fill in "Competency description" with "NewCompetencyDescription"
+    And I fill in "Max Competency Level" with "7"
+    And I click on "Save changes" "button"
+    Then I should see "You have successfully created the competency: 'NewCompetency'"
+    And I should see "NewCompetency"
+
+  @javascript
   Scenario: Delete a competency
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
