@@ -70,4 +70,22 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
         // Click the delete button
         $deleteButton->click();
     }
+
+    /**
+     * @When I click on the "Edit competency" button for :competency
+     */
+    public function iClickOnTheEditCompetencyButtonFor($competency) {
+        // Find the delete button associated with the competency
+        $deleteButton = $this->getSession()->getPage()->find(
+            'xpath',
+            "//h4[contains(text(), '{$competency}')]/following-sibling::input[@value='Edit competency']"
+        );
+
+        if (null === $deleteButton) {
+            throw new ElementNotFoundException($this->getSession()->getDriver(), "button", "text", "Edit competency for {$competency}");
+        }
+
+        // Click the delete button
+        $deleteButton->click();
+    }
 }
