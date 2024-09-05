@@ -106,5 +106,7 @@ Feature: View Gradebook XP Admin index page
     And I should see "MyCompetency1"
 
     When I click on the "Delete competency" button for "MyCompetency1"
+    Then I click on "Delete" "button" in the ".modal-dialog" "css_element"
+
     Then I should see "You have successfully deleted the competency."
     And I should not see "MyCompetency1"
