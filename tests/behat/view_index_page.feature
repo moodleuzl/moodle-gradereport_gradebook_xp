@@ -77,6 +77,22 @@ Feature: View Gradebook XP Admin index page
     And I should see "NewCompetency"
 
   @javascript
+  Scenario: Edit a competency
+    Given I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    And I navigate to "View > Gradebook XP Admin" in the course gradebook
+    Then I should see "Gradebook XP Admin"
+    Then I click on "Manage Competencies" "button"
+    Then I should see "List of competencies"
+    When I click on the "Edit competency" button for "MyCompetency1"
+    And I fill in "Competency name" with "EditedCompetency"
+    And I fill in "Competency description" with "EditedCompetencyDescription"
+    And I fill in "Max Competency Level" with "8"
+    And I click on "Save changes" "button"
+    Then I should see "You have successfully updated the competency: 'EditedCompetency'"
+    And I should see "EditedCompetency"
+
+  @javascript
   Scenario: Delete a competency
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
