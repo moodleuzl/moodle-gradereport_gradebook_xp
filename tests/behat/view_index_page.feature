@@ -105,6 +105,6 @@ Feature: View Gradebook XP Admin index page
 
     And I should see "MyCompetency1"
 
-    When I click on the "Delete competency" button for "MyCompetency1" and confirm the deletion
+    When I click on the "Delete competency" button for "MyCompetency1"
     Then I should see "You have successfully deleted the competency."
     And I should not see "MyCompetency1"
