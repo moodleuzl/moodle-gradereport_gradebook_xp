@@ -187,7 +187,7 @@ if ($mform->is_cancelled()) {
 $PAGE->navbar->add('Import');
 
 // Print header
-print_grade_page_head($courseid, 'settings', 'gradebook_xp_admin', 'Import', false, false, false);
+print_grade_page_head($courseid, 'report', 'gradebook_xp_admin', 'Import', false, false, false);
 
 // displays the form
 $mform->display();
