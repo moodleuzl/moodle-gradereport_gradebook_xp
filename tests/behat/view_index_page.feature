@@ -111,7 +111,7 @@ Feature: View Gradebook XP Admin index page
     Then I should see "You have successfully deleted the competency."
     And I should not see "MyCompetency1"
 
-  @javascript @mytest
+  @javascript
   Scenario: Export plugin data
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
