@@ -53,7 +53,7 @@ Feature: View Gradebook XP Admin index page
     And the "Parent Name" field should contain "" for competency "MyCompetency2"
     And the "Description" field should contain "MyDescription2" for competency "MyCompetency2"
 
-    And I should see "MyCompetency2"
+    And I should see "MyCompetency3"
     And the "Parent ID" field should contain "0" for competency "MyCompetency3"
     And the "Max Level" field should contain "2" for competency "MyCompetency3"
     And the "Name" field should contain "MyCompetency3" for competency "MyCompetency3"
