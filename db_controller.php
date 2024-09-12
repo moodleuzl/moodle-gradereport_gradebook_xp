@@ -25,7 +25,8 @@ function get_available_parents($currentRecordId)
             )
             SELECT id, name
             FROM {gradereport_gradebook_xp_com}
-            WHERE courseid = ? AND id NOT IN (
+            WHERE courseid = ? 
+            AND id NOT IN (
                 SELECT id FROM item_descendants UNION
                 SELECT ? WHERE parentid IS NULL
             )
