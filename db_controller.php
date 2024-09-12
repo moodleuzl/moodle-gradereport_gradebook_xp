@@ -276,18 +276,21 @@ function get_connection($activityid, $competencyid) {
 function insert_connection($connection) {
     global $DB;
 
+    // Insert the new connection record into the database.
     $DB->insert_record('gradereport_gradebook_xp_con', $connection);
 }
 
 function update_connection($connection) {
     global $DB;
 
+    // Update the connection record in the database.
     $DB->update_record("gradereport_gradebook_xp_con", $connection);
 }
 
 function delete_connection($id) {
     global $DB;
 
+    // Delete the connection record from the database.
     $DB->delete_records("gradereport_gradebook_xp_con", array('id' => $id));
 }
 
@@ -301,6 +304,7 @@ function get_connections($competencyid)
 {
     global $DB;
 
+    // Retrieve all connections related to the specified competency.
     $connections = $DB->get_records("gradereport_gradebook_xp_con", array("competencyid" => $competencyid));
 
     return $connections;
@@ -379,9 +383,13 @@ function get_connections_recursive($competencyid) {
 function get_activity_details($activityId) {
     global $courseid;
 
+    // Retrieve all activities of the course.
     $course_activities = get_all_activities($courseid);
+
+    // Iterate through the activities to find a matching ID.
     foreach ($course_activities as $activity) {
         if ($activity->id == $activityId) {
+            // Create an object to store the activity details.
             $activityDetails = new stdClass();
             $activityDetails->id = $activity->id;
             $activityDetails->name = $activity->name;
