@@ -74,6 +74,12 @@ function get_all_competencies($courseId = null)
     return $DB->get_records("gradereport_gradebook_xp_com", array("courseid" => $courseId), 'id ASC');
 }
 
+/**
+ * Retrieves direct children of a given competency by its ID.
+ *
+ * @param int $id The ID of the parent competency.
+ * @return array An array of direct children records of the specified competency.
+ */
 function get_direct_children($id)
 {
     global $DB;
@@ -84,6 +90,12 @@ function get_direct_children($id)
     return $children_records;
 }
 
+/**
+ * Retrieves all descendants (children, grandchildren, etc.) of a given competency by its ID.
+ *
+ * @param int $id The ID of the parent competency.
+ * @return array An array of all descendant records of the specified competency.
+ */
 function get_all_children($id)
 {
     global $DB;
@@ -108,6 +120,11 @@ function get_all_children($id)
     return $children_records;
 }
 
+/**
+ * Updates an existing competency in the database.
+ *
+ * @param stdClass $competency The competency object containing updated data.
+ */
 function update_competency($competency)
 {
     global $DB;
@@ -116,6 +133,11 @@ function update_competency($competency)
     $DB->update_record('gradereport_gradebook_xp_com', $competency);
 }
 
+/**
+ * Inserts a new competency into the database.
+ *
+ * @param stdClass $competency The competency object to insert.
+ */
 function insert_competency($competency)
 {
     global $DB;
@@ -124,6 +146,11 @@ function insert_competency($competency)
     $DB->insert_record('gradereport_gradebook_xp_com', $competency);
 }
 
+/**
+ * Deletes a competency from the database by its ID.
+ *
+ * @param int $id The ID of the competency to delete.
+ */
 function delete_competency($id)
 {
     global $DB;
