@@ -3,7 +3,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 /**
- * Retrieves the parent options for a select element based on the provided record ID.
+ * Retrieves the available parent options for a select element excluding the current record and its descendants.
  *
  * @param int|null $currentRecordId The ID of the current record. Pass null if no record ID is available.
  * @return array An array of parent options for the select element.
@@ -12,7 +12,7 @@ function get_available_parents($currentRecordId)
 {
     global $COURSE, $DB;
 
-    // SQL query to retrieve available parent options for the select element based on the current record's ID.
+    // Recursive SQL query to retrieve all available parent options excluding current record and its descendants.
     $sql = "WITH RECURSIVE item_descendants AS (
                 SELECT id, parentid, name
                 FROM {gradereport_gradebook_xp_com}
@@ -38,7 +38,7 @@ function get_available_parents($currentRecordId)
 }
 
 /**
- * Retrieves the details of a competency based on its ID.
+ * Retrieves a competency's details based on its ID.
  *
  * @param int $id The ID of the competency to retrieve.
  * @return array|false An associative array containing the competency's details if found, false otherwise.
@@ -48,15 +48,15 @@ function get_competency($id)
 {
     global $DB;
 
-    // Attempt to retrieve the competency details from the database
+    // Retrieve competency record from the database.
     return $DB->get_record('gradereport_gradebook_xp_com', array('id' => $id));
 }
 
 /**
- * Retrieves all competencies of a course.
+ * Retrieves all competencies for a specified course or the current course.
  *
- * @param int|null $courseId Optional. Pass null for the current course, or specify another course ID to retrieve its competencies.
- * @return array An associative array containing details of all competencies in the specified course. If no records are found, an empty array is returned.
+ * @param int|null $courseId Optional. Specify another course ID or pass null for the current course.
+ * @return array An associative array containing competencies of the specified course, or an empty array if none are found.
  * @throws dml_exception
  */
 function get_all_competencies($courseId = null)
@@ -67,7 +67,7 @@ function get_all_competencies($courseId = null)
         $courseId = $COURSE->id;
     }
 
-    // Get all competencies of this course with all fields. Ignore if no records are found and just return an empty array
+    // Retrieve all competencies for the specified course, ordered by ID.
     return $DB->get_records("gradereport_gradebook_xp_com", array("courseid" => $courseId), 'id ASC');
 }
 
@@ -84,7 +84,7 @@ function get_all_children($id)
 {
     global $DB;
 
-    // Use a recursive SQL query to get all children records of the parent
+    // Recursive SQL query to retrieve all descendant records of the specified parent.
     $sql = "WITH RECURSIVE item_descendants AS (
                 SELECT id, parentid, name
                 FROM {gradereport_gradebook_xp_com}
@@ -129,7 +129,7 @@ function delete_competency($id)
  * Retrieves all assignments of a course visible to the user.
  *
  * @param int $courseid The ID of the course.
- * @return array An array containing all assignments of the course visible to the user. If nothing is found, an empty array is returned.
+ * @return array An array of all assignments visible to the user. Returns an empty array if none are found.
  */
 function get_all_assignments($courseid)
 {
@@ -155,7 +155,7 @@ function get_all_assignments($courseid)
  * Retrieves all quizzes of a course visible to the user.
  *
  * @param int $courseid The ID of the course.
- * @return array An array containing all quizzes of the course visible to the user. If nothing is found, an empty array is returned.
+ * @return array An array of all quizzes visible to the user. Returns an empty array if none are found.
  */
 function get_all_quizzes($courseid)
 {
@@ -178,10 +178,10 @@ function get_all_quizzes($courseid)
 }
 
 /**
- * Retrieves all vpls of a course visible to the user.
+ * Retrieves all virtual programming labs (VPLs) of a course visible to the user.
  *
  * @param int $courseid The ID of the course.
- * @return array An array containing all quizzes of the course visible to the user. If nothing is found, an empty array is returned.
+ * @return array An array of all VPLs visible to the user. Returns an empty array if none are found.
  */
 function get_all_vpls($courseid)
 {
@@ -204,14 +204,14 @@ function get_all_vpls($courseid)
 }
 
 /**
- * Retrieves all activities of a course visible to the user.
+ * Retrieves all activities (assignments, quizzes, VPLs) of a course visible to the user.
  *
  * @param int $courseid The ID of the course.
- * @return array An array containing all activities of the course visible to the user. If nothing is found, an empty array is returned.
+ * @return array An array of all activities (assignments, quizzes, VPLs) visible to the user. Returns an empty array if none are found.
  */
 function get_all_activities($courseid)
 {
-    // Merge all activities into a single array
+    // Merge all activities (assignments, quizzes, and VPLs) into a single array.
     $activities = array_merge(
         get_all_assignments($courseid),
         get_all_quizzes($courseid),
