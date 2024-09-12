@@ -214,7 +214,7 @@ function get_all_vpls($courseid)
         ORDER BY cm.section, v.name
     ", array($courseid));
 
-    return $quizzes;
+    return $vpls;
 }
 
 /**
