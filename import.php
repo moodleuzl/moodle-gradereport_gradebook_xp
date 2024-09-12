@@ -16,18 +16,34 @@ $PAGE->navbar->add(get_string('preferences'));
 $mform = new import_form();
 
 
+/**
+ * Process and import data into the specified tables in the database.
+ *
+ * This function parses CSV data for competencies and connections,
+ * inserts them into their respective tables, and updates parent IDs
+ * based on the mappings generated during insertion.
+ *
+ * @param int $courseid The ID of the course for which the data is being processed.
+ * @param string $com_name The name of the competency table in the database.
+ * @param string $com_table The CSV data for competencies.
+ * @param string $con_name The name of the connection table in the database.
+ * @param string $con_table The CSV data for connections.
+ *
+ * @throws dml_exception
+ * @global moodle_database $DB The global database object.
+ */
 function process_data($courseid, $com_name, $com_table, $con_name, $con_table)
 {
     global $DB;
 
-    // Parse the CSV data
+    // Parse the CSV data for competencies
     $com_rows = explode("\n", $com_table);
     $com_headers = str_getcsv(array_shift($com_rows));
 
-    // Initialize arrays to store old and new IDs
+    // Initialize array to store old and new IDs mapping
     $mapping = [];
 
-    // Iterate through each row in the CSV data
+    // Iterate through each row in the CSV data for competencies
     foreach ($com_rows as $row) {
         // Skip empty rows
         if (!empty($row)) {
@@ -44,13 +60,12 @@ function process_data($courseid, $com_name, $com_table, $con_name, $con_table)
             // Insert a new record and store the new ID
             $new_id = (int)$DB->insert_record($com_name, (object)$record);
 
+            // Store mapping of old and new IDs
             $mapping[$old_id] = $new_id;
         }
     }
 
-
-
-    // Update the parent IDs for the new records
+    // Update the parent IDs for the new competency records
     foreach ($mapping as $old_key => $new_value) {
         // Get the record with the old ID from the database
         $existing_record = $DB->get_record($com_name, array('id' => $new_value));
@@ -58,11 +73,7 @@ function process_data($courseid, $com_name, $com_table, $con_name, $con_table)
         // Check if the record exists
         if ($existing_record) {
             // Get the new ID corresponding to the old parent ID
-            if (isset($mapping[$existing_record->parentid])) {
-                $new_parent_id = $mapping[$existing_record->parentid];
-            } else {
-                $new_parent_id = 0;
-            }
+            $new_parent_id = isset($mapping[$existing_record->parentid]) ? $mapping[$existing_record->parentid] : 0;
 
             // Update the parentid property of the existing record
             $existing_record->parentid = $new_parent_id;
@@ -71,21 +82,17 @@ function process_data($courseid, $com_name, $com_table, $con_name, $con_table)
             $DB->update_record($com_name, $existing_record);
         } else {
             // Handle the case where the record with the old ID does not exist
-            // This may occur if the record was not successfully retrieved from the database
-            // You may want to log an error or handle this situation as needed
             echo "Error: Record with ID $old_key not found in the database.";
         }
     }
 
-///////// CONNECTIONS
-
-    // Parse the CSV data
+    // Parse the CSV data for connections
     $con_rows = explode("\n", $con_table);
     $con_headers = str_getcsv(array_shift($con_rows));
 
     $connection_ids = [];
 
-    // Iterate through each row in the CSV data
+    // Iterate through each row in the CSV data for connections
     foreach ($con_rows as $row) {
         // Skip empty rows
         if (!empty($row)) {
@@ -102,38 +109,33 @@ function process_data($courseid, $com_name, $com_table, $con_name, $con_table)
             // Insert a new record and store the new ID
             $new_id = (int)$DB->insert_record($con_name, (object)$record);
 
+            // Store the new ID
             $connection_ids[] = $new_id;
         }
     }
 
-
-    // Update the parent IDs for the new records
+    // Update the competency IDs for the new connection records
     foreach ($connection_ids as $new_value) {
         // Get the record with the old ID from the database
         $existing_record = $DB->get_record($con_name, array('id' => $new_value));
 
         // Check if the record exists
         if ($existing_record) {
-            // Get the new ID corresponding to the old parent ID
-            if (isset($mapping[$existing_record->competencyid])) {
-                $new_competencyid = $mapping[$existing_record->competencyid];
-            } else {
-                $new_competencyid = 0;
-            }
+            // Get the new ID corresponding to the old competency ID
+            $new_competencyid = isset($mapping[$existing_record->competencyid]) ? $mapping[$existing_record->competencyid] : 0;
 
-            // Update the parentid property of the existing record
+            // Update the competencyid property of the existing record
             $existing_record->competencyid = $new_competencyid;
 
             // Update the record in the database
             $DB->update_record($con_name, $existing_record);
         } else {
             // Handle the case where the record with the old ID does not exist
-            // This may occur if the record was not successfully retrieved from the database
-            // You may want to log an error or handle this situation as needed
-            echo "Error: Record with ID $old_key not found in the database.";
+            echo "Error: Record with ID $old_id not found in the database.";
         }
     }
 }
+
 
 
 if ($mform->is_cancelled()) {
@@ -185,7 +187,7 @@ if ($mform->is_cancelled()) {
 $PAGE->navbar->add('Import');
 
 // Print header
-print_grade_page_head($courseid, 'settings', 'gradebook_xp_admin', 'Import', false, false, false);
+print_grade_page_head($courseid, 'report', 'gradebook_xp_admin', 'Import', false, false, false);
 
 // displays the form
 $mform->display();

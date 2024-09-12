@@ -38,7 +38,7 @@ $templatecontext = (object)[
     'courseid' => $courseid,
 ];
 
-print_grade_page_head($courseid, 'settings', 'gradebook_xp_admin', get_string('pluginname', 'gradereport_gradebook_xp_admin'), false, '');
+print_grade_page_head($courseid, 'report', 'gradebook_xp_admin', get_string('pluginname', 'gradereport_gradebook_xp_admin'), false, '');
 echo(display_hierarchy($competencies));
 echo $OUTPUT->render_from_template('gradereport_gradebook_xp_admin/preferences', $templatecontext);
 echo $OUTPUT->footer();
