@@ -175,6 +175,7 @@ function get_all_quizzes($courseid)
         return array(); // Return empty array if table doesn't exist.
     }
 
+    // SQL query to get all quiz records for the specified course.
     $quizzes = $DB->get_records_sql("
         SELECT cm.id, cm.course, q.name, q.intro, 'quiz' AS module
         FROM {course_modules} cm
