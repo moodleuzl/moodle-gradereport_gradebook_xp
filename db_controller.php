@@ -264,6 +264,13 @@ function get_all_activities($courseid)
     return $activities;
 }
 
+/**
+ * Retrieves the connection between an activity and a competency based on their IDs.
+ *
+ * @param int $activityid The ID of the activity.
+ * @param int $competencyid The ID of the competency.
+ * @return stdClass|null The connection object if found, or null if not found.
+ */
 function get_connection($activityid, $competencyid) {
     global $DB;
 
@@ -273,6 +280,11 @@ function get_connection($activityid, $competencyid) {
     return $connection;
 }
 
+/**
+ * Inserts a new connection between an activity and a competency into the database.
+ *
+ * @param stdClass $connection The connection object to insert.
+ */
 function insert_connection($connection) {
     global $DB;
 
@@ -280,6 +292,11 @@ function insert_connection($connection) {
     $DB->insert_record('gradereport_gradebook_xp_con', $connection);
 }
 
+/**
+ * Updates an existing connection between an activity and a competency in the database.
+ *
+ * @param stdClass $connection The connection object to update.
+ */
 function update_connection($connection) {
     global $DB;
 
@@ -287,6 +304,11 @@ function update_connection($connection) {
     $DB->update_record("gradereport_gradebook_xp_con", $connection);
 }
 
+/**
+ * Deletes a connection between an activity and a competency from the database by its ID.
+ *
+ * @param int $id The ID of the connection to delete.
+ */
 function delete_connection($id) {
     global $DB;
 
