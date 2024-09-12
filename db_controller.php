@@ -309,6 +309,7 @@ function get_connections($competencyid)
 
     return $connections;
 }
+
 /**
  * Retrieves activity details (name and level) associated with a competency and its sub-competencies recursively.
  *
