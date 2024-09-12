@@ -1,5 +1,6 @@
 <?php
 
+// Prevent direct script access outside Moodle environment.
 defined('MOODLE_INTERNAL') || die;
 
 /**
@@ -32,9 +33,9 @@ function get_available_parents($currentRecordId)
             ORDER BY id";
 
     $params = array($currentRecordId, $COURSE->id, $currentRecordId, $currentRecordId);
-    $availableParents = $DB->get_records_sql($sql, $params); // Get parent records
+    $availableParents = $DB->get_records_sql($sql, $params); // Execute the query
 
-    return $availableParents;
+    return $availableParents; // Return parent records
 }
 
 /**
@@ -63,6 +64,7 @@ function get_all_competencies($courseId = null)
 {
     global $COURSE, $DB;
 
+    // Default to the current course if no course ID is provided.
     if (is_null($courseId)) {
         $courseId = $COURSE->id;
     }
@@ -75,6 +77,7 @@ function get_direct_children($id)
 {
     global $DB;
 
+    // Retrieve direct child records with the parent ID.
     $children_records = $DB->get_records('gradereport_gradebook_xp_com', array('parentid' => $id));
 
     return $children_records;
@@ -99,7 +102,7 @@ function get_all_children($id)
             WHERE id != ?";
 
     $params = array($id, $id);
-    $children_records = $DB->get_records_sql($sql, $params);
+    $children_records = $DB->get_records_sql($sql, $params); // Execute the query
 
     return $children_records;
 }
@@ -108,6 +111,7 @@ function update_competency($competency)
 {
     global $DB;
 
+    // Update the competency record in the database.
     $DB->update_record('gradereport_gradebook_xp_com', $competency);
 }
 
@@ -115,6 +119,7 @@ function insert_competency($competency)
 {
     global $DB;
 
+    // Insert a new competency record into the database.
     $DB->insert_record('gradereport_gradebook_xp_com', $competency);
 }
 
@@ -122,6 +127,7 @@ function delete_competency($id)
 {
     global $DB;
 
+    // Delete the competency record from the database.
     $DB->delete_records('gradereport_gradebook_xp_com', array('id' => $id));
 }
 
@@ -134,10 +140,13 @@ function delete_competency($id)
 function get_all_assignments($courseid)
 {
     global $DB;
+
+    // Check if the 'assign' table exists in the database.
     if (!$DB->get_manager()->table_exists("assign")) {
-        return array();
+        return array(); // Return empty array if table doesn't exist.
     }
 
+    // SQL query to get all assignment records for the specified course.
     $assignments = $DB->get_records_sql("
         SELECT cm.id, cm.course, a.name, a.intro, 'assign' AS module
         FROM {course_modules} cm
@@ -160,8 +169,10 @@ function get_all_assignments($courseid)
 function get_all_quizzes($courseid)
 {
     global $DB;
+
+    // Check if the 'quiz' table exists in the database.
     if (!$DB->get_manager()->table_exists("quiz")) {
-        return array();
+        return array(); // Return empty array if table doesn't exist.
     }
 
     $quizzes = $DB->get_records_sql("
@@ -186,11 +197,14 @@ function get_all_quizzes($courseid)
 function get_all_vpls($courseid)
 {
     global $DB;
+
+    // Check if the 'vpl' table exists in the database.
     if (!$DB->get_manager()->table_exists("vpl")) {
-        return array();
+        return array(); // Return empty array if table doesn't exist.
     }
 
-    $quizzes = $DB->get_records_sql("
+    // SQL query to get all VPL records for the specified course.
+    $vpls = $DB->get_records_sql("
         SELECT cm.id, cm.course, v.name, v.intro, 'vpl' AS module
         FROM {course_modules} cm
         INNER JOIN {modules} m ON cm.module = m.id
@@ -221,7 +235,6 @@ function get_all_activities($courseid)
     return $activities;
 }
 
-// TODO: connections
 function get_connection($activityid, $competencyid) {
     global $DB;
 
