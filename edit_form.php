@@ -125,25 +125,30 @@ class edit_form extends moodleform
         }
         $activities = $activitiesForm;
 
-        // Create a group for the multiselect elements
-        $multiselect_group = array();
+        $action = optional_param('action', null, PARAM_ALPHA); // Get action from the URL
 
-        // Add multiselect 1 to the group
-        $multiselect_group[] = $mform->createElement('select', 'multiselect1', get_string('activities', 'gradereport_gradebook_xp_admin'), $activities, array('multiple' => 'multiple'));
+        // Check if the action is 'new'
+        if ($action !== 'new') {
+            // Create a group for the multiselect elements
+            $multiselect_group = array();
 
+            // Add multiselect 1 to the group
+            $multiselect_group[] = $mform->createElement('select', 'multiselect1', get_string('activities', 'gradereport_gradebook_xp_admin'), $activities, array('multiple' => 'multiple'));
 
-        // Add move buttons to the group
-        $multiselect_group[] = $mform->createElement('button', 'move_to_multiselect2', '>>');
-        $multiselect_group[] = $mform->createElement('button', 'move_to_multiselect1', '<<');
+            // Add move buttons to the group
+            $multiselect_group[] = $mform->createElement('button', 'move_to_multiselect2', '>>');
+            $multiselect_group[] = $mform->createElement('button', 'move_to_multiselect1', '<<');
 
-        // Add multiselect 2 to the group
-        $multiselect_group[] = $mform->createElement('select', 'multiselect2', get_string('connections', 'gradereport_gradebook_xp_admin'), $connections, array('multiple' => 'multiple'));
+            // Add multiselect 2 to the group
+            $multiselect_group[] = $mform->createElement('select', 'multiselect2', get_string('connections', 'gradereport_gradebook_xp_admin'), $connections, array('multiple' => 'multiple'));
 
-        // Add the group to the form
-        $mform->addGroup($multiselect_group, 'multiselect_group', get_string('activities', 'gradereport_gradebook_xp_admin'), ' ', false);
+            // Add the group to the form
+            $mform->addGroup($multiselect_group, 'multiselect_group', get_string('activities', 'gradereport_gradebook_xp_admin'), ' ', false);
 
-        // Add Dropdown Menu for level (ranging from 1 to max_lvl)
-        $mform->addElement('select', 'level', get_string('level', 'gradereport_gradebook_xp_admin'), range(1,'maxcomlvl'), array());
+            // Add Dropdown Menu for level (ranging from 1 to max_lvl)
+            $mform->addElement('select', 'level', get_string('level', 'gradereport_gradebook_xp_admin'), range(1, 'maxcomlvl'), array());
+        }
+
 
 //-------------------------------------------------------------------------------
         // Add action buttons to the form
