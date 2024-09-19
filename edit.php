@@ -13,7 +13,7 @@ $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp_a
 // Get URL parameters
 $courseid = required_param('courseid', PARAM_INT);
 $id = optional_param('id', null, PARAM_INT);
-$action = optional_param('action', null, PARAM_ALPHA);
+$action = optional_param('action', 'new', PARAM_ALPHA);
 
 gradereport_gradebook_xp_admin_setup_page($courseid, 'moodle/grade:manage');
 
