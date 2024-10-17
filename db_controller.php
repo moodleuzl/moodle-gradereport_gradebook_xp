@@ -1,5 +1,4 @@
 <?php
-
 // Prevent direct script access outside Moodle environment.
 defined('MOODLE_INTERNAL') || die;
 
