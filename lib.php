@@ -38,7 +38,7 @@ require_once($CFG->dirroot . '/grade/report/gradebook_xp_admin/db_controller.php
 function gradereport_gradebook_xp_admin_setup_page($courseid, $capability = 'moodle/grade:manage') {
     global $PAGE, $CFG, $DB, $context;
 
-    // Set page URL and layout
+    // Set page URL and layout.
     $url = new moodle_url('/grade/report/gradebook_xp_admin/' . gradereport_gradebook_xp_admin_get_caller_filename(),
         ['id' => $courseid]);
     if ($courseid !== 0) {
@@ -50,7 +50,7 @@ function gradereport_gradebook_xp_admin_setup_page($courseid, $capability = 'moo
     $PAGE->requires->jquery();
     $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp_admin/js/change_active_tab.js'));
 
-    // Verify user has access to course
+    // Verify user has access to course.
     if (!$course = $DB->get_record('course', ['id' => $courseid])) {
         print_error('invalidcourseid');
     }
@@ -94,30 +94,30 @@ function gradereport_gradebook_xp_admin_get_caller_filename() {
 function gradereport_gradebook_xp_admin_add_competency($courseid, $name, $description) {
     global $DB;
 
-    // Attempt to find matching record in our table
+    // Attempt to find matching record in our table.
     $table = "gradereport_gradebook_xp_com";
     $competency = $DB->get_record($table, ["courseid" => $courseid, "name" => $name]);
 
-    // Update or insert record
+    // Update or insert record.
     if ($competency) {
 
-        // Update values
+        // Update values.
         $competency->name = $name;
         $competency->description = $description;
 
-        // Update record with new competency
+        // Update record with new competency.
         update_competency($competency);
 
     } else {
 
-        // Construct new competency array
+        // Construct new competency array.
         $competency = [
             "courseid" => $courseid,
             "name" => $name,
             "description" => $description,
         ];
 
-        // Insert new record
+        // Insert new record.
         insert_competency($competency);
     }
 }
@@ -134,29 +134,29 @@ function gradereport_gradebook_xp_admin_add_competency($courseid, $name, $descri
 function gradereport_gradebook_xp_admin_set_competency_connection($activityid, $competencyid, $level) {
     global $DB;
 
-    // Attempt to find matching record in our table
+    // Attempt to find matching record in our table.
     $table = "gradereport_gradebook_xp_con";
     $connection = get_connection($activityid, $competencyid);
 
-    // Update or insert record
+    // Update or insert record.
     if ($connection) {
 
-        // Update value
+        // Update value.
         $connection->level = $level;
 
-        // Update record with new competency
+        // Update record with new competency.
         update_connection($connection);
 
     } else {
 
-        // Construct new competency array
+        // Construct new competency array.
         $connection = [
             "activityid" => $activityid,
             "competencyid" => $competencyid,
             "level" => $level,
         ];
 
-        // Insert new record
+        // Insert new record.
         insert_connection($connection);
     }
 }
@@ -170,25 +170,25 @@ function gradereport_gradebook_xp_admin_set_competency_connection($activityid, $
  * @return array The hierarchical structure of competencies.
  */
 function get_hierarchy($competencies, $parentid = 0): array {
-    // Initialize an empty array to store the hierarchy
+    // Initialize an empty array to store the hierarchy.
     $hierarchy = [];
 
-    // Iterate through each competency
+    // Iterate through each competency.
     foreach ($competencies as $competency) {
-        // Check if the competency's parent ID matches the given parent ID
+        // Check if the competency's parent ID matches the given parent ID.
         if ($competency->parentid == $parentid) {
-            // Recursively call get_hierarchy to retrieve sub-competencies
+            // Recursively call get_hierarchy to retrieve sub-competencies.
             $competency->subCompetencies = get_hierarchy($competencies, $competency->id);
 
-            // Retrieve connections for the current competency
+            // Retrieve connections for the current competency.
             $competency->connections = get_connections($competency->id);
 
-            // Add the competency to the hierarchy array
+            // Add the competency to the hierarchy array.
             $hierarchy[$competency->id] = $competency;
         }
     }
 
-    // Return the hierarchical structure
+    // Return the hierarchical structure.
     return $hierarchy;
 }
 
@@ -211,9 +211,9 @@ function get_competencies_hierarchy(int $courseid = null, int $competencyid = 0)
         $courseid = $COURSE->id;
     }
 
-    // Get all competencies of the specified course with their parent IDs
+    // Get all competencies of the specified course with their parent IDs.
     $competencies = get_all_competencies($courseid);
 
-    // Build hierarchy
+    // Build hierarchy.
     return get_hierarchy($competencies, $competencyid);
 }

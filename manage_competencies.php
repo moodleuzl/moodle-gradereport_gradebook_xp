@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - http://moodle.org/.
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,17 +19,17 @@ require_once($CFG->dirroot . '/grade/lib.php');
 require_once('lib.php');
 require_once('db_controller.php');
 
-// Get required and optional parameters
+// Get required and optional parameters.
 $courseid = required_param('id', PARAM_INT);
 $userid = optional_param('userid', $USER->id, PARAM_INT);
 
-// Set up the page
+// Set up the page.
 gradereport_gradebook_xp_admin_setup_page($courseid, 'moodle/grade:manage');
 
-// Get the competencies for the course and sort by ID
+// Get the competencies for the course and sort by ID.
 $competencies = get_all_competencies();
 
-// Render the page
+// Render the page.
 $templatecontext = (object) [
     'competencies' => array_values($competencies),
     'gobackurl' => new moodle_url('/grade/report/gradebook_xp_admin/index.php'),

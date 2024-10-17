@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - https://moodle.org/
+// This file is part of Moodle - https://moodle.org/.
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-// Include behat_base for Moodle environment setup
+// Include behat_base for Moodle environment setup.
 require_once(__DIR__ . '/../../../../../lib/behat/behat_base.php');
 require_once(__DIR__ . '/../../../../tests/behat/behat_grade.php');
 
@@ -34,17 +34,17 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
 
         $competencies = $table->getHash();
         foreach ($competencies as $competency) {
-            // Get the course ID by shortname
+            // Get the course ID by shortname.
             $courseid = $DB->get_field('course', 'id', ['shortname' => $competency['courseid']]);
 
-            // Initialize the record
+            // Initialize the record.
             $record = new stdClass();
             $record->courseid = $courseid;
             $record->name = $competency['name'];
             $record->description = $competency['description'];
             $record->maxcomlvl = $competency['maxcomlvl'];
 
-            // If the parent name is not '0', find the parent competency's ID by its name
+            // If the parent name is not '0', find the parent competency's ID by its name.
             if ($competency['parentid'] !== '0') {
                 $parentid = $DB->get_field('gradereport_gradebook_xp_com', 'id',
                     ['name' => $competency['parentid'], 'courseid' => $courseid]);
@@ -53,7 +53,7 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
                 }
                 $record->parentid = $parentid;
             } else {
-                $record->parentid = 0; // No parent competency
+                $record->parentid = 0; // No parent competency.
             }
 
             // Insert the competency into your custom table.
@@ -65,7 +65,7 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
      * @Then /^the "(?P<field>[^"]*)" field should contain "(?P<value>[^"]*)" for competency "(?P<competency>[^"]*)"$/
      */
     public function thefieldshouldcontainforcompetency($field, $value, $competency) {
-        // Locate the specific competency section first
+        // Locate the specific competency section first.
         $competencysection = $this->getSession()->getPage()->find(
             'xpath',
             "//h4[contains(text(), '{$competency}')]/following-sibling::table//td[strong[contains(text(), '{$field}:')]]/following-sibling::td"
@@ -85,7 +85,7 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
      * @When I click on the "Delete competency" button for :competency
      */
     public function iclickonthedeletecompetencybuttonfor($competency) {
-        // Find the delete button associated with the competency
+        // Find the delete button associated with the competency.
         $deletebutton = $this->getSession()->getPage()->find(
             'xpath',
             "//h4[contains(text(), '{$competency}')]/following-sibling::input[@value='Delete competency']"
@@ -96,7 +96,7 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
                 "Delete competency for {$competency}");
         }
 
-        // Click the delete button
+        // Click the delete button.
         $deletebutton->click();
     }
 
@@ -104,7 +104,7 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
      * @When I click on the "Edit competency" button for :competency
      */
     public function iclickontheeditcompetencybuttonfor($competency) {
-        // Find the delete button associated with the competency
+        // Find the delete button associated with the competency.
         $deletebutton = $this->getSession()->getPage()->find(
             'xpath',
             "//h4[contains(text(), '{$competency}')]/following-sibling::input[@value='Edit competency']"
@@ -115,7 +115,7 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
                 "Edit competency for {$competency}");
         }
 
-        // Click the delete button
+        // Click the delete button.
         $deletebutton->click();
     }
 }
