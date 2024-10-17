@@ -9,8 +9,7 @@ defined('MOODLE_INTERNAL') || die;
  * @param int|null $currentRecordId The ID of the current record. Pass null if no record ID is available.
  * @return array An array of parent options for the select element.
  */
-function get_available_parents($currentRecordId)
-{
+function get_available_parents($currentRecordId) {
     global $COURSE, $DB;
 
     // Recursive SQL query to retrieve all available parent options excluding current record and its descendants.
@@ -46,8 +45,7 @@ function get_available_parents($currentRecordId)
  * @return array|false An associative array containing the competency's details if found, false otherwise.
  * @throws dml_exception
  */
-function get_competency($id)
-{
+function get_competency($id) {
     global $DB;
 
     // Retrieve competency record from the database.
@@ -61,8 +59,7 @@ function get_competency($id)
  * @return array An associative array containing competencies of the specified course, or an empty array if none are found.
  * @throws dml_exception
  */
-function get_all_competencies($courseId = null)
-{
+function get_all_competencies($courseId = null) {
     global $COURSE, $DB;
 
     // Default to the current course if no course ID is provided.
@@ -80,8 +77,7 @@ function get_all_competencies($courseId = null)
  * @param int $id The ID of the parent competency.
  * @return array An array of direct children records of the specified competency.
  */
-function get_direct_children($id)
-{
+function get_direct_children($id) {
     global $DB;
 
     // Retrieve direct child records with the parent ID.
@@ -96,8 +92,7 @@ function get_direct_children($id)
  * @param int $id The ID of the parent competency.
  * @return array An array of all descendant records of the specified competency.
  */
-function get_all_children($id)
-{
+function get_all_children($id) {
     global $DB;
 
     // Recursive SQL query to retrieve all descendant records of the specified parent.
@@ -125,8 +120,7 @@ function get_all_children($id)
  *
  * @param stdClass $competency The competency object containing updated data.
  */
-function update_competency($competency)
-{
+function update_competency($competency) {
     global $DB;
 
     // Update the competency record in the database.
@@ -138,8 +132,7 @@ function update_competency($competency)
  *
  * @param stdClass $competency The competency object to insert.
  */
-function insert_competency($competency)
-{
+function insert_competency($competency) {
     global $DB;
 
     // Insert a new competency record into the database.
@@ -151,8 +144,7 @@ function insert_competency($competency)
  *
  * @param int $id The ID of the competency to delete.
  */
-function delete_competency($id)
-{
+function delete_competency($id) {
     global $DB;
 
     // Delete the competency record from the database.
@@ -165,8 +157,7 @@ function delete_competency($id)
  * @param int $courseid The ID of the course.
  * @return array An array of all assignments visible to the user. Returns an empty array if none are found.
  */
-function get_all_assignments($courseid)
-{
+function get_all_assignments($courseid) {
     global $DB;
 
     // Check if the 'assign' table exists in the database.
@@ -194,8 +185,7 @@ function get_all_assignments($courseid)
  * @param int $courseid The ID of the course.
  * @return array An array of all quizzes visible to the user. Returns an empty array if none are found.
  */
-function get_all_quizzes($courseid)
-{
+function get_all_quizzes($courseid) {
     global $DB;
 
     // Check if the 'quiz' table exists in the database.
@@ -223,8 +213,7 @@ function get_all_quizzes($courseid)
  * @param int $courseid The ID of the course.
  * @return array An array of all VPLs visible to the user. Returns an empty array if none are found.
  */
-function get_all_vpls($courseid)
-{
+function get_all_vpls($courseid) {
     global $DB;
 
     // Check if the 'vpl' table exists in the database.
@@ -252,8 +241,7 @@ function get_all_vpls($courseid)
  * @param int $courseid The ID of the course.
  * @return array An array of all activities (assignments, quizzes, VPLs) visible to the user. Returns an empty array if none are found.
  */
-function get_all_activities($courseid)
-{
+function get_all_activities($courseid) {
     // Merge all activities (assignments, quizzes, and VPLs) into a single array.
     $activities = array_merge(
         get_all_assignments($courseid),
@@ -322,8 +310,7 @@ function delete_connection($id) {
  * @param int $competencyid The ID of the competency.
  * @return array An array of connection records related to the specified competency.
  */
-function get_connections($competencyid)
-{
+function get_connections($competencyid) {
     global $DB;
 
     // Retrieve all connections related to the specified competency.
@@ -363,7 +350,7 @@ function get_competency_activities($competencyid) {
     }
 
     // Sort the activities by level in descending order.
-    usort($activityDetailsArray, function($a, $b) {
+    usort($activityDetailsArray, function ($a, $b) {
         return $b->level - $a->level;
     });
 
