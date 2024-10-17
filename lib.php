@@ -50,12 +50,10 @@ function gradereport_gradebook_xp_admin_setup_page($courseid, $capability = 'moo
     $PAGE->requires->jquery();
     $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp_admin/js/change_active_tab.js'));
 
-    // Verify user has access to course.
-    if (!$course = $DB->get_record('course', ['id' => $courseid])) {
-        print_error('invalidcourseid');
+    if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+        throw new \moodle_exception('invalidcourseid');
     }
 
-    require_login($course);
     $context = context_course::instance($course->id);
     require_capability($capability, $context);
     $PAGE->set_context($context);

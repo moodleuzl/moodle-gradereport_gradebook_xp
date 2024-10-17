@@ -23,7 +23,8 @@ $courseid = required_param('id', PARAM_INT);
 $userid = optional_param('userid', $USER->id, PARAM_INT);
 
 // Set up the page
-gradereport_gradebook_xp_admin_setup_page($courseid, 'moodle/grade:manage');
+require_course_login($courseid);
+gradereport_gradebook_xp_admin_setup_page($courseid);
 $PAGE->navbar->add(get_string('preferences'));
 
 // Get the competencies for the course and sort by ID.

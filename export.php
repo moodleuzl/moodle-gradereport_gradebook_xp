@@ -30,7 +30,7 @@ if (!$course = $DB->get_record('course', ['id' => $courseid])) {
 }
 
 // Ensure user is logged in and has access to the course.
-require_login($course);
+require_course_login($courseid);
 $context = context_course::instance($course->id);
 
 // Define table names for competencies and connections.
