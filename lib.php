@@ -50,7 +50,7 @@ function gradereport_gradebook_xp_admin_setup_page($courseid, $capability = 'moo
     $PAGE->requires->jquery();
     $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp_admin/js/change_active_tab.js'));
 
-    if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+    if (!$course = $DB->get_record('course', ['id' => $courseid])) {
         throw new \moodle_exception('invalidcourseid');
     }
 
