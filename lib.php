@@ -75,21 +75,6 @@ function gradereport_gradebook_xp_admin_get_caller_filename() {
     return basename($caller['file']);
 }
 
-/**
- * Output a formatted and human-readable representation of a variable for debugging purposes.
- *
- * This function prints a preformatted and human-readable representation of the given variable
- * for debugging purposes. It uses print_r to display the variable's contents.
- *
- * @param mixed $value The variable to be debugged.
- *
- * @return void
- */
-function grade_report_gradebook_xp_admin_debug($value) {
-    echo "<pre>";
-    print_r($value);
-    echo "</pre>";
-}
 
 /**
  * Add or update a competency entry for the 'gradebook_xp' report in Moodle.
