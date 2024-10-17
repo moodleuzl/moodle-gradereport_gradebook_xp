@@ -150,13 +150,13 @@ function handle_action_buttons() {
 function generate_output() {
     global $PAGE, $heading, $courseid, $mform, $OUTPUT;
 
-    // add heading to navbar.
+    // Add heading to navbar.
     $PAGE->navbar->add($heading);
 
     // Print header.
     print_grade_page_head($courseid, 'report', 'gradebook_xp_admin', $heading, false, false, false);
 
-    // displays the form.
+    // Displays the form.
     $mform->display();
 
     // Print footer.
