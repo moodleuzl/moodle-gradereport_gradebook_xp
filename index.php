@@ -22,7 +22,7 @@ require_once('./lib.php');
 $courseid = required_param('id', PARAM_INT);
 $userid = optional_param('userid', $USER->id, PARAM_INT);
 
-// Set up the page
+// Set up the page.
 require_course_login($courseid);
 gradereport_gradebook_xp_admin_setup_page($courseid);
 $PAGE->navbar->add(get_string('preferences'));
