@@ -239,7 +239,8 @@ function get_all_vpls($courseid) {
  * Retrieves all activities (assignments, quizzes, VPLs) of a course visible to the user.
  *
  * @param int $courseid The ID of the course.
- * @return array An array of all activities (assignments, quizzes, VPLs) visible to the user. Returns an empty array if none are found.
+ * @return array An array of all activities (assignments, quizzes, VPLs) visible to the user. Returns an empty array if none are
+ *     found.
  */
 function get_all_activities($courseid) {
     // Merge all activities (assignments, quizzes, and VPLs) into a single array.
@@ -263,7 +264,8 @@ function get_connection($activityid, $competencyid) {
     global $DB;
 
     // Retrieve the matching record from the database based on activity and competency IDs.
-    $connection = $DB->get_record("gradereport_gradebook_xp_con", array("activityid" => $activityid, "competencyid" => $competencyid));
+    $connection =
+        $DB->get_record("gradereport_gradebook_xp_con", array("activityid" => $activityid, "competencyid" => $competencyid));
 
     return $connection;
 }
@@ -350,7 +352,7 @@ function get_competency_activities($competencyid) {
     }
 
     // Sort the activities by level in descending order.
-    usort($activityDetailsArray, function ($a, $b) {
+    usort($activityDetailsArray, function($a, $b) {
         return $b->level - $a->level;
     });
 

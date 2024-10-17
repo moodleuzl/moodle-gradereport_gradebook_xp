@@ -24,7 +24,8 @@ function gradereport_gradebook_xp_admin_setup_page($courseid, $capability = 'moo
     global $PAGE, $CFG, $DB, $context;
 
     // Set page URL and layout
-    $url = new moodle_url('/grade/report/gradebook_xp_admin/' . gradereport_gradebook_xp_admin_get_caller_filename(), array('id' => $courseid));
+    $url = new moodle_url('/grade/report/gradebook_xp_admin/' . gradereport_gradebook_xp_admin_get_caller_filename(),
+        array('id' => $courseid));
     if ($courseid !== 0) {
         $url->param('id', $courseid);
     }
@@ -113,7 +114,7 @@ function gradereport_gradebook_xp_admin_add_competency($courseid, $name, $descri
         $competency = array(
             "courseid" => $courseid,
             "name" => $name,
-            "description" => $description
+            "description" => $description,
         );
 
         // Insert new record
@@ -152,7 +153,7 @@ function gradereport_gradebook_xp_admin_set_competency_connection($activityid, $
         $connection = array(
             "activityid" => $activityid,
             "competencyid" => $competencyid,
-            "level" => $level
+            "level" => $level,
         );
 
         // Insert new record

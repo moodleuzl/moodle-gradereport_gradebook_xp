@@ -1,6 +1,6 @@
 <?php
 require_once('../../../config.php');
-require_once($CFG->dirroot.'/grade/lib.php');
+require_once($CFG->dirroot . '/grade/lib.php');
 require_once('./lib.php');
 require_once('./db_controller.php');
 require_once 'import_form.php';
@@ -14,7 +14,6 @@ $PAGE->navbar->add(get_string('preferences'));
 
 // Instantiate import_form
 $mform = new import_form();
-
 
 /**
  * Process and import data into the specified tables in the database.
@@ -32,8 +31,7 @@ $mform = new import_form();
  * @throws dml_exception
  * @global moodle_database $DB The global database object.
  */
-function process_data($courseid, $com_name, $com_table, $con_name, $con_table)
-{
+function process_data($courseid, $com_name, $com_table, $con_name, $con_table) {
     global $DB;
 
     // Parse the CSV data for competencies
@@ -58,7 +56,7 @@ function process_data($courseid, $com_name, $com_table, $con_name, $con_table)
             $record['courseid'] = $courseid;
 
             // Insert a new record and store the new ID
-            $new_id = (int)$DB->insert_record($com_name, (object)$record);
+            $new_id = (int) $DB->insert_record($com_name, (object) $record);
 
             // Store mapping of old and new IDs
             $mapping[$old_id] = $new_id;
@@ -107,7 +105,7 @@ function process_data($courseid, $com_name, $com_table, $con_name, $con_table)
             $record['courseid'] = $courseid;
 
             // Insert a new record and store the new ID
-            $new_id = (int)$DB->insert_record($con_name, (object)$record);
+            $new_id = (int) $DB->insert_record($con_name, (object) $record);
 
             // Store the new ID
             $connection_ids[] = $new_id;
@@ -136,8 +134,6 @@ function process_data($courseid, $com_name, $com_table, $con_name, $con_table)
     }
 }
 
-
-
 if ($mform->is_cancelled()) {
     // Handle form cancellation.
 } else if ($data = $mform->get_data()) {
@@ -151,11 +147,11 @@ if ($mform->is_cancelled()) {
 
     // Open the zip archive
     $zip = new ZipArchive;
-    if ($zip->open($zip_file) === TRUE) {
+    if ($zip->open($zip_file) === true) {
         $com_name = 'gradereport_gradebook_xp_com';
-        $com_table = Null;
+        $com_table = null;
         $con_name = 'gradereport_gradebook_xp_con';
-        $con_table = Null;
+        $con_table = null;
         // Extract each CSV file from the zip archive
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $filename = $zip->getNameIndex($i);
@@ -165,13 +161,11 @@ if ($mform->is_cancelled()) {
             $table_name = basename($filename, '.csv');
 
             // Check if the table name matches the expected ones
-            if ($table_name == $com_name){
+            if ($table_name == $com_name) {
                 $com_table = $csv_data;
-            }
-            else if ($table_name == $con_name) {
+            } else if ($table_name == $con_name) {
                 $con_table = $csv_data;
-            }
-            else {
+            } else {
                 echo "Skipping file $filename as it doesn't match the expected format.<br>";
             }
         }

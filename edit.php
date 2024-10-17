@@ -113,7 +113,7 @@ function handle_action_buttons() {
                 update_competency($existing_competency);
 
                 // Redirect with success message
-                redirect($returnurl, 'You have successfully updated the competency: \''.$fromform->name.'\'');
+                redirect($returnurl, 'You have successfully updated the competency: \'' . $fromform->name . '\'');
             }
         }
 
@@ -128,7 +128,7 @@ function handle_action_buttons() {
         insert_competency($competencytoinsert);
 
         // Redirect with success message
-        redirect($returnurl, 'You have successfully created the competency: \''.$fromform->name.'\'');
+        redirect($returnurl, 'You have successfully created the competency: \'' . $fromform->name . '\'');
 
     } else { // If form is submitted but the data doesn't validate and the form should be redisplayed or on the first display of the form
         handle_action(); // No action needed

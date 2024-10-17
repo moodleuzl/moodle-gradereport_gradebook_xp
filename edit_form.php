@@ -34,7 +34,7 @@ class edit_form extends moodleform {
         }
         $parent_options += array_column($availableParents, 'name', 'id'); // Add parent options to array
 
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
         // Add hidden parameters to the form
 
         // Add hidden id element to form
@@ -47,8 +47,9 @@ class edit_form extends moodleform {
 
         // Hidden element to store activities array as a JSON string
         $mform->addElement('hidden', 'connections', '');
-        $mform->setType('connections', PARAM_RAW);  // Using PARAM_RAW since it'll be a JSON string, but ensure you validate and sanitize the value on server-side before using it.
-//-------------------------------------------------------------------------------
+        $mform->setType('connections',
+            PARAM_RAW);  // Using PARAM_RAW since it'll be a JSON string, but ensure you validate and sanitize the value on server-side before using it.
+        //-------------------------------------------------------------------------------
         // Add visible parameters to the form
 
         // Add parent select element to form
@@ -66,21 +67,21 @@ class edit_form extends moodleform {
         $mform->addElement('text', 'maxcomlvl', get_string('maxcomlvl', 'gradereport_gradebook_xp_admin'));
         $mform->setType('maxcomlvl', PARAM_NOTAGS);
 
-
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
         // Add rules to the form
 
         // Add validation rule for competency name text element
         $mform->addRule('name', get_string('missingname', 'gradereport_gradebook_xp_admin'), 'required', null, 'server');
         $mform->addRule('name', get_string('strexceedslimit100', 'gradereport_gradebook_xp_admin'), 'maxlength', 100, 'server');
 
-        $mform->addRule('description', get_string('strexceedslimit255','gradereport_gradebook_xp_admin'), 'maxlength', 255, 'server');
+        $mform->addRule('description', get_string('strexceedslimit255', 'gradereport_gradebook_xp_admin'), 'maxlength', 255,
+            'server');
 
         $mform->addRule('maxcomlvl', get_string('missinginput', 'gradereport_gradebook_xp_admin'), 'required', null, 'server');
         $mform->addRule('maxcomlvl', get_string('nonNumericError', 'gradereport_gradebook_xp_admin'), 'numeric', null, 'server');
         $mform->addRule('maxcomlvl', get_string('strupto999', 'gradereport_gradebook_xp_admin'), 'maxlength', 3, 'server');
 
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
         // Set defaults for editing if the current record exists
         if (!empty($current)) {
             $mform->setDefault('id', $current->id);
@@ -90,7 +91,7 @@ class edit_form extends moodleform {
             $mform->setDefault('description', $current->description);
             $mform->setDefault('maxcomlvl', $current->maxcomlvl);
         }
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
         // Retrieve activity records
         $activityRecords = get_all_activities($COURSE->id);
 
@@ -112,7 +113,8 @@ class edit_form extends moodleform {
         foreach ($connectionsRecords as $connectionRecord) {
             $activity = $activities[$connectionRecord->activityid];
 
-            $connectionValue = json_encode(array('id' => $connectionRecord->activityid, 'name' => $activity['activityName'], 'level' => $connectionRecord->level));
+            $connectionValue = json_encode(array('id' => $connectionRecord->activityid, 'name' => $activity['activityName'],
+                'level' => $connectionRecord->level));
             $connections[$connectionValue] = $activity['activityName'] . " | " . $connectionRecord->level;
             unset($activities[$connectionRecord->activityid]);
         }
@@ -131,24 +133,29 @@ class edit_form extends moodleform {
             $multiselect_group = array();
 
             // Add multiselect 1 to the group
-            $multiselect_group[] = $mform->createElement('select', 'multiselect1', get_string('activities', 'gradereport_gradebook_xp_admin'), $activities, array('multiple' => 'multiple'));
+            $multiselect_group[] =
+                $mform->createElement('select', 'multiselect1', get_string('activities', 'gradereport_gradebook_xp_admin'),
+                    $activities, array('multiple' => 'multiple'));
 
             // Add move buttons to the group
             $multiselect_group[] = $mform->createElement('button', 'move_to_multiselect2', '>>');
             $multiselect_group[] = $mform->createElement('button', 'move_to_multiselect1', '<<');
 
             // Add multiselect 2 to the group
-            $multiselect_group[] = $mform->createElement('select', 'multiselect2', get_string('connections', 'gradereport_gradebook_xp_admin'), $connections, array('multiple' => 'multiple'));
+            $multiselect_group[] =
+                $mform->createElement('select', 'multiselect2', get_string('connections', 'gradereport_gradebook_xp_admin'),
+                    $connections, array('multiple' => 'multiple'));
 
             // Add the group to the form
-            $mform->addGroup($multiselect_group, 'multiselect_group', get_string('activities', 'gradereport_gradebook_xp_admin'), ' ', false);
+            $mform->addGroup($multiselect_group, 'multiselect_group', get_string('activities', 'gradereport_gradebook_xp_admin'),
+                ' ', false);
 
             // Add Dropdown Menu for level (ranging from 1 to max_lvl)
-            $mform->addElement('select', 'level', get_string('level', 'gradereport_gradebook_xp_admin'), range(1, 'maxcomlvl'), array());
+            $mform->addElement('select', 'level', get_string('level', 'gradereport_gradebook_xp_admin'), range(1, 'maxcomlvl'),
+                array());
         }
 
-
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
         // Add action buttons to the form
         $this->add_action_buttons();
     }

@@ -1,6 +1,6 @@
 <?php
 require_once('../../../config.php');
-require_once($CFG->dirroot.'/grade/lib.php');
+require_once($CFG->dirroot . '/grade/lib.php');
 require_once('./lib.php');
 require_once('./db_controller.php');
 
@@ -10,7 +10,7 @@ $userid = optional_param('userid', $USER->id, PARAM_INT);
 
 // Verify course ID validity
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-    throw new \moodle_exception('invalidcourseid');
+    throw new moodle_exception('invalidcourseid');
 }
 
 // Ensure user is logged in and has access to the course
@@ -37,7 +37,7 @@ $zip->addFile($table1_csv, $table_com . '.csv');
 $zip->addFile($table2_csv, $table_con . '.csv');
 
 // Close the zip archive
-if ($zip->close() !== TRUE) {
+if ($zip->close() !== true) {
     die("Failed to close zip archive");
 }
 
@@ -83,7 +83,7 @@ function generate_csv($tablename, $filename) {
     // Write each record to the CSV
     $records = $DB->get_records($tablename);
     foreach ($records as $record) {
-        fputcsv($output, (array)$record);
+        fputcsv($output, (array) $record);
     }
 
     // Close the output file

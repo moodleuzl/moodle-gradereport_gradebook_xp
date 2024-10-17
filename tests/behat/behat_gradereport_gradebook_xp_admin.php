@@ -32,7 +32,8 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
 
             // If the parent name is not '0', find the parent competency's ID by its name
             if ($competency['parentid'] !== '0') {
-                $parentid = $DB->get_field('gradereport_gradebook_xp_com', 'id', ['name' => $competency['parentid'], 'courseid' => $courseid]);
+                $parentid = $DB->get_field('gradereport_gradebook_xp_com', 'id',
+                    ['name' => $competency['parentid'], 'courseid' => $courseid]);
                 if (!$parentid) {
                     throw new Exception("The parent competency '{$competency['parentid']}' was not found for course '{$competency['courseid']}'.");
                 }
@@ -65,6 +66,7 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
             throw new Exception("The field '{$field}' for competency '{$competency}' contains '{$competencySection->getText()}', expected '{$value}'");
         }
     }
+
     /**
      * @When I click on the "Delete competency" button for :competency
      */
@@ -76,7 +78,8 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
         );
 
         if (null === $deleteButton) {
-            throw new ElementNotFoundException($this->getSession()->getDriver(), "button", "text", "Delete competency for {$competency}");
+            throw new ElementNotFoundException($this->getSession()->getDriver(), "button", "text",
+                "Delete competency for {$competency}");
         }
 
         // Click the delete button
@@ -94,7 +97,8 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
         );
 
         if (null === $deleteButton) {
-            throw new ElementNotFoundException($this->getSession()->getDriver(), "button", "text", "Edit competency for {$competency}");
+            throw new ElementNotFoundException($this->getSession()->getDriver(), "button", "text",
+                "Edit competency for {$competency}");
         }
 
         // Click the delete button

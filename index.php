@@ -1,7 +1,7 @@
 <?php
 global $CFG, $USER, $PAGE;
 require_once('../../../config.php');
-require_once($CFG->dirroot.'/grade/lib.php');
+require_once($CFG->dirroot . '/grade/lib.php');
 require_once('./lib.php');
 
 // Get required and optional parameters
@@ -18,7 +18,7 @@ $competencies = get_competencies_hierarchy($courseid);
 // Display the competency hierarchy recursively
 function display_hierarchy($competencies) {
     $html = '<ul>';
-    foreach ($competencies as $competencyid => $competency ) {
+    foreach ($competencies as $competencyid => $competency) {
         $html .= "<li>$competency->name"; // Display the competency name
         if (!empty($competency->subCompetencies)) {
             $html .= display_hierarchy($competency->subCompetencies);
@@ -30,7 +30,7 @@ function display_hierarchy($competencies) {
 }
 
 // Render the page
-$templatecontext = (object)[
+$templatecontext = (object) [
     'managecompetenciesurl' => new moodle_url('/grade/report/gradebook_xp_admin/manage_competencies.php'),
     'manageconnectionsurl' => new moodle_url('/grade/report/gradebook_xp_admin/manage_connections.php'),
     'exporturl' => new moodle_url('/grade/report/gradebook_xp_admin/export.php'),
@@ -38,7 +38,8 @@ $templatecontext = (object)[
     'courseid' => $courseid,
 ];
 
-print_grade_page_head($courseid, 'report', 'gradebook_xp_admin', get_string('pluginname', 'gradereport_gradebook_xp_admin'), false, '');
+print_grade_page_head($courseid, 'report', 'gradebook_xp_admin', get_string('pluginname', 'gradereport_gradebook_xp_admin'), false,
+    '');
 echo(display_hierarchy($competencies));
 echo $OUTPUT->render_from_template('gradereport_gradebook_xp_admin/preferences', $templatecontext);
 echo $OUTPUT->footer();
