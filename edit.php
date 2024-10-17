@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - http://moodle.org/.
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -8,13 +8,13 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle. If not, see <http://www.gnu.org/licenses/>.
 
-// Load necessary files
+// Load necessary files.
 require_once('../../../config.php');
 require_once($CFG->dirroot . '/grade/lib.php');
 require_once('edit_form.php');
@@ -24,23 +24,23 @@ require_once('db_controller.php');
 $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp_admin/js/move_multiselect.js'));
 $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp_admin/js/change_level.js'));
 
-// Get URL parameters
+// Get URL parameters.
 $courseid = required_param('courseid', PARAM_INT);
 $id = optional_param('id', null, PARAM_INT);
 $action = optional_param('action', 'new', PARAM_ALPHA);
 
 gradereport_gradebook_xp_admin_setup_page($courseid, 'moodle/grade:manage');
 
-// Get return URL
+// Get return URL.
 $gpr = new grade_plugin_return();
 $returnurl = $gpr->get_return_url('manage_competencies.php?id=' . $courseid);
 
-// Set page heading
+// Set page heading.
 // $heading = get_string('name', 'gradereport_gradebook_xp_admin');
 
 // handle_action($returnurl, $action);
 
-// Instantiate edit_form
+// Instantiate edit_form.
 $mform = new edit_form();
 
 handle_action_buttons();
@@ -50,32 +50,32 @@ function handle_action() {
     global $id, $action, $returnurl, $heading;
 
     if ($action == 'delete') {
-        // Get all children competency of the deleted competency
+        // Get all children competency of the deleted competency.
         $childrencompetencies = get_direct_children($id);
 
-        // Update the parentid of all children competencies to 0
+        // Update the parentid of all children competencies to 0.
         foreach ($childrencompetencies as $childcompetency) {
             $childcompetency->parentid = 0;
             update_competency($childcompetency);
         }
 
-        // Delete the competency using ID
+        // Delete the competency using ID.
         delete_competency($id);
 
-        // Redirect user to manage_competencies.php page
+        // Redirect user to manage_competencies.php page.
         redirect($returnurl, 'You have successfully deleted the competency.');
 
     } else if ($action == 'edit') {
-        // Handle edit action
-        // Get name using ID
+        // Handle edit action.
+        // Get name using ID.
         $name = get_competency($id)->name;
 
-        // Change heading in the navbar to current name
+        // Change heading in the navbar to current name.
         $heading = $name;
 
     } else {
-        // Handle no action (new action for example)
-        // Set page heading
+        // Handle no action (new action for example).
+        // Set page heading.
         $heading = get_string('newcompetency', 'gradereport_gradebook_xp_admin');
     }
 }
@@ -83,14 +83,14 @@ function handle_action() {
 function handle_action_buttons() {
     global $mform, $returnurl;
 
-    // Check if form is cancelled
+    // Check if form is cancelled.
     if ($mform->is_cancelled()) {
-        // Handle form cancel operation
-        // Redirect to manage_competencies.php page
+        // Handle form cancel operation.
+        // Redirect to manage_competencies.php page.
         redirect($returnurl, 'You cancelled the competency form.');
 
     } else if ($fromform = $mform->get_data()) {
-        // If form data is submitted and validated
+        // If form data is submitted and validated.
 
         $activityids = [];
         if (!empty($fromform->connections)) {
@@ -102,7 +102,7 @@ function handle_action_buttons() {
 
                 gradereport_gradebook_xp_admin_set_competency_connection($activityid, $fromform->id, $connectionlevel);
                 $activityids[] = $activityid;
-                // Process these values as needed
+                // Process these values as needed.
             }
         }
 
@@ -112,13 +112,13 @@ function handle_action_buttons() {
             }
         }
 
-        // Check if competency already exists
+        // Check if competency already exists.
         if (!empty($fromform->id)) {
-            // Get existing competency
+            // Get existing competency.
             $existingcompetency = get_competency($fromform->id);
 
             if ($existingcompetency) {
-                // Update existing competency
+                // Update existing competency.
                 $existingcompetency->name = $fromform->name;
                 $existingcompetency->description = $fromform->description;
                 $existingcompetency->parentid = $fromform->parentid;
@@ -126,12 +126,12 @@ function handle_action_buttons() {
 
                 update_competency($existingcompetency);
 
-                // Redirect with success message
+                // Redirect with success message.
                 redirect($returnurl, 'You have successfully updated the competency: \'' . $fromform->name . '\'');
             }
         }
 
-        // If competency does not exist, insert a new one
+        // If competency does not exist, insert a new one.
         $competencytoinsert = new stdClass();
         $competencytoinsert->courseid = $fromform->courseid;
         $competencytoinsert->name = $fromform->name;
@@ -141,27 +141,26 @@ function handle_action_buttons() {
 
         insert_competency($competencytoinsert);
 
-        // Redirect with success message
+        // Redirect with success message.
         redirect($returnurl, 'You have successfully created the competency: \'' . $fromform->name . '\'');
 
-    } else { // If form is submitted but the data doesn't validate and the form should be redisplayed or on the first display of the form
-        handle_action(); // No action needed
+    } else { // If form is submitted but the data doesn't validate and the form should be redisplayed or on the first display of the form.
+        handle_action(); // No action needed.
     }
 }
 
 function generate_output() {
     global $PAGE, $heading, $courseid, $mform, $OUTPUT;
 
-    // add heading to navbar
+    // add heading to navbar.
     $PAGE->navbar->add($heading);
 
-    // Print header
+    // Print header.
     print_grade_page_head($courseid, 'report', 'gradebook_xp_admin', $heading, false, false, false);
 
-    // displays the form
+    // displays the form.
     $mform->display();
 
-    // Print footer
+    // Print footer.
     echo $OUTPUT->footer();
 }
-
