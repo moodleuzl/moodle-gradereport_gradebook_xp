@@ -95,4 +95,4 @@ jobs:
 
       - name: Behat features
         if: ${{ always() }}
-        run: moodle-plugin-ci behat --profile chrome --auto-rerun 0 --suite gradereport_gradebook_xp_admin
+        run: moodle-plugin-ci behat --profile chrome --auto-rerun 0 gradereport_gradebook_xp_admin
