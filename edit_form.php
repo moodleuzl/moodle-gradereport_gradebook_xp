@@ -40,15 +40,15 @@ class edit_form extends moodleform {
 
         // Get parent options for select element
 
-        $parent_options = [0 => '---']; // Initialize with an empty option
+        $parentoptions = [0 => '---']; // Initialize with an empty option
         if (!empty($current)) { // If record ID is provided
-            $availableParents = get_available_parents($current->id);
+            $availableparents = get_available_parents($current->id);
         } else { // If no record ID is provided
-            $availableParents = get_all_competencies();
+            $availableparents = get_all_competencies();
         }
-        $parent_options += array_column($availableParents, 'name', 'id'); // Add parent options to array
+        $parentoptions += array_column($availableparents, 'name', 'id'); // Add parent options to array
 
-        //-------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------
         // Add hidden parameters to the form
 
         // Add hidden id element to form
@@ -63,11 +63,11 @@ class edit_form extends moodleform {
         $mform->addElement('hidden', 'connections', '');
         $mform->setType('connections',
             PARAM_RAW);  // Using PARAM_RAW since it'll be a JSON string, but ensure you validate and sanitize the value on server-side before using it.
-        //-------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------
         // Add visible parameters to the form
 
         // Add parent select element to form
-        $mform->addElement('select', 'parentid', get_string('parent', 'gradereport_gradebook_xp_admin'), $parent_options);
+        $mform->addElement('select', 'parentid', get_string('parent', 'gradereport_gradebook_xp_admin'), $parentoptions);
 
         // Add competency name text element to form
         $mform->addElement('text', 'name', get_string('name', 'gradereport_gradebook_xp_admin'));
@@ -81,7 +81,7 @@ class edit_form extends moodleform {
         $mform->addElement('text', 'maxcomlvl', get_string('maxcomlvl', 'gradereport_gradebook_xp_admin'));
         $mform->setType('maxcomlvl', PARAM_NOTAGS);
 
-        //-------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------
         // Add rules to the form
 
         // Add validation rule for competency name text element
@@ -95,7 +95,7 @@ class edit_form extends moodleform {
         $mform->addRule('maxcomlvl', get_string('nonNumericError', 'gradereport_gradebook_xp_admin'), 'numeric', null, 'server');
         $mform->addRule('maxcomlvl', get_string('strupto999', 'gradereport_gradebook_xp_admin'), 'maxlength', 3, 'server');
 
-        //-------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------
         // Set defaults for editing if the current record exists
         if (!empty($current)) {
             $mform->setDefault('id', $current->id);
@@ -105,71 +105,71 @@ class edit_form extends moodleform {
             $mform->setDefault('description', $current->description);
             $mform->setDefault('maxcomlvl', $current->maxcomlvl);
         }
-        //-------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------
         // Retrieve activity records
-        $activityRecords = get_all_activities($COURSE->id);
+        $activityrecords = get_all_activities($COURSE->id);
 
         if (!empty($current)) { // If record ID is provided
-            $connectionsRecords = get_connections($current->id);
+            $connectionsrecords = get_connections($current->id);
         } else {
-            $connectionsRecords = array();
+            $connectionsrecords = [];
         }
 
-        $activities = array();
-        $connections = array();
+        $activities = [];
+        $connections = [];
 
         // Iterate over activity records and store activity ID and name in the array
-        foreach ($activityRecords as $activityRecord) {
-            $activityValue = json_encode(array('id' => $activityRecord->id, 'name' => $activityRecord->name));
-            $activities[$activityRecord->id] = array('activityValue' => $activityValue, 'activityName' => $activityRecord->name);
+        foreach ($activityrecords as $activityrecord) {
+            $activityvalue = json_encode(['id' => $activityrecord->id, 'name' => $activityrecord->name]);
+            $activities[$activityrecord->id] = ['activityValue' => $activityvalue, 'activityName' => $activityrecord->name];
         }
 
-        foreach ($connectionsRecords as $connectionRecord) {
-            $activity = $activities[$connectionRecord->activityid];
+        foreach ($connectionsrecords as $connectionrecord) {
+            $activity = $activities[$connectionrecord->activityid];
 
-            $connectionValue = json_encode(array('id' => $connectionRecord->activityid, 'name' => $activity['activityName'],
-                'level' => $connectionRecord->level));
-            $connections[$connectionValue] = $activity['activityName'] . " | " . $connectionRecord->level;
-            unset($activities[$connectionRecord->activityid]);
+            $connectionvalue = json_encode(['id' => $connectionrecord->activityid, 'name' => $activity['activityName'],
+                'level' => $connectionrecord->level]);
+            $connections[$connectionvalue] = $activity['activityName'] . " | " . $connectionrecord->level;
+            unset($activities[$connectionrecord->activityid]);
         }
 
-        $activitiesForm = array();
+        $activitiesform = [];
         foreach ($activities as $activity) {
-            $activitiesForm[$activity['activityValue']] = $activity['activityName'];
+            $activitiesform[$activity['activityValue']] = $activity['activityName'];
         }
-        $activities = $activitiesForm;
+        $activities = $activitiesform;
 
         $action = optional_param('action', null, PARAM_ALPHA); // Get action from the URL
 
         // Check if the action is 'new'
         if ($action !== 'new') {
             // Create a group for the multiselect elements
-            $multiselect_group = array();
+            $multiselectgroup = [];
 
             // Add multiselect 1 to the group
-            $multiselect_group[] =
+            $multiselectgroup[] =
                 $mform->createElement('select', 'multiselect1', get_string('activities', 'gradereport_gradebook_xp_admin'),
-                    $activities, array('multiple' => 'multiple'));
+                    $activities, ['multiple' => 'multiple']);
 
             // Add move buttons to the group
-            $multiselect_group[] = $mform->createElement('button', 'move_to_multiselect2', '>>');
-            $multiselect_group[] = $mform->createElement('button', 'move_to_multiselect1', '<<');
+            $multiselectgroup[] = $mform->createElement('button', 'move_to_multiselect2', '>>');
+            $multiselectgroup[] = $mform->createElement('button', 'move_to_multiselect1', '<<');
 
             // Add multiselect 2 to the group
-            $multiselect_group[] =
+            $multiselectgroup[] =
                 $mform->createElement('select', 'multiselect2', get_string('connections', 'gradereport_gradebook_xp_admin'),
-                    $connections, array('multiple' => 'multiple'));
+                    $connections, ['multiple' => 'multiple']);
 
             // Add the group to the form
-            $mform->addGroup($multiselect_group, 'multiselect_group', get_string('activities', 'gradereport_gradebook_xp_admin'),
+            $mform->addGroup($multiselectgroup, 'multiselect_group', get_string('activities', 'gradereport_gradebook_xp_admin'),
                 ' ', false);
 
             // Add Dropdown Menu for level (ranging from 1 to max_lvl)
             $mform->addElement('select', 'level', get_string('level', 'gradereport_gradebook_xp_admin'), range(1, 'maxcomlvl'),
-                array());
+                []);
         }
 
-        //-------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------
         // Add action buttons to the form
         $this->add_action_buttons();
     }

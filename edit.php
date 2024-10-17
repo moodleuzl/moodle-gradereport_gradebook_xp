@@ -36,9 +36,9 @@ $gpr = new grade_plugin_return();
 $returnurl = $gpr->get_return_url('manage_competencies.php?id=' . $courseid);
 
 // Set page heading
-//$heading = get_string('name', 'gradereport_gradebook_xp_admin');
+// $heading = get_string('name', 'gradereport_gradebook_xp_admin');
 
-//handle_action($returnurl, $action);
+// handle_action($returnurl, $action);
 
 // Instantiate edit_form
 $mform = new edit_form();
@@ -51,12 +51,12 @@ function handle_action() {
 
     if ($action == 'delete') {
         // Get all children competency of the deleted competency
-        $children_competencies = get_direct_children($id);
+        $childrencompetencies = get_direct_children($id);
 
         // Update the parentid of all children competencies to 0
-        foreach ($children_competencies as $child_competency) {
-            $child_competency->parentid = 0;
-            update_competency($child_competency);
+        foreach ($childrencompetencies as $childcompetency) {
+            $childcompetency->parentid = 0;
+            update_competency($childcompetency);
         }
 
         // Delete the competency using ID
@@ -92,22 +92,22 @@ function handle_action_buttons() {
     } else if ($fromform = $mform->get_data()) {
         // If form data is submitted and validated
 
-        $activityIds = array();
+        $activityids = [];
         if (!empty($fromform->connections)) {
-            $connectionsArray = json_decode($fromform->connections, true);
+            $connectionsarray = json_decode($fromform->connections, true);
 
-            foreach ($connectionsArray as $connection) {
-                $activityId = $connection['id'];
-                $connectionLevel = $connection['level'];
+            foreach ($connectionsarray as $connection) {
+                $activityid = $connection['id'];
+                $connectionlevel = $connection['level'];
 
-                gradereport_gradebook_xp_admin_set_competency_connection($activityId, $fromform->id, $connectionLevel);
-                $activityIds[] = $activityId;
+                gradereport_gradebook_xp_admin_set_competency_connection($activityid, $fromform->id, $connectionlevel);
+                $activityids[] = $activityid;
                 // Process these values as needed
             }
         }
 
         foreach (get_connections($fromform->id) as $connection) {
-            if (!in_array($connection->activityid, $activityIds)) {
+            if (!in_array($connection->activityid, $activityids)) {
                 delete_connection($connection->id);
             }
         }
@@ -115,16 +115,16 @@ function handle_action_buttons() {
         // Check if competency already exists
         if (!empty($fromform->id)) {
             // Get existing competency
-            $existing_competency = get_competency($fromform->id);
+            $existingcompetency = get_competency($fromform->id);
 
-            if ($existing_competency) {
+            if ($existingcompetency) {
                 // Update existing competency
-                $existing_competency->name = $fromform->name;
-                $existing_competency->description = $fromform->description;
-                $existing_competency->parentid = $fromform->parentid;
-                $existing_competency->maxcomlvl = $fromform->maxcomlvl;
+                $existingcompetency->name = $fromform->name;
+                $existingcompetency->description = $fromform->description;
+                $existingcompetency->parentid = $fromform->parentid;
+                $existingcompetency->maxcomlvl = $fromform->maxcomlvl;
 
-                update_competency($existing_competency);
+                update_competency($existingcompetency);
 
                 // Redirect with success message
                 redirect($returnurl, 'You have successfully updated the competency: \'' . $fromform->name . '\'');

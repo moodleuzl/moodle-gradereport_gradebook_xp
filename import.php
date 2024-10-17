@@ -45,106 +45,107 @@ $mform = new import_form();
  *
  * @throws dml_exception
  * @global moodle_database $DB The global database object.
+ * @package gradereport_gradebook_xp_admin
  */
-function process_data($courseid, $com_name, $com_table, $con_name, $con_table) {
+function process_data($courseid, $comname, $comtable, $conname, $contable) {
     global $DB;
 
     // Parse the CSV data for competencies
-    $com_rows = explode("\n", $com_table);
-    $com_headers = str_getcsv(array_shift($com_rows));
+    $comrows = explode("\n", $comtable);
+    $comheaders = str_getcsv(array_shift($comrows));
 
     // Initialize array to store old and new IDs mapping
     $mapping = [];
 
     // Iterate through each row in the CSV data for competencies
-    foreach ($com_rows as $row) {
+    foreach ($comrows as $row) {
         // Skip empty rows
         if (!empty($row)) {
             // Extract values from the row
             $values = str_getcsv($row);
-            $record = array_combine($com_headers, $values);
+            $record = array_combine($comheaders, $values);
 
             // Store the old ID
-            $old_id = $record['id'];
+            $oldid = $record['id'];
 
             // Set the course ID for the record
             $record['courseid'] = $courseid;
 
             // Insert a new record and store the new ID
-            $new_id = (int) $DB->insert_record($com_name, (object) $record);
+            $newid = (int) $DB->insert_record($comname, (object) $record);
 
             // Store mapping of old and new IDs
-            $mapping[$old_id] = $new_id;
+            $mapping[$oldid] = $newid;
         }
     }
 
     // Update the parent IDs for the new competency records
-    foreach ($mapping as $old_key => $new_value) {
+    foreach ($mapping as $oldkey => $newvalue) {
         // Get the record with the old ID from the database
-        $existing_record = $DB->get_record($com_name, array('id' => $new_value));
+        $existingrecord = $DB->get_record($comname, ['id' => $newvalue]);
 
         // Check if the record exists
-        if ($existing_record) {
+        if ($existingrecord) {
             // Get the new ID corresponding to the old parent ID
-            $new_parent_id = isset($mapping[$existing_record->parentid]) ? $mapping[$existing_record->parentid] : 0;
+            $newparentid = isset($mapping[$existingrecord->parentid]) ? $mapping[$existingrecord->parentid] : 0;
 
             // Update the parentid property of the existing record
-            $existing_record->parentid = $new_parent_id;
+            $existingrecord->parentid = $newparentid;
 
             // Update the record in the database
-            $DB->update_record($com_name, $existing_record);
+            $DB->update_record($comname, $existingrecord);
         } else {
             // Handle the case where the record with the old ID does not exist
-            echo "Error: Record with ID $old_key not found in the database.";
+            echo "Error: Record with ID $oldkey not found in the database.";
         }
     }
 
     // Parse the CSV data for connections
-    $con_rows = explode("\n", $con_table);
-    $con_headers = str_getcsv(array_shift($con_rows));
+    $conrows = explode("\n", $contable);
+    $conheaders = str_getcsv(array_shift($conrows));
 
-    $connection_ids = [];
+    $connectionids = [];
 
     // Iterate through each row in the CSV data for connections
-    foreach ($con_rows as $row) {
+    foreach ($conrows as $row) {
         // Skip empty rows
         if (!empty($row)) {
             // Extract values from the row
             $values = str_getcsv($row);
-            $record = array_combine($con_headers, $values);
+            $record = array_combine($conheaders, $values);
 
             // Store the old ID
-            $old_id = $record['id'];
+            $oldid = $record['id'];
 
             // Set the course ID for the record
             $record['courseid'] = $courseid;
 
             // Insert a new record and store the new ID
-            $new_id = (int) $DB->insert_record($con_name, (object) $record);
+            $newid = (int) $DB->insert_record($conname, (object) $record);
 
             // Store the new ID
-            $connection_ids[] = $new_id;
+            $connectionids[] = $newid;
         }
     }
 
     // Update the competency IDs for the new connection records
-    foreach ($connection_ids as $new_value) {
+    foreach ($connectionids as $newvalue) {
         // Get the record with the old ID from the database
-        $existing_record = $DB->get_record($con_name, array('id' => $new_value));
+        $existingrecord = $DB->get_record($conname, ['id' => $newvalue]);
 
         // Check if the record exists
-        if ($existing_record) {
+        if ($existingrecord) {
             // Get the new ID corresponding to the old competency ID
-            $new_competencyid = isset($mapping[$existing_record->competencyid]) ? $mapping[$existing_record->competencyid] : 0;
+            $newcompetencyid = isset($mapping[$existingrecord->competencyid]) ? $mapping[$existingrecord->competencyid] : 0;
 
             // Update the competencyid property of the existing record
-            $existing_record->competencyid = $new_competencyid;
+            $existingrecord->competencyid = $newcompetencyid;
 
             // Update the record in the database
-            $DB->update_record($con_name, $existing_record);
+            $DB->update_record($conname, $existingrecord);
         } else {
             // Handle the case where the record with the old ID does not exist
-            echo "Error: Record with ID $old_id not found in the database.";
+            echo "Error: Record with ID $oldid not found in the database.";
         }
     }
 }
@@ -152,39 +153,39 @@ function process_data($courseid, $com_name, $com_table, $con_name, $con_table) {
 if ($mform->is_cancelled()) {
     // Handle form cancellation.
 } else if ($data = $mform->get_data()) {
-    $zip_content = $mform->get_file_content('userfile');
+    $zipcontent = $mform->get_file_content('userfile');
     $name = $mform->get_new_filename('userfile');
     echo "<script>alert('$name');</script>";
 
     // Write the zip content to a temporary file
-    $zip_file = sys_get_temp_dir() . '/imported_data.zip';
-    file_put_contents($zip_file, $zip_content);
+    $zipfile = sys_get_temp_dir() . '/imported_data.zip';
+    file_put_contents($zipfile, $zipcontent);
 
     // Open the zip archive
     $zip = new ZipArchive;
-    if ($zip->open($zip_file) === true) {
-        $com_name = 'gradereport_gradebook_xp_com';
-        $com_table = null;
-        $con_name = 'gradereport_gradebook_xp_con';
-        $con_table = null;
+    if ($zip->open($zipfile) === true) {
+        $comname = 'gradereport_gradebook_xp_com';
+        $comtable = null;
+        $conname = 'gradereport_gradebook_xp_con';
+        $contable = null;
         // Extract each CSV file from the zip archive
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $filename = $zip->getNameIndex($i);
-            $csv_data = $zip->getFromIndex($i);
+            $csvdata = $zip->getFromIndex($i);
 
             // Determine the table name from the filename
-            $table_name = basename($filename, '.csv');
+            $tablename = basename($filename, '.csv');
 
             // Check if the table name matches the expected ones
-            if ($table_name == $com_name) {
-                $com_table = $csv_data;
-            } else if ($table_name == $con_name) {
-                $con_table = $csv_data;
+            if ($tablename == $comname) {
+                $comtable = $csvdata;
+            } else if ($tablename == $conname) {
+                $contable = $csvdata;
             } else {
                 echo "Skipping file $filename as it doesn't match the expected format.<br>";
             }
         }
-        process_data($courseid, $com_name, $com_table, $con_name, $con_table);
+        process_data($courseid, $comname, $comtable, $conname, $contable);
         $zip->close();
         echo 'Import successful.';
     } else {

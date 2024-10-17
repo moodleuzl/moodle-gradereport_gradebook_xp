@@ -17,7 +17,7 @@
 /**
  * Version details for the Gradebook XP plugin
  *
- * @package gradebook_xp_admin
+ * @package gradereport_gradebook_xp_admin
  */
 
 defined('MOODLE_INTERNAL') || die();

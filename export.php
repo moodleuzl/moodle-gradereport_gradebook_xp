@@ -24,7 +24,7 @@ $courseid = required_param('id', PARAM_INT);
 $userid = optional_param('userid', $USER->id, PARAM_INT);
 
 // Verify course ID validity
-if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+if (!$course = $DB->get_record('course', ['id' => $courseid])) {
     throw new moodle_exception('invalidcourseid');
 }
 
@@ -33,23 +33,23 @@ require_login($course);
 $context = context_course::instance($course->id);
 
 // Define table names for competencies and connections
-$table_com = 'gradereport_gradebook_xp_com';
-$table_con = 'gradereport_gradebook_xp_con';
+$tablecom = 'gradereport_gradebook_xp_com';
+$tablecon = 'gradereport_gradebook_xp_con';
 
 // Generate CSV files for competencies and connections
-$table1_csv = generate_csv($table_com, sys_get_temp_dir() . '/' . $table_com . '.csv');
-$table2_csv = generate_csv($table_con, sys_get_temp_dir() . '/' . $table_con . '.csv');
+$table1csv = generate_csv($tablecom, sys_get_temp_dir() . '/' . $tablecom . '.csv');
+$table2csv = generate_csv($tablecon, sys_get_temp_dir() . '/' . $tablecon . '.csv');
 
 // Create a zip archive
 $zip = new ZipArchive();
 
 // Specify temporary directory and name for the zip file
-$temp_zip_file = sys_get_temp_dir() . '/exported_data.zip';
-$zip->open($temp_zip_file, ZipArchive::CREATE);
+$tempzipfile = sys_get_temp_dir() . '/exported_data.zip';
+$zip->open($tempzipfile, ZipArchive::CREATE);
 
 // Add CSV files to the zip archive
-$zip->addFile($table1_csv, $table_com . '.csv');
-$zip->addFile($table2_csv, $table_con . '.csv');
+$zip->addFile($table1csv, $tablecom . '.csv');
+$zip->addFile($table2csv, $tablecon . '.csv');
 
 // Close the zip archive
 if ($zip->close() !== true) {
@@ -64,12 +64,12 @@ header("Content-type: application/zip");
 header("Content-Disposition: attachment; filename=$filename");
 header("Pragma: no-cache");
 header("Expires: 0");
-readfile($temp_zip_file);
+readfile($tempzipfile);
 
 // Delete temporary CSV files and the zip file
-unlink($table1_csv);
-unlink($table2_csv);
-unlink($temp_zip_file);
+unlink($table1csv);
+unlink($table2csv);
+unlink($tempzipfile);
 
 /**
  * Generate a CSV file for a given database table.
@@ -78,6 +78,7 @@ unlink($temp_zip_file);
  * @param string $filename The filename to save the CSV as.
  * @return string The filename of the generated CSV file.
  * @throws dml_exception
+ * @package gradereport_gradebook_xp_admin
  */
 function generate_csv($tablename, $filename) {
     global $DB;
@@ -86,9 +87,9 @@ function generate_csv($tablename, $filename) {
     $output = fopen($filename, 'w');
 
     // Extract column names from the database table
-    $table_columns = $DB->get_columns($tablename);
-    $headers = array();
-    foreach ($table_columns as $column) {
+    $tablecolumns = $DB->get_columns($tablename);
+    $headers = [];
+    foreach ($tablecolumns as $column) {
         $headers[] = $column->name;
     }
 

@@ -27,6 +27,7 @@ require_once("db_controller.php"); // Include the database controller file
  * Class import_form
  *
  * Represents a form for importing data in Moodle.
+ * @package gradereport_gradebook_xp_admin
  */
 class import_form extends moodleform {
 
@@ -47,7 +48,7 @@ class import_form extends moodleform {
         $mform->setType('id', PARAM_INT);
 
         // Add a filepicker element for selecting a file to import
-        $mform->addElement('filepicker', 'userfile', get_string('file'), null, array('accepted_types' => '.zip'));
+        $mform->addElement('filepicker', 'userfile', get_string('file'), null, ['accepted_types' => '.zip']);
 
         // Add a submit button to submit the form
         $mform->addElement('submit', 'submitbutton', get_string('import'));

@@ -22,8 +22,9 @@ defined('MOODLE_INTERNAL') || die;
  *
  * @param int|null $currentRecordId The ID of the current record. Pass null if no record ID is available.
  * @return array An array of parent options for the select element.
+ * @package gradereport_gradebook_xp_admin
  */
-function get_available_parents($currentRecordId) {
+function get_available_parents($currentrecordid) {
     global $COURSE, $DB;
 
     // Recursive SQL query to retrieve all available parent options excluding current record and its descendants.
@@ -46,10 +47,10 @@ function get_available_parents($currentRecordId) {
             AND id != ?
             ORDER BY id";
 
-    $params = array($currentRecordId, $COURSE->id, $currentRecordId, $currentRecordId);
-    $availableParents = $DB->get_records_sql($sql, $params); // Execute the query
+    $params = [$currentrecordid, $COURSE->id, $currentrecordid, $currentrecordid];
+    $availableparents = $DB->get_records_sql($sql, $params); // Execute the query
 
-    return $availableParents; // Return parent records
+    return $availableparents; // Return parent records
 }
 
 /**
@@ -58,12 +59,13 @@ function get_available_parents($currentRecordId) {
  * @param int $id The ID of the competency to retrieve.
  * @return array|false An associative array containing the competency's details if found, false otherwise.
  * @throws dml_exception
+ * @package gradereport_gradebook_xp_admin
  */
 function get_competency($id) {
     global $DB;
 
     // Retrieve competency record from the database.
-    return $DB->get_record('gradereport_gradebook_xp_com', array('id' => $id));
+    return $DB->get_record('gradereport_gradebook_xp_com', ['id' => $id]);
 }
 
 /**
@@ -72,17 +74,18 @@ function get_competency($id) {
  * @param int|null $courseId Optional. Specify another course ID or pass null for the current course.
  * @return array An associative array containing competencies of the specified course, or an empty array if none are found.
  * @throws dml_exception
+ * @package gradereport_gradebook_xp_admin
  */
-function get_all_competencies($courseId = null) {
+function get_all_competencies($courseid = null) {
     global $COURSE, $DB;
 
     // Default to the current course if no course ID is provided.
-    if (is_null($courseId)) {
-        $courseId = $COURSE->id;
+    if (is_null($courseid)) {
+        $courseid = $COURSE->id;
     }
 
     // Retrieve all competencies for the specified course, ordered by ID.
-    return $DB->get_records("gradereport_gradebook_xp_com", array("courseid" => $courseId), 'id ASC');
+    return $DB->get_records("gradereport_gradebook_xp_com", ["courseid" => $courseid], 'id ASC');
 }
 
 /**
@@ -90,14 +93,15 @@ function get_all_competencies($courseId = null) {
  *
  * @param int $id The ID of the parent competency.
  * @return array An array of direct children records of the specified competency.
+ * @package gradereport_gradebook_xp_admin
  */
 function get_direct_children($id) {
     global $DB;
 
     // Retrieve direct child records with the parent ID.
-    $children_records = $DB->get_records('gradereport_gradebook_xp_com', array('parentid' => $id));
+    $childrenrecords = $DB->get_records('gradereport_gradebook_xp_com', ['parentid' => $id]);
 
-    return $children_records;
+    return $childrenrecords;
 }
 
 /**
@@ -105,6 +109,7 @@ function get_direct_children($id) {
  *
  * @param int $id The ID of the parent competency.
  * @return array An array of all descendant records of the specified competency.
+ * @package gradereport_gradebook_xp_admin
  */
 function get_all_children($id) {
     global $DB;
@@ -123,16 +128,17 @@ function get_all_children($id) {
             FROM item_descendants
             WHERE id != ?";
 
-    $params = array($id, $id);
-    $children_records = $DB->get_records_sql($sql, $params); // Execute the query
+    $params = [$id, $id];
+    $childrenrecords = $DB->get_records_sql($sql, $params); // Execute the query
 
-    return $children_records;
+    return $childrenrecords;
 }
 
 /**
  * Updates an existing competency in the database.
  *
  * @param stdClass $competency The competency object containing updated data.
+ * @package gradereport_gradebook_xp_admin
  */
 function update_competency($competency) {
     global $DB;
@@ -145,6 +151,7 @@ function update_competency($competency) {
  * Inserts a new competency into the database.
  *
  * @param stdClass $competency The competency object to insert.
+ * @package gradereport_gradebook_xp_admin
  */
 function insert_competency($competency) {
     global $DB;
@@ -157,12 +164,13 @@ function insert_competency($competency) {
  * Deletes a competency from the database by its ID.
  *
  * @param int $id The ID of the competency to delete.
+ * @package gradereport_gradebook_xp_admin
  */
 function delete_competency($id) {
     global $DB;
 
     // Delete the competency record from the database.
-    $DB->delete_records('gradereport_gradebook_xp_com', array('id' => $id));
+    $DB->delete_records('gradereport_gradebook_xp_com', ['id' => $id]);
 }
 
 /**
@@ -170,13 +178,14 @@ function delete_competency($id) {
  *
  * @param int $courseid The ID of the course.
  * @return array An array of all assignments visible to the user. Returns an empty array if none are found.
+ * @package gradereport_gradebook_xp_admin
  */
 function get_all_assignments($courseid) {
     global $DB;
 
     // Check if the 'assign' table exists in the database.
     if (!$DB->get_manager()->table_exists("assign")) {
-        return array(); // Return empty array if table doesn't exist.
+        return []; // Return empty array if table doesn't exist.
     }
 
     // SQL query to get all assignment records for the specified course.
@@ -188,7 +197,7 @@ function get_all_assignments($courseid) {
         WHERE cm.course = ?
             AND m.name = 'assign'
         ORDER BY cm.section, a.name
-    ", array($courseid));
+    ", [$courseid]);
 
     return $assignments;
 }
@@ -198,13 +207,14 @@ function get_all_assignments($courseid) {
  *
  * @param int $courseid The ID of the course.
  * @return array An array of all quizzes visible to the user. Returns an empty array if none are found.
+ * @package gradereport_gradebook_xp_admin
  */
 function get_all_quizzes($courseid) {
     global $DB;
 
     // Check if the 'quiz' table exists in the database.
     if (!$DB->get_manager()->table_exists("quiz")) {
-        return array(); // Return empty array if table doesn't exist.
+        return []; // Return empty array if table doesn't exist.
     }
 
     // SQL query to get all quiz records for the specified course.
@@ -216,7 +226,7 @@ function get_all_quizzes($courseid) {
         WHERE cm.course = ?
             AND m.name = 'quiz'
         ORDER BY cm.section, q.name
-    ", array($courseid));
+    ", [$courseid]);
 
     return $quizzes;
 }
@@ -226,13 +236,14 @@ function get_all_quizzes($courseid) {
  *
  * @param int $courseid The ID of the course.
  * @return array An array of all VPLs visible to the user. Returns an empty array if none are found.
+ * @package gradereport_gradebook_xp_admin
  */
 function get_all_vpls($courseid) {
     global $DB;
 
     // Check if the 'vpl' table exists in the database.
     if (!$DB->get_manager()->table_exists("vpl")) {
-        return array(); // Return empty array if table doesn't exist.
+        return []; // Return empty array if table doesn't exist.
     }
 
     // SQL query to get all VPL records for the specified course.
@@ -244,7 +255,7 @@ function get_all_vpls($courseid) {
         WHERE cm.course = ?
             AND m.name = 'vpl'
         ORDER BY cm.section, v.name
-    ", array($courseid));
+    ", [$courseid]);
 
     return $vpls;
 }
@@ -255,6 +266,7 @@ function get_all_vpls($courseid) {
  * @param int $courseid The ID of the course.
  * @return array An array of all activities (assignments, quizzes, VPLs) visible to the user. Returns an empty array if none are
  *     found.
+ * @package gradereport_gradebook_xp_admin
  */
 function get_all_activities($courseid) {
     // Merge all activities (assignments, quizzes, and VPLs) into a single array.
@@ -273,13 +285,14 @@ function get_all_activities($courseid) {
  * @param int $activityid The ID of the activity.
  * @param int $competencyid The ID of the competency.
  * @return stdClass|null The connection object if found, or null if not found.
+ * @package gradereport_gradebook_xp_admin
  */
 function get_connection($activityid, $competencyid) {
     global $DB;
 
     // Retrieve the matching record from the database based on activity and competency IDs.
     $connection =
-        $DB->get_record("gradereport_gradebook_xp_con", array("activityid" => $activityid, "competencyid" => $competencyid));
+        $DB->get_record("gradereport_gradebook_xp_con", ["activityid" => $activityid, "competencyid" => $competencyid]);
 
     return $connection;
 }
@@ -288,6 +301,7 @@ function get_connection($activityid, $competencyid) {
  * Inserts a new connection between an activity and a competency into the database.
  *
  * @param stdClass $connection The connection object to insert.
+ * @package gradereport_gradebook_xp_admin
  */
 function insert_connection($connection) {
     global $DB;
@@ -300,6 +314,7 @@ function insert_connection($connection) {
  * Updates an existing connection between an activity and a competency in the database.
  *
  * @param stdClass $connection The connection object to update.
+ * @package gradereport_gradebook_xp_admin
  */
 function update_connection($connection) {
     global $DB;
@@ -312,12 +327,13 @@ function update_connection($connection) {
  * Deletes a connection between an activity and a competency from the database by its ID.
  *
  * @param int $id The ID of the connection to delete.
+ * @package gradereport_gradebook_xp_admin
  */
 function delete_connection($id) {
     global $DB;
 
     // Delete the connection record from the database.
-    $DB->delete_records("gradereport_gradebook_xp_con", array('id' => $id));
+    $DB->delete_records("gradereport_gradebook_xp_con", ['id' => $id]);
 }
 
 /**
@@ -325,12 +341,13 @@ function delete_connection($id) {
  *
  * @param int $competencyid The ID of the competency.
  * @return array An array of connection records related to the specified competency.
+ * @package gradereport_gradebook_xp_admin
  */
 function get_connections($competencyid) {
     global $DB;
 
     // Retrieve all connections related to the specified competency.
-    $connections = $DB->get_records("gradereport_gradebook_xp_con", array("competencyid" => $competencyid));
+    $connections = $DB->get_records("gradereport_gradebook_xp_con", ["competencyid" => $competencyid]);
 
     return $connections;
 }
@@ -340,37 +357,38 @@ function get_connections($competencyid) {
  *
  * @param int $competencyid The ID of the competency.
  * @return array An array of objects containing the activity ID, name, and level.
+ * @package gradereport_gradebook_xp_admin
  */
 function get_competency_activities($competencyid) {
     global $DB, $courseid;
 
     // Initialize an empty array to store activity details.
-    $activityDetailsArray = array();
+    $activitydetailsarray = [];
 
     // Retrieve all connections of the competency and its sub-competencies.
     $connections = get_connections_recursive($competencyid);
 
     // Iterate through the connections to retrieve activity details.
     foreach ($connections as $connection) {
-        $activityId = $connection->activityid;
+        $activityid = $connection->activityid;
         $level = $connection->level;
 
         // Retrieve the activity details.
-        $activityDetails = get_activity_details($activityId);
-        if ($activityDetails) {
+        $activitydetails = get_activity_details($activityid);
+        if ($activitydetails) {
             // Add the level to the activity details.
-            $activityDetails->level = $level;
+            $activitydetails->level = $level;
             // Append the activity details to the array.
-            $activityDetailsArray[] = $activityDetails;
+            $activitydetailsarray[] = $activitydetails;
         }
     }
 
     // Sort the activities by level in descending order.
-    usort($activityDetailsArray, function($a, $b) {
+    usort($activitydetailsarray, function($a, $b) {
         return $b->level - $a->level;
     });
 
-    return $activityDetailsArray;
+    return $activitydetailsarray;
 }
 
 /**
@@ -378,26 +396,27 @@ function get_competency_activities($competencyid) {
  *
  * @param int $competencyid The ID of the competency.
  * @return array An array of all connections related to the competency and its sub-competencies.
+ * @package gradereport_gradebook_xp_admin
  */
 function get_connections_recursive($competencyid) {
     global $DB;
 
     // Initialize an empty array to store all connections.
-    $allConnections = array();
+    $allconnections = [];
 
     // Retrieve the connections for the current competency.
     $connections = get_connections($competencyid);
 
     // Merge the connections into the result array.
-    $allConnections = array_merge($allConnections, $connections);
+    $allconnections = array_merge($allconnections, $connections);
 
     // Recursively retrieve connections for child competencies.
     $children = get_direct_children($competencyid);
     foreach ($children as $child) {
-        $allConnections = array_merge($allConnections, get_connections_recursive($child->id));
+        $allconnections = array_merge($allconnections, get_connections_recursive($child->id));
     }
 
-    return $allConnections;
+    return $allconnections;
 }
 
 /**
@@ -405,21 +424,22 @@ function get_connections_recursive($competencyid) {
  *
  * @param int $activityId The ID of the activity.
  * @return stdClass|null The activity details object if found, or null if not found.
+ * @package gradereport_gradebook_xp_admin
  */
-function get_activity_details($activityId) {
+function get_activity_details($activityid) {
     global $courseid;
 
     // Retrieve all activities of the course.
-    $course_activities = get_all_activities($courseid);
+    $courseactivities = get_all_activities($courseid);
 
     // Iterate through the activities to find a matching ID.
-    foreach ($course_activities as $activity) {
-        if ($activity->id == $activityId) {
+    foreach ($courseactivities as $activity) {
+        if ($activity->id == $activityid) {
             // Create an object to store the activity details.
-            $activityDetails = new stdClass();
-            $activityDetails->id = $activity->id;
-            $activityDetails->name = $activity->name;
-            return $activityDetails;
+            $activitydetails = new stdClass();
+            $activitydetails->id = $activity->id;
+            $activitydetails->name = $activity->name;
+            return $activitydetails;
         }
     }
     return null;
