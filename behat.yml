@@ -1,0 +1,13 @@
+default:
+  suites:
+    default:
+      paths: {  }
+      contexts: {  }
+  extensions:
+    Behat\MinkExtension:
+      base_url: 'http://localhost:8000'
+      goutte: null
+      webdriver: null
+    Moodle\BehatExtension:
+      moodledirroot: .
+      steps_definitions: {  }
