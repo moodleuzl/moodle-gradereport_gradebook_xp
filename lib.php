@@ -20,8 +20,7 @@ require_once $CFG->dirroot . '/grade/report/gradebook_xp_admin/db_controller.php
  *
  * @throws moodle_exception If the course ID is invalid.
  */
-function gradereport_gradebook_xp_admin_setup_page($courseid, $capability = 'moodle/grade:manage')
-{
+function gradereport_gradebook_xp_admin_setup_page($courseid, $capability = 'moodle/grade:manage') {
     global $PAGE, $CFG, $DB, $context;
 
     // Set page URL and layout
@@ -54,8 +53,7 @@ function gradereport_gradebook_xp_admin_setup_page($courseid, $capability = 'moo
  *
  * @return string The filename of the calling script.
  */
-function gradereport_gradebook_xp_admin_get_caller_filename()
-{
+function gradereport_gradebook_xp_admin_get_caller_filename() {
     $trace = debug_backtrace();
     $caller = $trace[1];
     return basename($caller['file']);
@@ -71,8 +69,7 @@ function gradereport_gradebook_xp_admin_get_caller_filename()
  *
  * @return void
  */
-function grade_report_gradebook_xp_admin_debug($value)
-{
+function grade_report_gradebook_xp_admin_debug($value) {
     echo "<pre>";
     print_r($value);
     echo "</pre>";
@@ -93,8 +90,7 @@ function grade_report_gradebook_xp_admin_debug($value)
  *
  * @throws dml_exception
  */
-function gradereport_gradebook_xp_admin_add_competency($courseid, $name, $description)
-{
+function gradereport_gradebook_xp_admin_add_competency($courseid, $name, $description) {
     global $DB;
 
     // Attempt to find matching record in our table
@@ -134,8 +130,7 @@ function gradereport_gradebook_xp_admin_add_competency($courseid, $name, $descri
  *
  * @return void
  */
-function gradereport_gradebook_xp_admin_set_competency_connection($activityid, $competencyid, $level)
-{
+function gradereport_gradebook_xp_admin_set_competency_connection($activityid, $competencyid, $level) {
     global $DB;
 
     // Attempt to find matching record in our table
@@ -173,8 +168,7 @@ function gradereport_gradebook_xp_admin_set_competency_connection($activityid, $
  *
  * @return array The hierarchical structure of competencies.
  */
-function get_hierarchy($competencies, $parentId = 0): array
-{
+function get_hierarchy($competencies, $parentId = 0): array {
     // Initialize an empty array to store the hierarchy
     $hierarchy = array();
 
@@ -210,8 +204,7 @@ function get_hierarchy($competencies, $parentId = 0): array
  * @return array An array representing the hierarchical structure of all competencies for the specified course.
  * @throws dml_exception
  */
-function get_competencies_hierarchy(int $courseId = null, int $competencyid = 0): array
-{
+function get_competencies_hierarchy(int $courseId = null, int $competencyid = 0): array {
     if (is_null($courseId)) {
         global $COURSE;
         $courseId = $COURSE->id;
