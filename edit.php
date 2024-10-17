@@ -32,7 +32,7 @@ $mform = new edit_form();
 handle_action_buttons();
 generate_output();
 
-function handle_action(){
+function handle_action() {
     global $id, $action, $returnurl, $heading;
 
     if ($action == 'delete') {
@@ -66,7 +66,6 @@ function handle_action(){
     }
 }
 
-
 function handle_action_buttons() {
     global $mform, $returnurl;
 
@@ -93,8 +92,8 @@ function handle_action_buttons() {
             }
         }
 
-        foreach (get_connections($fromform->id) as $connection){
-            if (!in_array($connection->activityid, $activityIds)){
+        foreach (get_connections($fromform->id) as $connection) {
+            if (!in_array($connection->activityid, $activityIds)) {
                 delete_connection($connection->id);
             }
         }
@@ -135,7 +134,6 @@ function handle_action_buttons() {
         handle_action(); // No action needed
     }
 }
-
 
 function generate_output() {
     global $PAGE, $heading, $courseid, $mform, $OUTPUT;
