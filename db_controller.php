@@ -46,9 +46,9 @@ function get_available_parents($currentrecordid) {
             ORDER BY id";
 
     $params = [$currentrecordid, $COURSE->id, $currentrecordid, $currentrecordid];
-    $availableparents = $DB->get_records_sql($sql, $params); // Execute the query
+    $availableparents = $DB->get_records_sql($sql, $params); // Execute the query.
 
-    return $availableparents; // Return parent records
+    return $availableparents; // Return parent records.
 }
 
 /**
@@ -127,7 +127,7 @@ function get_all_children($id) {
             WHERE id != ?";
 
     $params = [$id, $id];
-    $childrenrecords = $DB->get_records_sql($sql, $params); // Execute the query
+    $childrenrecords = $DB->get_records_sql($sql, $params); // Execute the query.
 
     return $childrenrecords;
 }
