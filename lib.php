@@ -22,8 +22,8 @@ defined('MOODLE_INTERNAL') || die;
  * @package    gradereport_gradebook_xp_admin
  */
 
-require_once $CFG->dirroot . '/grade/report/user/lib.php';
-require_once $CFG->dirroot . '/grade/report/gradebook_xp_admin/db_controller.php';
+require_once($CFG->dirroot . '/grade/report/user/lib.php');
+require_once($CFG->dirroot . '/grade/report/gradebook_xp_admin/db_controller.php');
 
 /**
  * Set up a page for the 'gradebook_xp' report in Moodle.

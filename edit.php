@@ -15,11 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 // Load necessary files
-require_once '../../../config.php';
-require_once $CFG->dirroot . '/grade/lib.php';
-require_once 'edit_form.php';
-require_once 'lib.php';
-require_once 'db_controller.php';
+require_once('../../../config.php');
+require_once($CFG->dirroot . '/grade/lib.php');
+require_once('edit_form.php');
+require_once('lib.php');
+require_once('db_controller.php');
 
 $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp_admin/js/move_multiselect.js'));
 $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp_admin/js/change_level.js'));

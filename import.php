@@ -18,7 +18,7 @@ require_once('../../../config.php');
 require_once($CFG->dirroot . '/grade/lib.php');
 require_once('./lib.php');
 require_once('./db_controller.php');
-require_once 'import_form.php';
+require_once('import_form.php');
 
 // Get required parameter
 $courseid = required_param('id', PARAM_INT);
