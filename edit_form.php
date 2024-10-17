@@ -9,12 +9,10 @@ if (!defined('MOODLE_INTERNAL')) {
 require_once("$CFG->libdir/formslib.php");
 require_once("db_controller.php");
 
-class edit_form extends moodleform
-{
+class edit_form extends moodleform {
 
     // Add elements to form
-    public function definition()
-    {
+    public function definition() {
         global $COURSE;
 
         // Assign form object to variable
