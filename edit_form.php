@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+// Check if script is being accessed from Moodle page.
+if (!defined('MOODLE_INTERNAL')) {
+    die('Direct access to this script is forbidden.');    ///  It must be included from a Moodle page
+}
+
 // Include Moodle form library.
 require_once("$CFG->libdir/formslib.php");
 require_once("db_controller.php");

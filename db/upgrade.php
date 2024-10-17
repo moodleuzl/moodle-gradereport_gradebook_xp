@@ -20,8 +20,6 @@
  * @package gradereport_gradebook_xp_admin
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Function to upgrade Gradebook XP.
  *
