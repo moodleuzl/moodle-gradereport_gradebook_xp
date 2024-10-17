@@ -81,7 +81,8 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
         // Check if the field within the competency section contains the expected value.
         if ($competencysection->getText() !== $value) {
             throw new Exception(
-                "The field '{$field}' for competency '{$competency}' contains '{$competencysection->getText()}', expected '{$value}'");
+                "The field '{$field}' for competency '{$competency}' "
+                        . "contains '{$competencysection->getText()}', expected '{$value}'");
         }
     }
 
