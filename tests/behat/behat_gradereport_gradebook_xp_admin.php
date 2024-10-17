@@ -49,7 +49,8 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
                 $parentid = $DB->get_field('gradereport_gradebook_xp_com', 'id',
                     ['name' => $competency['parentid'], 'courseid' => $courseid]);
                 if (!$parentid) {
-                    throw new Exception("The parent competency '{$competency['parentid']}' was not found for course '{$competency['courseid']}'.");
+                    throw new Exception(
+                        "The parent competency '{$competency['parentid']}' was not found for course '{$competency['courseid']}'.");
                 }
                 $record->parentid = $parentid;
             } else {
@@ -68,7 +69,9 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
         // Locate the specific competency section first.
         $competencysection = $this->getSession()->getPage()->find(
             'xpath',
-            "//h4[contains(text(), '{$competency}')]/following-sibling::table//td[strong[contains(text(), '{$field}:')]]/following-sibling::td"
+            "//h4[contains(text(), "
+            . "'{$competency}')]/following-sibling::table//td[strong[contains(text(), "
+            . "'{$field}:')]]/following-sibling::td"
         );
 
         if (null === $competencysection) {
@@ -77,7 +80,8 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
 
         // Check if the field within the competency section contains the expected value.
         if ($competencysection->getText() !== $value) {
-            throw new Exception("The field '{$field}' for competency '{$competency}' contains '{$competencysection->getText()}', expected '{$value}'");
+            throw new Exception(
+                "The field '{$field}' for competency '{$competency}' contains '{$competencysection->getText()}', expected '{$value}'");
         }
     }
 
