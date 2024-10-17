@@ -30,7 +30,7 @@ $courseid = required_param('courseid', PARAM_INT);
 $id = optional_param('id', null, PARAM_INT);
 $action = optional_param('action', 'new', PARAM_ALPHA);
 
-//Set up the page.
+// Set up the page.
 require_course_login($courseid);
 gradereport_gradebook_xp_admin_setup_page($courseid);
 
@@ -142,7 +142,7 @@ function handle_action_buttons() {
         // Redirect with success message.
         redirect($returnurl, 'You have successfully created the competency: \'' . $fromform->name . '\'');
 
-    } else { // If form is submitted but the data doesn't validate and the form should be redisplayed or on the first display of the form.
+    } else {
         handle_action(); // No action needed.
     }
 }
