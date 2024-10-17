@@ -14,14 +14,12 @@ require_once("db_controller.php"); // Include the database controller file
  *
  * Represents a form for importing data in Moodle.
  */
-class import_form extends moodleform
-{
+class import_form extends moodleform {
 
     /**
      * Define the form elements.
      */
-    public function definition()
-    {
+    public function definition() {
         global $COURSE;
 
         // Assign form object to variable
