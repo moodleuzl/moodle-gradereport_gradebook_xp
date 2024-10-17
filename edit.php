@@ -35,11 +35,6 @@ gradereport_gradebook_xp_admin_setup_page($courseid, 'moodle/grade:manage');
 $gpr = new grade_plugin_return();
 $returnurl = $gpr->get_return_url('manage_competencies.php?id=' . $courseid);
 
-// Set page heading.
-// $heading = get_string('name', 'gradereport_gradebook_xp_admin');
-
-// handle_action($returnurl, $action);
-
 // Instantiate edit_form.
 $mform = new edit_form();
 
