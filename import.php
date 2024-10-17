@@ -152,6 +152,7 @@ function process_data($courseid, $comname, $comtable, $conname, $contable) {
 
 if ($mform->is_cancelled()) {
     // Handle form cancellation.
+    echo 'Import cancelled.';
 } else if ($data = $mform->get_data()) {
     $zipcontent = $mform->get_file_content('userfile');
     $name = $mform->get_new_filename('userfile');
