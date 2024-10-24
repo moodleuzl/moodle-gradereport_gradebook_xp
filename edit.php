@@ -14,6 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Handles the creation, editing, and deletion of competencies within the gradebook_xp_admin plugin.
+ *
+ * @package    gradereport_gradebook_xp_admin
+ */
+
 // Load necessary files.
 require_once('../../../config.php');
 require_once($CFG->dirroot . '/grade/lib.php');
@@ -43,6 +49,9 @@ $mform = new edit_form();
 handle_action_buttons();
 generate_output();
 
+/**
+ * Handles the action for editing, deleting, or creating a new competency.
+ */
 function handle_action() {
     global $id, $action, $returnurl, $heading;
 
@@ -77,6 +86,9 @@ function handle_action() {
     }
 }
 
+/**
+ * Handles the action buttons for the competency form submission.
+ */
 function handle_action_buttons() {
     global $mform, $returnurl;
 
@@ -146,6 +158,9 @@ function handle_action_buttons() {
     }
 }
 
+/**
+ * Generates the output for the competency page, including the header, form, and footer.
+ */
 function generate_output() {
     global $PAGE, $heading, $courseid, $mform, $OUTPUT;
 
