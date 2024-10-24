@@ -28,6 +28,7 @@
  *
  * @param int|null $currentrecordid The ID of the current record. Pass null if no record ID is available.
  * @return array An array of parent options for the select element.
+ *
  * @package gradereport_gradebook_xp_admin
  */
 function get_available_parents($currentrecordid) {

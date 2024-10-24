@@ -15,8 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Handles the import of competency and activity connection data for a course from CSV files within a zip archive.
- * Includes form setup, data processing, and updating records in the database.
+ * Handles the import of competency and connection data for a course from CSV files within a zip archive.
  *
  * @package    gradereport_gradebook_xp_admin
  */
