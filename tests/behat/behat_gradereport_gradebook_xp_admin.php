@@ -14,6 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+/**
+ * Behat steps definitions for the plugin.
+ *
+ * @package gradereport_gradebook_xp_admin
+ * @category  test
+ */
+
 // Include behat_base for Moodle environment setup.
 require_once(__DIR__ . '/../../../../../lib/behat/behat_base.php');
 require_once(__DIR__ . '/../../../../tests/behat/behat_grade.php');
@@ -22,12 +29,18 @@ use Behat\Mink\Exception\ExpectationException as ExpectationException;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Exception\ElementNotFoundException;
 
+/**
+ * Steps definitions for the plugin.
+ *
+ * @package gradereport_gradebook_xp_admin
+ */
 class behat_gradereport_gradebook_xp_admin extends behat_base {
     /**
      * Adds competencies to the database.
      *
      * @Given the following competencies in my plugin exist:
      * @param TableNode $table
+     * @throws dml_exception
      */
     public function the_following_competencies_in_my_plugin_exist(TableNode $table) {
         global $DB;
@@ -63,9 +76,15 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
     }
 
     /**
+     * Verifies that a specific field in the competency section contains the expected value.
+     *
      * @Then /^the "(?P<field>[^"]*)" field should contain "(?P<value>[^"]*)" for competency "(?P<competency>[^"]*)"$/
+     * @param string $field The field to check.
+     * @param string $value The expected value.
+     * @param string $competency The name of the competency.
+     * @throws Exception if the field or competency is not found or if the value does not match.
      */
-    public function thefieldshouldcontainforcompetency($field, $value, $competency) {
+    public function the_field_should_contain_for_competency($field, $value, $competency) {
         // Locate the specific competency section first.
         $competencysection = $this->getSession()->getPage()->find(
             'xpath',
@@ -87,9 +106,12 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
     }
 
     /**
+     * Clicks the "Delete competency" button for the specified competency.
+     *
      * @When I click on the "Delete competency" button for :competency
+     * @param string $competency The name of the competency to delete.
      */
-    public function iclickonthedeletecompetencybuttonfor($competency) {
+    public function i_click_on_the_delete_competency_button_for($competency) {
         // Find the delete button associated with the competency.
         $deletebutton = $this->getSession()->getPage()->find(
             'xpath',
@@ -106,9 +128,12 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
     }
 
     /**
+     * Clicks the "Edit competency" button for the specified competency.
+     *
      * @When I click on the "Edit competency" button for :competency
+     * @param string $competency The name of the competency to edit.
      */
-    public function iclickontheeditcompetencybuttonfor($competency) {
+    public function i_click_on_the_edit_competency_button_for($competency) {
         // Find the delete button associated with the competency.
         $deletebutton = $this->getSession()->getPage()->find(
             'xpath',
