@@ -14,6 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Handles the import of competency and activity connection data for a course from CSV files within a zip archive.
+ * Includes form setup, data processing, and updating records in the database.
+ *
+ * @package    gradereport_gradebook_xp_admin
+ */
+
 require_once('../../../config.php');
 require_once($CFG->dirroot . '/grade/lib.php');
 require_once('./lib.php');
@@ -39,13 +46,12 @@ $mform = new import_form();
  * based on the mappings generated during insertion.
  *
  * @param int $courseid The ID of the course for which the data is being processed.
- * @param string $com_name The name of the competency table in the database.
- * @param string $com_table The CSV data for competencies.
- * @param string $con_name The name of the connection table in the database.
- * @param string $con_table The CSV data for connections.
+ * @param string $comname The name of the competency table in the database.
+ * @param string $comtable The CSV data for competencies.
+ * @param string $conname The name of the connection table in the database.
+ * @param string $contable The CSV data for connections.
  *
  * @throws dml_exception
- * @global moodle_database $DB The global database object.
  * @package gradereport_gradebook_xp_admin
  */
 function process_data($courseid, $comname, $comtable, $conname, $contable) {
