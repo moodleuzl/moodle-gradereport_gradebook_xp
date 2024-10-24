@@ -14,6 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Displays the competency hierarchy for a course and provides links for managing competencies and connections.
+ *
+ * @package    gradereport_gradebook_xp_admin
+ */
+
 require_once('../../../config.php');
 require_once($CFG->dirroot . '/grade/lib.php');
 require_once('./lib.php');
@@ -30,7 +36,12 @@ $PAGE->navbar->add(get_string('preferences'));
 // Get the competencies for the course and sort by ID.
 $competencies = get_competencies_hierarchy($courseid);
 
-// Display the competency hierarchy recursively.
+/**
+ * Display the competency hierarchy recursively.
+ *
+ * @param $competencies
+ * @return string
+ */
 function display_hierarchy($competencies) {
     $html = '<ul>';
     foreach ($competencies as $competencyid => $competency) {
