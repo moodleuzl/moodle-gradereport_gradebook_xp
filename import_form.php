@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 // Check if script is being accessed from Moodle page.
+
 defined('MOODLE_INTERNAL') || die();
 
 // Include Moodle form library.
