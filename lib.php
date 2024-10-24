@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die;
-
 /**
- * Library functions for the gradebook_xp_admin report.
+ * Library functions for managing competencies, activity connections, and page setup for the gradebook_xp_admin report.
  *
  * @package    gradereport_gradebook_xp_admin
  */
+
+defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/grade/report/user/lib.php');
 require_once($CFG->dirroot . '/grade/report/gradebook_xp_admin/db_controller.php');
@@ -163,7 +163,7 @@ function gradereport_gradebook_xp_admin_set_competency_connection($activityid, $
  * Recursively constructs a hierarchical structure of competencies.
  *
  * @param array $competencies An array of competency objects.
- * @param int $parentId The parent ID to start building the hierarchy from. Defaults to 0.
+ * @param int $parentid The parent ID to start building the hierarchy from. Defaults to 0.
  *
  * @return array The hierarchical structure of competencies.
  */
@@ -196,7 +196,7 @@ function get_hierarchy($competencies, $parentid = 0): array {
  * This function retrieves the hierarchical structure of all competencies for a specified course.
  * It uses recursion to build the competency tree and returns an array representing the hierarchy.
  *
- * @param int|null $courseId The ID of the course whose competencies are being retrieved. Defaults to null,
+ * @param int|null $courseid The ID of the course whose competencies are being retrieved. Defaults to null,
  *                           which means the current course will be used.
  * @param int $competencyid The ID of the parent competency to start building the hierarchy from. Defaults to 0.
  *
