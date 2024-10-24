@@ -21,9 +21,17 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/formslib.php");
 require_once("db_controller.php");
 
+/**
+ * Class edit_form
+ *
+ * Represents a form for editing competencies.
+ * @package gradereport_gradebook_xp_admin
+ */
 class edit_form extends moodleform {
 
-    // Add elements to form.
+    /**
+     * Define the form elements.
+     */
     public function definition() {
         global $COURSE;
 
