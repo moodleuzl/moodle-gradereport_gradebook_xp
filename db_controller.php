@@ -15,10 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Provides utility functions for managing competencies, activities, and their connections within the grading system.
+ *
+ * Functions include retrieving, inserting, updating, and deleting competencies, handling activity connections,
+ * and recursive operations for competency hierarchies.
+ *
+ * @package    gradereport_gradebook_xp_admin
+ */
+
+/**
  * Retrieves the available parent options for a select element excluding the current record and its descendants.
  *
- * @param int|null $currentRecordId The ID of the current record. Pass null if no record ID is available.
+ * @param int|null $currentrecordid The ID of the current record. Pass null if no record ID is available.
  * @return array An array of parent options for the select element.
+ *
  * @package gradereport_gradebook_xp_admin
  */
 function get_available_parents($currentrecordid) {
@@ -68,7 +78,7 @@ function get_competency($id) {
 /**
  * Retrieves all competencies for a specified course or the current course.
  *
- * @param int|null $courseId Optional. Specify another course ID or pass null for the current course.
+ * @param int|null $courseid Optional. Specify another course ID or pass null for the current course.
  * @return array An associative array containing competencies of the specified course, or an empty array if none are found.
  * @throws dml_exception
  * @package gradereport_gradebook_xp_admin
@@ -419,7 +429,7 @@ function get_connections_recursive($competencyid) {
 /**
  * Retrieves activity details (name and ID) based on the activity ID.
  *
- * @param int $activityId The ID of the activity.
+ * @param int $activityid The ID of the activity.
  * @return stdClass|null The activity details object if found, or null if not found.
  * @package gradereport_gradebook_xp_admin
  */
