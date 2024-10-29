@@ -1,6 +1,20 @@
 <?php
+// This file is part of Moodle - https://moodle.org/.
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-// Include behat_base for Moodle environment setup
+// Include behat_base for Moodle environment setup.
 require_once(__DIR__ . '/../../../../../lib/behat/behat_base.php');
 
 use Behat\Mink\Exception\ExpectationException as ExpectationException;
@@ -19,25 +33,27 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
 
         $competencies = $table->getHash();
         foreach ($competencies as $competency) {
-            // Get the course ID by shortname
+            // Get the course ID by shortname.
             $courseid = $DB->get_field('course', 'id', ['shortname' => $competency['courseid']]);
 
-            // Initialize the record
+            // Initialize the record.
             $record = new stdClass();
             $record->courseid = $courseid;
             $record->name = $competency['name'];
             $record->description = $competency['description'];
             $record->maxcomlvl = $competency['maxcomlvl'];
 
-            // If the parent name is not '0', find the parent competency's ID by its name
+            // If the parent name is not '0', find the parent competency's ID by its name.
             if ($competency['parentid'] !== '0') {
-                $parentid = $DB->get_field('gradereport_gradebook_xp_com', 'id', ['name' => $competency['parentid'], 'courseid' => $courseid]);
+                $parentid = $DB->get_field('gradereport_gradebook_xp_com', 'id',
+                    ['name' => $competency['parentid'], 'courseid' => $courseid]);
                 if (!$parentid) {
-                    throw new Exception("The parent competency '{$competency['parentid']}' was not found for course '{$competency['courseid']}'.");
+                    throw new Exception(
+                        "The parent competency '{$competency['parentid']}' was not found for course '{$competency['courseid']}'.");
                 }
                 $record->parentid = $parentid;
             } else {
-                $record->parentid = 0; // No parent competency
+                $record->parentid = 0; // No parent competency.
             }
 
             // Insert the competency into your custom table.
@@ -48,55 +64,62 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
     /**
      * @Then /^the "(?P<field>[^"]*)" field should contain "(?P<value>[^"]*)" for competency "(?P<competency>[^"]*)"$/
      */
-    public function theFieldShouldContainForCompetency($field, $value, $competency) {
-        // Locate the specific competency section first
-        $competencySection = $this->getSession()->getPage()->find(
+    public function thefieldshouldcontainforcompetency($field, $value, $competency) {
+        // Locate the specific competency section first.
+        $competencysection = $this->getSession()->getPage()->find(
             'xpath',
-            "//h4[contains(text(), '{$competency}')]/following-sibling::table//td[strong[contains(text(), '{$field}:')]]/following-sibling::td"
+            "//h4[contains(text(), "
+            . "'{$competency}')]/following-sibling::table//td[strong[contains(text(), "
+            . "'{$field}:')]]/following-sibling::td"
         );
 
-        if (null === $competencySection) {
+        if (null === $competencysection) {
             throw new Exception("Field '{$field}' for competency '{$competency}' not found on the page");
         }
 
         // Check if the field within the competency section contains the expected value.
-        if ($competencySection->getText() !== $value) {
-            throw new Exception("The field '{$field}' for competency '{$competency}' contains '{$competencySection->getText()}', expected '{$value}'");
+        if ($competencysection->getText() !== $value) {
+            throw new Exception(
+                "The field '{$field}' for competency '{$competency}' "
+                        . "contains '{$competencysection->getText()}', expected '{$value}'");
         }
     }
+
     /**
      * @When I click on the "Delete competency" button for :competency
      */
-    public function iClickOnTheDeleteCompetencyButtonFor($competency) {
-        // Find the delete button associated with the competency
-        $deleteButton = $this->getSession()->getPage()->find(
+    public function iclickonthedeletecompetencybuttonfor($competency) {
+        // Find the delete button associated with the competency.
+        $deletebutton = $this->getSession()->getPage()->find(
             'xpath',
             "//h4[contains(text(), '{$competency}')]/following-sibling::input[@value='Delete competency']"
         );
 
-        if (null === $deleteButton) {
-            throw new ElementNotFoundException($this->getSession()->getDriver(), "button", "text", "Delete competency for {$competency}");
+        if (null === $deletebutton) {
+            throw new ElementNotFoundException($this->getSession()->getDriver(), "button", "text",
+                "Delete competency for {$competency}");
         }
 
-        // Click the delete button
-        $deleteButton->click();
+        // Click the delete button.
+        $deletebutton->click();
     }
 
     /**
      * @When I click on the "Edit competency" button for :competency
      */
-    public function iClickOnTheEditCompetencyButtonFor($competency) {
-        // Find the delete button associated with the competency
-        $deleteButton = $this->getSession()->getPage()->find(
+    public function iclickontheeditcompetencybuttonfor($competency) {
+        // Find the delete button associated with the competency.
+        $deletebutton = $this->getSession()->getPage()->find(
             'xpath',
             "//h4[contains(text(), '{$competency}')]/following-sibling::input[@value='Edit competency']"
         );
 
-        if (null === $deleteButton) {
-            throw new ElementNotFoundException($this->getSession()->getDriver(), "button", "text", "Edit competency for {$competency}");
+        if (null === $deletebutton) {
+            throw new ElementNotFoundException($this->getSession()->getDriver(), "button", "text",
+                "Edit competency for {$competency}");
         }
 
-        // Click the delete button
-        $deleteButton->click();
+        // Click the delete button.
+        $deletebutton->click();
     }
 }
