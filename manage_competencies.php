@@ -44,7 +44,7 @@ $templatecontext = (object) [
     'courseid' => $courseid,
 ];
 
-print_grade_page_head($courseid, 'report', 'gradebook_xp_admin', get_string('pluginname', 'gradereport_gradebook_xp'), false, '');
+print_grade_page_head($courseid, 'report', 'gradebook_xp_admin', get_string('pluginname', 'gradereport_gradebook_xp_admin'), false, '');
 
 echo $OUTPUT->render_from_template('gradereport_gradebook_xp_admin/manage_competencies', $templatecontext);
 echo $OUTPUT->footer();

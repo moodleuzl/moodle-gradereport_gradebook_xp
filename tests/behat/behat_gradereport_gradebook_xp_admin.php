@@ -23,7 +23,6 @@
 
 // Include behat_base for Moodle environment setup.
 require_once(__DIR__ . '/../../../../../lib/behat/behat_base.php');
-require_once(__DIR__ . '/../../../../tests/behat/behat_grade.php');
 
 use Behat\Mink\Exception\ExpectationException as ExpectationException;
 use Behat\Gherkin\Node\TableNode;
