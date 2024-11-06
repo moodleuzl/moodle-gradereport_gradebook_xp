@@ -25,7 +25,7 @@ require_once("db_controller.php");
  * Class edit_form
  *
  * Represents a form for editing competencies.
- * @package gradereport_gradebook_xp_admin
+ * @package gradereport_gb_xp_admin
  */
 class edit_form extends moodleform {
 
@@ -73,33 +73,33 @@ class edit_form extends moodleform {
         // Add visible parameters to the form.
 
         // Add parent select element to form.
-        $mform->addElement('select', 'parentid', get_string('parent', 'gradereport_gradebook_xp_admin'), $parentoptions);
+        $mform->addElement('select', 'parentid', get_string('parent', 'gradereport_gb_xp_admin'), $parentoptions);
 
         // Add competency name text element to form.
-        $mform->addElement('text', 'name', get_string('name', 'gradereport_gradebook_xp_admin'));
+        $mform->addElement('text', 'name', get_string('name', 'gradereport_gb_xp_admin'));
         $mform->setType('name', PARAM_NOTAGS);
 
         // Add competency descriptionion text element to form.
-        $mform->addElement('textarea', 'description', get_string('description', 'gradereport_gradebook_xp_admin'));
+        $mform->addElement('textarea', 'description', get_string('description', 'gradereport_gb_xp_admin'));
         $mform->setType('description', PARAM_TEXT);
 
         // Add competency max level input element to form.
-        $mform->addElement('text', 'maxcomlvl', get_string('maxcomlvl', 'gradereport_gradebook_xp_admin'));
+        $mform->addElement('text', 'maxcomlvl', get_string('maxcomlvl', 'gradereport_gb_xp_admin'));
         $mform->setType('maxcomlvl', PARAM_NOTAGS);
 
         // -------------------------------------------------------------------------------
         // Add rules to the form.
 
         // Add validation rule for competency name text element.
-        $mform->addRule('name', get_string('missingname', 'gradereport_gradebook_xp_admin'), 'required', null, 'server');
-        $mform->addRule('name', get_string('strexceedslimit100', 'gradereport_gradebook_xp_admin'), 'maxlength', 100, 'server');
+        $mform->addRule('name', get_string('missingname', 'gradereport_gb_xp_admin'), 'required', null, 'server');
+        $mform->addRule('name', get_string('strexceedslimit100', 'gradereport_gb_xp_admin'), 'maxlength', 100, 'server');
 
-        $mform->addRule('description', get_string('strexceedslimit255', 'gradereport_gradebook_xp_admin'), 'maxlength', 255,
+        $mform->addRule('description', get_string('strexceedslimit255', 'gradereport_gb_xp_admin'), 'maxlength', 255,
             'server');
 
-        $mform->addRule('maxcomlvl', get_string('missinginput', 'gradereport_gradebook_xp_admin'), 'required', null, 'server');
-        $mform->addRule('maxcomlvl', get_string('nonNumericError', 'gradereport_gradebook_xp_admin'), 'numeric', null, 'server');
-        $mform->addRule('maxcomlvl', get_string('strupto999', 'gradereport_gradebook_xp_admin'), 'maxlength', 3, 'server');
+        $mform->addRule('maxcomlvl', get_string('missinginput', 'gradereport_gb_xp_admin'), 'required', null, 'server');
+        $mform->addRule('maxcomlvl', get_string('nonNumericError', 'gradereport_gb_xp_admin'), 'numeric', null, 'server');
+        $mform->addRule('maxcomlvl', get_string('strupto999', 'gradereport_gb_xp_admin'), 'maxlength', 3, 'server');
 
         // -------------------------------------------------------------------------------
         // Set defaults for editing if the current record exists.
@@ -153,7 +153,7 @@ class edit_form extends moodleform {
 
             // Add multiselect 1 to the group.
             $multiselectgroup[] =
-                $mform->createElement('select', 'multiselect1', get_string('activities', 'gradereport_gradebook_xp_admin'),
+                $mform->createElement('select', 'multiselect1', get_string('activities', 'gradereport_gb_xp_admin'),
                     $activities, ['multiple' => 'multiple']);
 
             // Add move buttons to the group.
@@ -162,15 +162,15 @@ class edit_form extends moodleform {
 
             // Add multiselect 2 to the group.
             $multiselectgroup[] =
-                $mform->createElement('select', 'multiselect2', get_string('connections', 'gradereport_gradebook_xp_admin'),
+                $mform->createElement('select', 'multiselect2', get_string('connections', 'gradereport_gb_xp_admin'),
                     $connections, ['multiple' => 'multiple']);
 
             // Add the group to the form.
-            $mform->addGroup($multiselectgroup, 'multiselect_group', get_string('activities', 'gradereport_gradebook_xp_admin'),
+            $mform->addGroup($multiselectgroup, 'multiselect_group', get_string('activities', 'gradereport_gb_xp_admin'),
                 ' ', false);
 
             // Add Dropdown Menu for level (ranging from 1 to max_lvl).
-            $mform->addElement('select', 'level', get_string('level', 'gradereport_gradebook_xp_admin'), range(1, 'maxcomlvl'),
+            $mform->addElement('select', 'level', get_string('level', 'gradereport_gb_xp_admin'), range(1, 'maxcomlvl'),
                 []);
         }
 

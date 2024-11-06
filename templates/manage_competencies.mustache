@@ -1,7 +1,7 @@
-<input type="button" class="btn btn-secondary" value="{{#str}} goback, gradereport_gradebook_xp_admin {{/str}}" onclick="location.href='{{gobackurl}}?id={{courseid}}'">
+<input type="button" class="btn btn-secondary" value="{{#str}} goback, gradereport_gb_xp_admin {{/str}}" onclick="location.href='{{gobackurl}}?id={{courseid}}'">
 <hr>
 
-<h1>{{#str}} listofcompetencies, gradereport_gradebook_xp_admin {{/str}}</h1>
+<h1>{{#str}} listofcompetencies, gradereport_gb_xp_admin {{/str}}</h1>
 {{#competencies}}
     <div class="card mt-2 mb-2">
         <div class="card-body">
@@ -26,8 +26,8 @@
             </table>
 
 
-            <input type="button" class="btn btn-primary" value="{{#str}} editcompetency, gradereport_gradebook_xp_admin {{/str}}" onclick="location.href='{{editurl}}?courseid={{courseid}}&id={{id}}&action=edit'">
-            <input type="button" class="btn btn-danger local_message_delete_button" name="delete-competency" value="{{#str}} deletecompetency, gradereport_gradebook_xp_admin {{/str}}" data-confirmation="modal" data-confirmation-type="delete" data-confirmation-title-str='["delete", "core"]'
+            <input type="button" class="btn btn-primary" value="{{#str}} editcompetency, gradereport_gb_xp_admin {{/str}}" onclick="location.href='{{editurl}}?courseid={{courseid}}&id={{id}}&action=edit'">
+            <input type="button" class="btn btn-danger local_message_delete_button" name="delete-competency" value="{{#str}} deletecompetency, gradereport_gb_xp_admin {{/str}}" data-confirmation="modal" data-confirmation-type="delete" data-confirmation-title-str='["delete", "core"]'
                                                                                                                                                                                         data-confirmation-content-str='["areyousure"]' data-confirmation-yes-button-str='["delete", "core"]'
                                                                                                                                                                                         data-confirmation-destination="{{editurl}}?courseid={{courseid}}&id={{id}}&action=delete'">Show delete modal>
         </div>
@@ -35,4 +35,4 @@
 {{/competencies}}
 
 <hr>
-<input type="button" class="btn btn-primary" value="{{#str}} addcompetency, gradereport_gradebook_xp_admin {{/str}}" onclick="location.href='{{editurl}}?courseid={{courseid}}&action=new'">
+<input type="button" class="btn btn-primary" value="{{#str}} addcompetency, gradereport_gb_xp_admin {{/str}}" onclick="location.href='{{editurl}}?courseid={{courseid}}&action=new'">

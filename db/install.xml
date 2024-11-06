@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="grade/report/gradebook_xp_admin/db" VERSION="20220922" COMMENT="XMLDB file for Moodle grade/report/gradebook_xp_admin"
+<XMLDB PATH="grade/report/gb_xp_admin/db" VERSION="20220922" COMMENT="XMLDB file for Moodle grade/report/gb_xp_admin"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
     <TABLES>
         <!-- Table name limit is 28 chars... -->
-        <TABLE NAME="gradereport_gradebook_xp_com" COMMENT="Stores all competencies bound to a course">
+        <TABLE NAME="gradereport_gb_xp_admin_com" COMMENT="Stores all competencies bound to a course">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -22,7 +22,7 @@
         </TABLE>
 
         <!-- Table name limit is 28 chars... -->
-        <TABLE NAME="gradereport_gradebook_xp_con" COMMENT="Stores all competency to activity connections and their weight">
+        <TABLE NAME="gradereport_gb_xp_admin_con" COMMENT="Stores all competency to activity connections and their weight">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="activityid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

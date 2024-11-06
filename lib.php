@@ -15,18 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Library functions for managing competencies, activity connections, and page setup for the gradebook_xp_admin report.
+ * Library functions for managing competencies, activity connections, and page setup for the gb_xp_admin report.
  *
- * @package    gradereport_gradebook_xp_admin
+ * @package    gradereport_gb_xp_admin
  */
 
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/grade/report/user/lib.php');
-require_once($CFG->dirroot . '/grade/report/gradebook_xp_admin/db_controller.php');
+require_once($CFG->dirroot . '/grade/report/gb_xp_admin/db_controller.php');
 
 /**
- * Set up a page for the 'gradebook_xp' report in Moodle.
+ * Set up a page for the 'gb_xp' report in Moodle.
  *
  * This function sets the page URL, layout, and verifies user access before displaying the report.
  *
@@ -35,11 +35,11 @@ require_once($CFG->dirroot . '/grade/report/gradebook_xp_admin/db_controller.php
  *
  * @throws moodle_exception If the course ID is invalid.
  */
-function gradereport_gradebook_xp_admin_setup_page($courseid, $capability = 'moodle/grade:manage') {
+function gradereport_gb_xp_admin_setup_page($courseid, $capability = 'moodle/grade:manage') {
     global $PAGE, $CFG, $DB, $context;
 
     // Set page URL and layout.
-    $url = new moodle_url('/grade/report/gradebook_xp_admin/' . gradereport_gradebook_xp_admin_get_caller_filename(),
+    $url = new moodle_url('/grade/report/gb_xp_admin/' . gradereport_gb_xp_admin_get_caller_filename(),
         ['id' => $courseid]);
     if ($courseid !== 0) {
         $url->param('id', $courseid);
@@ -48,7 +48,7 @@ function gradereport_gradebook_xp_admin_setup_page($courseid, $capability = 'moo
     $PAGE->set_pagelayout('standard');
 
     $PAGE->requires->jquery();
-    $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp_admin/js/change_active_tab.js'));
+    $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/change_active_tab.js'));
 
     if (!$course = $DB->get_record('course', ['id' => $courseid])) {
         throw new \moodle_exception('invalidcourseid');
@@ -60,14 +60,14 @@ function gradereport_gradebook_xp_admin_setup_page($courseid, $capability = 'moo
 }
 
 /**
- * Get the filename of the calling script in the 'gradebook_xp' report context.
+ * Get the filename of the calling script in the 'gb_xp' report context.
  *
  * This function retrieves the filename of the script that calls it within the context
- * of the 'gradebook_xp' report. It uses debug_backtrace to inspect the call stack.
+ * of the 'gb_xp' report. It uses debug_backtrace to inspect the call stack.
  *
  * @return string The filename of the calling script.
  */
-function gradereport_gradebook_xp_admin_get_caller_filename() {
+function gradereport_gb_xp_admin_get_caller_filename() {
     $trace = debug_backtrace();
     $caller = $trace[1];
     return basename($caller['file']);
@@ -75,7 +75,7 @@ function gradereport_gradebook_xp_admin_get_caller_filename() {
 
 
 /**
- * Add or update a competency entry for the 'gradebook_xp' report in Moodle.
+ * Add or update a competency entry for the 'gb_xp' report in Moodle.
  *
  * This function checks if a competency with the given name already exists for the specified course.
  * If it exists, the competency is updated with the new name and description. If not, a new competency
@@ -89,11 +89,11 @@ function gradereport_gradebook_xp_admin_get_caller_filename() {
  *
  * @throws dml_exception
  */
-function gradereport_gradebook_xp_admin_add_competency($courseid, $name, $description) {
+function gradereport_gb_xp_admin_add_competency($courseid, $name, $description) {
     global $DB;
 
     // Attempt to find matching record in our table.
-    $table = "gradereport_gradebook_xp_com";
+    $table = "gradereport_gb_xp_admin_com";
     $competency = $DB->get_record($table, ["courseid" => $courseid, "name" => $name]);
 
     // Update or insert record.
@@ -129,11 +129,11 @@ function gradereport_gradebook_xp_admin_add_competency($courseid, $name, $descri
  *
  * @return void
  */
-function gradereport_gradebook_xp_admin_set_competency_connection($activityid, $competencyid, $level) {
+function gradereport_gb_xp_admin_set_competency_connection($activityid, $competencyid, $level) {
     global $DB;
 
     // Attempt to find matching record in our table.
-    $table = "gradereport_gradebook_xp_con";
+    $table = "gradereport_gb_xp_admin_con";
     $connection = get_connection($activityid, $competencyid);
 
     // Update or insert record.

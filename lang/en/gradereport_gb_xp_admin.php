@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'gradebook_xp_admin', language 'en'
+ * Strings for component 'gb_xp_admin', language 'en'
  *
- * @package gradereport_gradebook_xp_admin
+ * @package gradereport_gb_xp_admin
  */
 $string['pluginname'] = 'Gradebook XP Admin';
 $string['newcompetency'] = 'New competency';

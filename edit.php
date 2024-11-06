@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Handles the creation, editing, and deletion of competencies within the gradebook_xp_admin plugin.
+ * Handles the creation, editing, and deletion of competencies within the gb_xp_admin plugin.
  *
- * @package    gradereport_gradebook_xp_admin
+ * @package    gradereport_gb_xp_admin
  */
 
 // Load necessary files.
@@ -27,8 +27,8 @@ require_once('edit_form.php');
 require_once('lib.php');
 require_once('db_controller.php');
 
-$PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp_admin/js/move_multiselect.js'));
-$PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp_admin/js/change_level.js'));
+$PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/move_multiselect.js'));
+$PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/change_level.js'));
 
 // Get URL parameters.
 $courseid = required_param('courseid', PARAM_INT);
@@ -37,7 +37,7 @@ $action = optional_param('action', 'new', PARAM_ALPHA);
 
 // Set up the page.
 require_course_login($courseid);
-gradereport_gradebook_xp_admin_setup_page($courseid);
+gradereport_gb_xp_admin_setup_page($courseid);
 
 // Get return URL.
 $gpr = new grade_plugin_return();
@@ -82,7 +82,7 @@ function handle_action() {
     } else {
         // Handle no action (new action for example).
         // Set page heading.
-        $heading = get_string('newcompetency', 'gradereport_gradebook_xp_admin');
+        $heading = get_string('newcompetency', 'gradereport_gb_xp_admin');
     }
 }
 
@@ -109,7 +109,7 @@ function handle_action_buttons() {
                 $activityid = $connection['id'];
                 $connectionlevel = $connection['level'];
 
-                gradereport_gradebook_xp_admin_set_competency_connection($activityid, $fromform->id, $connectionlevel);
+                gradereport_gb_xp_admin_set_competency_connection($activityid, $fromform->id, $connectionlevel);
                 $activityids[] = $activityid;
                 // Process these values as needed.
             }
@@ -168,7 +168,7 @@ function generate_output() {
     $PAGE->navbar->add($heading);
 
     // Print header.
-    print_grade_page_head($courseid, 'report', 'gradebook_xp_admin', $heading, false, false, false);
+    print_grade_page_head($courseid, 'report', 'gb_xp_admin', $heading, false, false, false);
 
     // Displays the form.
     $mform->display();

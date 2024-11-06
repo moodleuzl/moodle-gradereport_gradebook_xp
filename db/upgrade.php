@@ -17,7 +17,7 @@
 /**
  * Gradebook XP upgrade steps.
  *
- * @package gradereport_gradebook_xp_admin
+ * @package gradereport_gb_xp_admin
  */
 
 /**
@@ -26,7 +26,7 @@
  * @param int $oldversion the version we are upgrading from
  * @return bool result
  */
-function xmldb_gradereport_gradebook_xp_admin_upgrade($oldversion) {
+function xmldb_gradereport_gb_xp_admin_upgrade($oldversion) {
     global $DB;
 
     return true;

@@ -1,3 +1,3 @@
-# gradebook_xp_admin
+# gb_xp_admin
 
-Moodle gradebook_xp_admin plugin
+Moodle gb_xp_admin plugin
