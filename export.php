@@ -17,7 +17,7 @@
 /**
  * Exports competencies and connections as CSV files, packages them into a zip, and serves it for download.
  *
- * @package    gradereport_gradebook_xp_admin
+ * @package    gradereport_gb_xp_admin
  */
 
 
@@ -41,8 +41,8 @@ require_course_login($courseid);
 $context = context_course::instance($course->id);
 
 // Define table names for competencies and connections.
-$tablecom = 'gradereport_gradebook_xp_com';
-$tablecon = 'gradereport_gradebook_xp_con';
+$tablecom = 'gradereport_gb_xp_admin_com';
+$tablecon = 'gradereport_gb_xp_admin_con';
 
 // Generate CSV files for competencies and connections.
 $table1csv = generate_csv($tablecom, sys_get_temp_dir() . '/' . $tablecom . '.csv');
@@ -65,7 +65,7 @@ if ($zip->close() !== true) {
 }
 
 // Define filename for the zip file.
-$filename = $courseid . "_gradebook_xp.zip";
+$filename = $courseid . "_gb_xp.zip";
 
 // Serve the zip file to the user.
 header("Content-type: application/zip");
@@ -86,7 +86,7 @@ unlink($tempzipfile);
  * @param string $filename The filename to save the CSV as.
  * @return string The filename of the generated CSV file.
  * @throws dml_exception
- * @package gradereport_gradebook_xp_admin
+ * @package gradereport_gb_xp_admin
  */
 function generate_csv($tablename, $filename) {
     global $DB;

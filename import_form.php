@@ -26,7 +26,7 @@ require_once("db_controller.php"); // Include the database controller file.
  * Class import_form
  *
  * Represents a form for importing data in Moodle.
- * @package gradereport_gradebook_xp_admin
+ * @package gradereport_gb_xp_admin
  */
 class import_form extends moodleform {
 

@@ -17,7 +17,7 @@
 /**
  * Displays the competency hierarchy for a course and provides links for managing competencies and connections.
  *
- * @package    gradereport_gradebook_xp_admin
+ * @package    gradereport_gb_xp_admin
  */
 
 require_once('../../../config.php');
@@ -30,7 +30,7 @@ $userid = optional_param('userid', $USER->id, PARAM_INT);
 
 // Set up the page.
 require_course_login($courseid);
-gradereport_gradebook_xp_admin_setup_page($courseid);
+gradereport_gb_xp_admin_setup_page($courseid);
 $PAGE->navbar->add(get_string('preferences'));
 
 // Get the competencies for the course and sort by ID.
@@ -57,15 +57,15 @@ function display_hierarchy($competencies) {
 
 // Render the page.
 $templatecontext = (object) [
-    'managecompetenciesurl' => new moodle_url('/grade/report/gradebook_xp_admin/manage_competencies.php'),
-    'manageconnectionsurl' => new moodle_url('/grade/report/gradebook_xp_admin/manage_connections.php'),
-    'exporturl' => new moodle_url('/grade/report/gradebook_xp_admin/export.php'),
-    'importurl' => new moodle_url('/grade/report/gradebook_xp_admin/import.php'),
+    'managecompetenciesurl' => new moodle_url('/grade/report/gb_xp_admin/manage_competencies.php'),
+    'manageconnectionsurl' => new moodle_url('/grade/report/gb_xp_admin/manage_connections.php'),
+    'exporturl' => new moodle_url('/grade/report/gb_xp_admin/export.php'),
+    'importurl' => new moodle_url('/grade/report/gb_xp_admin/import.php'),
     'courseid' => $courseid,
 ];
 
-print_grade_page_head($courseid, 'report', 'gradebook_xp_admin', get_string('pluginname', 'gradereport_gradebook_xp_admin'), false,
+print_grade_page_head($courseid, 'report', 'gb_xp_admin', get_string('pluginname', 'gradereport_gb_xp_admin'), false,
     '');
 echo(display_hierarchy($competencies));
-echo $OUTPUT->render_from_template('gradereport_gradebook_xp_admin/preferences', $templatecontext);
+echo $OUTPUT->render_from_template('gradereport_gb_xp_admin/preferences', $templatecontext);
 echo $OUTPUT->footer();

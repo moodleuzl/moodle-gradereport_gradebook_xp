@@ -17,13 +17,13 @@
 /**
  * Defines capabilities for the Gradebook XP plugin
  *
- * @package gradereport_gradebook_xp_admin
+ * @package gradereport_gb_xp_admin
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
-    'gradereport/gradebook_xp_admin:view' => [
+    'gradereport/gb_xp_admin:view' => [
             'riskbitmask' => RISK_PERSONAL,
             'captype' => 'read',
             'contextlevel' => CONTEXT_COURSE,

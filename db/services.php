@@ -17,7 +17,7 @@
 /**
  * Gradebook XP external functions and service definitions.
  *
- * @package gradereport_gradebook_xp_admin
+ * @package gradereport_gb_xp_admin
  */
 
 defined('MOODLE_INTERNAL') || die();

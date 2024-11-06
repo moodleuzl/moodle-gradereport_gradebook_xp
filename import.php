@@ -17,7 +17,7 @@
 /**
  * Handles the import of competency and connection data for a course from CSV files within a zip archive.
  *
- * @package    gradereport_gradebook_xp_admin
+ * @package    gradereport_gb_xp_admin
  */
 
 require_once('../../../config.php');
@@ -31,7 +31,7 @@ $courseid = required_param('id', PARAM_INT);
 
 // Set up the page.
 require_course_login($courseid);
-gradereport_gradebook_xp_admin_setup_page($courseid, 'moodle/grade:manage');
+gradereport_gb_xp_admin_setup_page($courseid, 'moodle/grade:manage');
 $PAGE->navbar->add(get_string('preferences'));
 
 // Instantiate import_form.
@@ -51,7 +51,7 @@ $mform = new import_form();
  * @param string $contable The CSV data for connections.
  *
  * @throws dml_exception
- * @package gradereport_gradebook_xp_admin
+ * @package gradereport_gb_xp_admin
  */
 function process_data($courseid, $comname, $comtable, $conname, $contable) {
     global $DB;
@@ -171,9 +171,9 @@ if ($mform->is_cancelled()) {
     // Open the zip archive.
     $zip = new ZipArchive;
     if ($zip->open($zipfile) === true) {
-        $comname = 'gradereport_gradebook_xp_com';
+        $comname = 'gradereport_gb_xp_admin_com';
         $comtable = null;
-        $conname = 'gradereport_gradebook_xp_con';
+        $conname = 'gradereport_gb_xp_admin_con';
         $contable = null;
         // Extract each CSV file from the zip archive.
         for ($i = 0; $i < $zip->numFiles; $i++) {
@@ -204,7 +204,7 @@ if ($mform->is_cancelled()) {
 $PAGE->navbar->add('Import');
 
 // Print header.
-print_grade_page_head($courseid, 'report', 'gradebook_xp_admin', 'Import', false, false, false);
+print_grade_page_head($courseid, 'report', 'gb_xp_admin', 'Import', false, false, false);
 
 // Displays the form.
 $mform->display();

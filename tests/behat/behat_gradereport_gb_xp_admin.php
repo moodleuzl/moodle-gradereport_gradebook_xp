@@ -17,7 +17,7 @@
 /**
  * Behat steps definitions for the plugin.
  *
- * @package gradereport_gradebook_xp_admin
+ * @package gradereport_gb_xp_admin
  * @category  test
  */
 
@@ -31,9 +31,9 @@ use Behat\Mink\Exception\ElementNotFoundException;
 /**
  * Steps definitions for the plugin.
  *
- * @package gradereport_gradebook_xp_admin
+ * @package gradereport_gb_xp_admin
  */
-class behat_gradereport_gradebook_xp_admin extends behat_base {
+class behat_gradereport_gb_xp_admin extends behat_base {
     /**
      * Adds competencies to the database.
      *
@@ -58,7 +58,7 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
 
             // If the parent name is not '0', find the parent competency's ID by its name.
             if ($competency['parentid'] !== '0') {
-                $parentid = $DB->get_field('gradereport_gradebook_xp_com', 'id',
+                $parentid = $DB->get_field('gradereport_gb_xp_admin_com', 'id',
                     ['name' => $competency['parentid'], 'courseid' => $courseid]);
                 if (!$parentid) {
                     throw new Exception(
@@ -70,7 +70,7 @@ class behat_gradereport_gradebook_xp_admin extends behat_base {
             }
 
             // Insert the competency into your custom table.
-            $DB->insert_record('gradereport_gradebook_xp_com', $record);
+            $DB->insert_record('gradereport_gb_xp_admin_com', $record);
         }
     }
 
