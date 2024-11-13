@@ -62,6 +62,7 @@ $templatecontext = (object) [
     'exporturl' => new moodle_url('/grade/report/gb_xp_admin/export.php'),
     'importurl' => new moodle_url('/grade/report/gb_xp_admin/import.php'),
     'courseid' => $courseid,
+    'competencies' => $competencies,
 ];
 
 print_grade_page_head($courseid, 'report', 'gb_xp_admin',

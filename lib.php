@@ -175,18 +175,19 @@ function get_hierarchy($competencies, $parentid = 0): array {
     foreach ($competencies as $competency) {
         // Check if the competency's parent ID matches the given parent ID.
         if ($competency->parentid == $parentid) {
-            // Recursively call get_hierarchy to retrieve sub-competencies.
-            $competency->subCompetencies = get_hierarchy($competencies, $competency->id);
+            // Recursively get subcompetencies
+            $subcompetencies = get_hierarchy($competencies, $competency->id);
+            // Ensure subcompetencies is an indexed array
+            $competency->subCompetencies = array_values($subcompetencies);
 
             // Retrieve connections for the current competency.
             $competency->connections = get_connections($competency->id);
 
             // Add the competency to the hierarchy array.
-            $hierarchy[$competency->id] = $competency;
+            $hierarchy[] = $competency;
         }
     }
 
-    // Return the hierarchical structure.
     return $hierarchy;
 }
 

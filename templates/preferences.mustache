@@ -1,3 +1,9 @@
+<ul>
+    {{#competencies}}
+        {{> gradereport_gb_xp_admin/competency_item}}
+    {{/competencies}}
+</ul>
+
 <input type="button" class="btn btn-primary" value="{{#str}} managecompetencies, gradereport_gb_xp_admin {{/str}}" onclick="location.href='{{managecompetenciesurl}}?id={{courseid}}'">
 <input type="button" class="btn btn-primary" value="{{#str}} export, gradereport_gb_xp_admin {{/str}}" onclick="location.href='{{exporturl}}?id={{courseid}}'">
 <input type="button" class="btn btn-primary" value="{{#str}} import, gradereport_gb_xp_admin {{/str}}" onclick="location.href='{{importurl}}?id={{courseid}}'">
