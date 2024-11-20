@@ -23,8 +23,6 @@
  */
 namespace gradereport_gb_xp_admin\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
 class provider implements \core_privacy\local\metadata\null_provider {
 
     /**
