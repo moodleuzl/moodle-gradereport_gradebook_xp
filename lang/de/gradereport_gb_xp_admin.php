@@ -22,4 +22,35 @@
  * @license CC BY 4.0
  */
 $string['pluginname'] = 'Gradebook XP Admin';
-$string['privacy:metadata'] = 'Das Gradebook XP-Plugin speichert keine persöhnlichen Daten.';
+$string['newcompetency'] = 'Neue Kompetenz';
+$string['editcompetency'] = 'Kompetenz bearbeiten';
+$string['deletecompetency'] = 'Kompetenz löschen';
+$string['id'] = 'ID';
+$string['name'] = 'Kompetenzname';
+$string['description'] = 'Kompetenzbeschreibung';
+$string['level'] = 'Kompetenzstufe';
+$string['connections'] = 'Verbindungen';
+$string['activities'] = 'Aktivitäten';
+$string['assignments'] = 'Aufgaben';
+$string['quizzes'] = 'Tests';
+$string['vpls'] = 'VPLs';
+$string['saveconnection'] = 'Verbindung speichern';
+$string['parent'] = 'Übergeordnet';
+$string['missingname'] = 'Name fehlt. Bitte geben Sie einen gültigen Namen ein.';
+$string['managecompetencies'] = 'Kompetenzen verwalten';
+$string['goback'] = 'Zurück';
+$string['listofcompetencies'] = 'Liste der Kompetenzen';
+$string['listofconnections'] = 'Liste der Verbindungen';
+$string['addcompetency'] = 'Kompetenz hinzufügen';
+$string['privacy:metadata'] = 'Das Gradebook XP Plugin speichert keine persönlichen Daten.';
+$string['export'] = 'Exportieren';
+$string['import'] = 'Importieren';
+$string['maxcomlvl'] = 'Maximale Kompetenzstufe';
+$string['nonNumericError'] = 'Ungültige Eingabe. Bitte geben Sie nur Zahlen ein.';
+$string['strexceedslimit255'] = 'Bitte geben Sie maximal 255 Zeichen ein.';
+$string['strexceedslimit100'] = 'Bitte geben Sie maximal 100 Zeichen ein.';
+$string['strupto999'] = 'Bitte geben Sie eine Zahl von 1 bis 999 ein.';
+$string['missinginput'] = 'Dieses Feld ist erforderlich. Bitte lassen Sie es nicht leer.';
+$string['cancelcompetency'] = 'Sie haben das Kompetenzformular abgebrochen.';
+$string['createcompetencysuccess'] = 'Sie haben die Kompetenz erfolgreich erstellt: ';
+$string['updatecompetencysuccess'] = 'Sie haben die Kompetenz erfolgreich aktualisiert: ';
