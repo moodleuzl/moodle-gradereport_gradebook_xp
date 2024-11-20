@@ -337,8 +337,6 @@ function get_connections($competencyid) {
  * @package gradereport_gb_xp_admin
  */
 function get_competency_activities($competencyid) {
-    global $DB, $courseid;
-
     // Initialize an empty array to store activity details.
     $activitydetailsarray = [];
 
@@ -376,8 +374,6 @@ function get_competency_activities($competencyid) {
  * @package gradereport_gb_xp_admin
  */
 function get_connections_recursive($competencyid) {
-    global $DB;
-
     // Initialize an empty array to store all connections.
     $allconnections = [];
 

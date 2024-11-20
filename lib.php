@@ -83,10 +83,6 @@ function gradereport_gb_xp_admin_get_caller_filename() {
  * @return void
  */
 function gradereport_gb_xp_admin_set_competency_connection($activityid, $competencyid, $level) {
-    global $DB;
-
-    // Attempt to find matching record in our table.
-    $table = "gradereport_gb_xp_admin_con";
     $connection = get_connection($activityid, $competencyid);
 
     // Update or insert record.
