@@ -136,7 +136,8 @@ function handle_action_buttons() {
                 update_competency($existingcompetency);
 
                 // Redirect with success message.
-                redirect($returnurl, get_string('updatecompetencysuccess', 'gradereport_gb_xp_admin') . '\'' . $fromform->name . '\'');
+                redirect($returnurl,
+                    get_string('updatecompetencysuccess', 'gradereport_gb_xp_admin') . '\'' . $fromform->name . '\'');
             }
         }
 
@@ -151,7 +152,8 @@ function handle_action_buttons() {
         insert_competency($competencytoinsert);
 
         // Redirect with success message.
-        redirect($returnurl, get_string('createcompetencysuccess', 'gradereport_gb_xp_admin') . '\'' . $fromform->name . '\'');
+        redirect($returnurl,
+            get_string('createcompetencysuccess', 'gradereport_gb_xp_admin') . '\'' . $fromform->name . '\'');
 
     } else {
         handle_action(); // No action needed.
