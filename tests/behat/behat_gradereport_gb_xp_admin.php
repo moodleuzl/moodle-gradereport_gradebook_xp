@@ -19,6 +19,8 @@
  *
  * @package gradereport_gb_xp_admin
  * @category  test
+ * @copyright INB University of Luebeck
+ * @license CC BY 4.0
  */
 
 // Include behat_base for Moodle environment setup.

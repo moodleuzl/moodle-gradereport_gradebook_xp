@@ -18,6 +18,8 @@
  * Displays the competency hierarchy for a course and provides links for managing competencies and connections.
  *
  * @package    gradereport_gb_xp_admin
+ * @copyright INB University of Luebeck
+ * @license CC BY 4.0
  */
 
 require_once('../../../config.php');

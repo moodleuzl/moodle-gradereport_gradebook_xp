@@ -18,6 +18,8 @@
  * Strings for component 'gb_xp_admin', language 'de'
  *
  * @package gradereport_gb_xp_admin
+ * @copyright INB University of Luebeck
+ * @license CC BY 4.0
  */
 $string['pluginname'] = 'Gradebook XP Admin';
 $string['privacy:metadata'] = 'Das Gradebook XP-Plugin speichert keine persöhnlichen Daten.';

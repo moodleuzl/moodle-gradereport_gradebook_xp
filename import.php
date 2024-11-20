@@ -18,6 +18,8 @@
  * Handles the import of competency and connection data for a course from CSV files within a zip archive.
  *
  * @package    gradereport_gb_xp_admin
+ * @copyright INB University of Luebeck
+ * @license CC BY 4.0
  */
 
 require_once('../../../config.php');

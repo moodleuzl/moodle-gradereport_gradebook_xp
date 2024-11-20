@@ -18,6 +18,8 @@
  * Handles the creation, editing, and deletion of competencies within the gb_xp_admin plugin.
  *
  * @package    gradereport_gb_xp_admin
+ * @copyright INB University of Luebeck
+ * @license CC BY 4.0
  */
 
 // Load necessary files.

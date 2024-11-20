@@ -18,6 +18,8 @@
  * Exports competencies and connections as CSV files, packages them into a zip, and serves it for download.
  *
  * @package    gradereport_gb_xp_admin
+ * @copyright INB University of Luebeck
+ * @license CC BY 4.0
  */
 
 

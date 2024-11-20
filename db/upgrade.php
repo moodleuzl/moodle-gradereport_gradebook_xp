@@ -18,6 +18,8 @@
  * Gradebook XP upgrade steps.
  *
  * @package gradereport_gb_xp_admin
+ * @copyright INB University of Luebeck
+ * @license CC BY 4.0
  */
 
 /**
