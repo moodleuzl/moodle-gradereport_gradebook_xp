@@ -16,7 +16,7 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-                <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="com" REFFIELDS="courseid"/> <!-- TODO: I'm not sure if both of these are necessary -->
+                <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="com" REFFIELDS="courseid"/>
                 <KEY NAME="name" TYPE="foreign" FIELDS="name" REFTABLE="com" REFFIELDS="name"/>
             </KEYS>
         </TABLE>
