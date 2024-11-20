@@ -75,53 +75,6 @@ function gradereport_gb_xp_admin_get_caller_filename() {
     return basename($caller['file']);
 }
 
-
-/**
- * Add or update a competency entry for the 'gb_xp' report in Moodle.
- *
- * This function checks if a competency with the given name already exists for the specified course.
- * If it exists, the competency is updated with the new name and description. If not, a new competency
- * entry is inserted into the database.
- *
- * @param int $courseid The ID of the course for which the competency is being added or updated.
- * @param string $name The name of the competency.
- * @param string $description The description of the competency.
- *
- * @return void
- *
- * @throws dml_exception
- */
-function gradereport_gb_xp_admin_add_competency($courseid, $name, $description) {
-    global $DB;
-
-    // Attempt to find matching record in our table.
-    $table = "gradereport_gb_xp_admin_com";
-    $competency = $DB->get_record($table, ["courseid" => $courseid, "name" => $name]);
-
-    // Update or insert record.
-    if ($competency) {
-
-        // Update values.
-        $competency->name = $name;
-        $competency->description = $description;
-
-        // Update record with new competency.
-        update_competency($competency);
-
-    } else {
-
-        // Construct new competency array.
-        $competency = [
-            "courseid" => $courseid,
-            "name" => $name,
-            "description" => $description,
-        ];
-
-        // Insert new record.
-        insert_competency($competency);
-    }
-}
-
 /**
  * Add a competency to activity connection or overwrite an existing one.
  *
@@ -132,10 +85,6 @@ function gradereport_gb_xp_admin_add_competency($courseid, $name, $description) 
  * @return void
  */
 function gradereport_gb_xp_admin_set_competency_connection($activityid, $competencyid, $level) {
-    global $DB;
-
-    // Attempt to find matching record in our table.
-    $table = "gradereport_gb_xp_admin_con";
     $connection = get_connection($activityid, $competencyid);
 
     // Update or insert record.

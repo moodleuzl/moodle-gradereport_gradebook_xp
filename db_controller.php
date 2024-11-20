@@ -114,36 +114,6 @@ function get_direct_children($id) {
 }
 
 /**
- * Retrieves all descendants (children, grandchildren, etc.) of a given competency by its ID.
- *
- * @param int $id The ID of the parent competency.
- * @return array An array of all descendant records of the specified competency.
- * @package gradereport_gb_xp_admin
- */
-function get_all_children($id) {
-    global $DB;
-
-    // Recursive SQL query to retrieve all descendant records of the specified parent.
-    $sql = "WITH RECURSIVE item_descendants AS (
-                SELECT id, parentid, name
-                FROM {gradereport_gb_xp_admin_com}
-                WHERE id = ?
-                UNION
-                SELECT g.id, g.parentid, g.name
-                FROM {gradereport_gb_xp_admin_com} g
-                JOIN item_descendants d ON g.parentid = d.id
-            )
-            SELECT id, name
-            FROM item_descendants
-            WHERE id != ?";
-
-    $params = [$id, $id];
-    $childrenrecords = $DB->get_records_sql($sql, $params); // Execute the query.
-
-    return $childrenrecords;
-}
-
-/**
  * Updates an existing competency in the database.
  *
  * @param stdClass $competency The competency object containing updated data.
@@ -369,8 +339,6 @@ function get_connections($competencyid) {
  * @package gradereport_gb_xp_admin
  */
 function get_competency_activities($competencyid) {
-    global $DB, $courseid;
-
     // Initialize an empty array to store activity details.
     $activitydetailsarray = [];
 
@@ -408,8 +376,6 @@ function get_competency_activities($competencyid) {
  * @package gradereport_gb_xp_admin
  */
 function get_connections_recursive($competencyid) {
-    global $DB;
-
     // Initialize an empty array to store all connections.
     $allconnections = [];
 
