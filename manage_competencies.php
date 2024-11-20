@@ -18,6 +18,8 @@
  * Displays the list of competencies for a course and provides options for managing them.
  *
  * @package    gradereport_gb_xp_admin
+ * @copyright INB University of Luebeck
+ * @license CC BY 4.0
  */
 
 require_once('../../../config.php');
