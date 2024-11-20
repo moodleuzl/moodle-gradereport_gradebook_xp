@@ -23,6 +23,12 @@
  */
 namespace gradereport_gb_xp_admin\privacy;
 
+/**
+ * Privacy Subsystem for gb_xp_admin implementing null_provider.
+ *
+ * @copyright INB University of Luebeck
+ * @license CC BY 4.0
+ */
 class provider implements \core_privacy\local\metadata\null_provider {
 
     /**
