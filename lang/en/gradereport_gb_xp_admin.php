@@ -49,3 +49,6 @@ $string['strexceedslimit255'] = 'Please only enter up to 255 Characters.';
 $string['strexceedslimit100'] = 'Please only enter up to 100 Characters.';
 $string['strupto999'] = 'Please enter a number from 1 to 999.';
 $string['missinginput'] = 'This field is required. Please do not leave it empty.';
+$string['cancelcompetency'] = 'You cancelled the competency form.';
+$string['createcompetencysuccess'] = 'You have successfully created the competency: ';
+$string['updatecompetencysuccess'] = 'You have successfully updated the competency: ';

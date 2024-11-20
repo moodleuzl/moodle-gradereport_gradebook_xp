@@ -49,3 +49,6 @@ $string['strexceedslimit255'] = 'Bitte geben Sie maximal 255 Zeichen ein.';
 $string['strexceedslimit100'] = 'Bitte geben Sie maximal 100 Zeichen ein.';
 $string['strupto999'] = 'Bitte geben Sie eine Zahl von 1 bis 999 ein.';
 $string['missinginput'] = 'Dieses Feld ist erforderlich. Bitte lassen Sie es nicht leer.';
+$string['cancelcompetency'] = 'Sie haben das Kompetenzformular abgebrochen.';
+$string['createcompetencysuccess'] = 'Sie haben die Kompetenz erfolgreich erstellt: ';
+$string['updatecompetencysuccess'] = 'Sie haben die Kompetenz erfolgreich aktualisiert: ';

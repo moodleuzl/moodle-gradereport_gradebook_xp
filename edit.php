@@ -96,7 +96,7 @@ function handle_action_buttons() {
     if ($mform->is_cancelled()) {
         // Handle form cancel operation.
         // Redirect to manage_competencies.php page.
-        redirect($returnurl, 'You cancelled the competency form.');
+        redirect($returnurl, get_string('cancelcompetency', 'gradereport_gb_xp_admin'));
 
     } else if ($fromform = $mform->get_data()) {
         // If form data is submitted and validated.
@@ -136,7 +136,7 @@ function handle_action_buttons() {
                 update_competency($existingcompetency);
 
                 // Redirect with success message.
-                redirect($returnurl, 'You have successfully updated the competency: \'' . $fromform->name . '\'');
+                redirect($returnurl, get_string('createcompetencysuccess', 'gradereport_gb_xp_admin') . '\'' . $fromform->name . '\'');
             }
         }
 
@@ -151,7 +151,7 @@ function handle_action_buttons() {
         insert_competency($competencytoinsert);
 
         // Redirect with success message.
-        redirect($returnurl, 'You have successfully created the competency: \'' . $fromform->name . '\'');
+        redirect($returnurl, get_string('createcompetencysuccess', 'gradereport_gb_xp_admin') . '\'' . $fromform->name . '\'');
 
     } else {
         handle_action(); // No action needed.
