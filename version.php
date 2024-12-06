@@ -19,11 +19,11 @@
  *
  * @package gradereport_gb_xp_admin
  * @copyright INB University of Luebeck
- * @license CC BY 4.0
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2024110600;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version = 2024120600;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires = 2020061000;        // Requires this Moodle version.
 $plugin->component = 'gradereport_gb_xp_admin'; // Full name of the plugin (used for diagnostics).

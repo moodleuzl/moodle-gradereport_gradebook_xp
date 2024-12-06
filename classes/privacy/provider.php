@@ -19,7 +19,7 @@
  *
  * @package gradereport_gb_xp_admin
  * @copyright INB University of Luebeck
- * @license CC BY 4.0
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace gradereport_gb_xp_admin\privacy;
 
@@ -27,7 +27,7 @@ namespace gradereport_gb_xp_admin\privacy;
  * Privacy Subsystem for gb_xp_admin implementing null_provider.
  *
  * @copyright INB University of Luebeck
- * @license CC BY 4.0
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements \core_privacy\local\metadata\null_provider {
 
