@@ -103,9 +103,13 @@ function process_data($courseid, $comname, $comtable, $conname, $contable) {
         // Check if the record exists.
         if ($existingrecord) {
             // Get the new ID corresponding to the old parent ID.
-            $newparentid = isset($mapping[$existingrecord->parentid]) ? $mapping[$existingrecord->parentid] : 0;
+            $newparentid = isset($mapping[$existingrecord->parentid]) ? $mapping[$existingrecord->parentid] : $existingrecord->parentid;
 
-            // Update the parentid property of the existing record.
+            // Update the parentid property only if necessary.
+            if (!$DB->record_exists($comname, ['id' => $newparentid])) {
+                $newparentid = 0;
+            }
+
             $existingrecord->parentid = $newparentid;
 
             // Update the record in the database.
