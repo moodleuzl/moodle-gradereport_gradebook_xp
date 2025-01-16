@@ -51,11 +51,12 @@ $mform = new import_form();
  * @param string $comtable The CSV data for competencies.
  * @param string $conname The name of the connection table in the database.
  * @param string $contable The CSV data for connections.
+ * @param bool $overwrite Whether to overwrite existing competencies.
  *
  * @throws dml_exception
  * @package gradereport_gb_xp_admin
  */
-function process_data($courseid, $comname, $comtable, $conname, $contable) {
+function process_data($courseid, $comname, $comtable, $conname, $contable, $overwrite) {
     global $DB;
 
     // Parse the CSV data for competencies.
@@ -76,44 +77,55 @@ function process_data($courseid, $comname, $comtable, $conname, $contable) {
             // Check if the competency already exists in the course.
             $existingrecord = $DB->get_record($comname, ['name' => $record['name'], 'courseid' => $courseid]);
 
-            if (!$existingrecord) {
-                // Set the course ID for the record.
-                $record['courseid'] = $courseid;
-
-                // Insert a new record and store the new ID.
-                $newid = (int) $DB->insert_record($comname, (object) $record);
-
-                // Store mapping of old and new IDs.
-                $mapping[$record['id']] = $newid;
-            } else {
+            if ($existingrecord) {
                 // Update mapping with existing record ID.
                 $mapping[$record['id']] = $existingrecord->id;
 
-                // Skip if the competency already exists.
-                echo "Skipping existing competency: " . $record['name'] . "<br>";
+                if ($overwrite) {
+                    // Overwrite the existing record.
+                    $record['id'] = $existingrecord->id;
+
+                    // Ensure parent ID is updated correctly using mapping.
+                    if (isset($record['parentid']) && isset($mapping[$record['parentid']])) {
+                        $record['parentid'] = $mapping[$record['parentid']];
+                    }
+
+                    $DB->update_record($comname, (object)$record);
+                    echo "Updated existing competency: " . $record['name'] . "<br>";
+                } else {
+                    // Skip if not overwriting.
+                    echo "Skipped existing competency: " . $record['name'] . "<br>";
+                }
+            } else {
+                // Insert new record.
+                $record['courseid'] = $courseid;
+                $newid = (int) $DB->insert_record($comname, (object)$record);
+
+                // Store mapping of old and new IDs.
+                $mapping[$record['id']] = $newid;
+                echo "Inserted new competency: " . $record['name'] . "<br>";
             }
         }
     }
 
     // Update the parent IDs for the new competency records.
     foreach ($mapping as $oldkey => $newvalue) {
-        // Get the record with the old ID from the database.
+        // Get the record with the new ID from the database.
         $existingrecord = $DB->get_record($comname, ['id' => $newvalue]);
 
         // Check if the record exists.
         if ($existingrecord) {
-            // Get the new ID corresponding to the old parent ID.
+            // Map the parentid if it exists in the mapping.
             $newparentid = isset($mapping[$existingrecord->parentid]) ? $mapping[$existingrecord->parentid] : $existingrecord->parentid;
 
-            // Update the parentid property only if necessary.
-            if (!$DB->record_exists($comname, ['id' => $newparentid])) {
-                $newparentid = 0;
+            // Update the parentid property only if it has changed.
+            if ($existingrecord->parentid != $newparentid) {
+                $existingrecord->parentid = $newparentid;
+
+                // Update the record in the database.
+                $DB->update_record($comname, $existingrecord);
+                echo "Updated parent ID for competency: " . $existingrecord->name . "<br>";
             }
-
-            $existingrecord->parentid = $newparentid;
-
-            // Update the record in the database.
-            $DB->update_record($comname, $existingrecord);
         } else {
             // Handle the case where the record with the old ID does not exist.
             echo "Error: Record with ID $oldkey not found in the database.";
@@ -141,7 +153,7 @@ function process_data($courseid, $comname, $comtable, $conname, $contable) {
             $record['courseid'] = $courseid;
 
             // Insert a new record and store the new ID.
-            $newid = (int) $DB->insert_record($conname, (object) $record);
+            $newid = (int) $DB->insert_record($conname, (object)$record);
 
             // Store the new ID.
             $connectionids[] = $newid;
@@ -206,7 +218,8 @@ if ($mform->is_cancelled()) {
                 echo "Skipping file $filename as it doesn't match the expected format.<br>";
             }
         }
-        process_data($courseid, $comname, $comtable, $conname, $contable);
+        $overwrite = !empty($data->overwrite);
+        process_data($courseid, $comname, $comtable, $conname, $contable, $overwrite);
         $zip->close();
         echo 'Import successful.';
     } else {
