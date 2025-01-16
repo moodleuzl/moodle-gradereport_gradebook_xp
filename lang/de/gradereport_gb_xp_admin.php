@@ -54,3 +54,5 @@ $string['missinginput'] = 'Dieses Feld ist erforderlich. Bitte lassen Sie es nic
 $string['cancelcompetency'] = 'Sie haben das Kompetenzformular abgebrochen.';
 $string['createcompetencysuccess'] = 'Sie haben die Kompetenz erfolgreich erstellt: ';
 $string['updatecompetencysuccess'] = 'Sie haben die Kompetenz erfolgreich aktualisiert: ';
+$string['overwriteexisting'] = 'Vorhandene Kompetenzen überschreiben';
+$string['keepconnections'] = 'Vorhandene Verbindungen beibehalten';

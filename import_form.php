@@ -49,6 +49,16 @@ class import_form extends moodleform {
         // Add a filepicker element for selecting a file to import.
         $mform->addElement('filepicker', 'userfile', get_string('file'), null, ['accepted_types' => '.zip']);
 
+        // Add a checkbox to decide whether to overwrite existing competencies.
+        $mform->addElement('advcheckbox', 'overwrite', get_string('overwriteexisting', 'gradereport_gb_xp_admin'), null, ['group' => 1]);
+        $mform->setType('overwrite', PARAM_BOOL);
+        $mform->setDefault('overwrite', 0); // Default is unchecked.
+
+        // Add a checkbox to decide whether to keep existing connections.
+        $mform->addElement('advcheckbox', 'keepconnections', get_string('keepconnections', 'gradereport_gb_xp_admin'), null, ['group' => 1]);
+        $mform->setType('keepconnections', PARAM_BOOL);
+        $mform->setDefault('keepconnections', 0); // Default is unchecked.
+
         // Add a submit button to submit the form.
         $mform->addElement('submit', 'submitbutton', get_string('import'));
     }

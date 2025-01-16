@@ -54,3 +54,5 @@ $string['missinginput'] = 'This field is required. Please do not leave it empty.
 $string['cancelcompetency'] = 'You cancelled the competency form.';
 $string['createcompetencysuccess'] = 'You have successfully created the competency: ';
 $string['updatecompetencysuccess'] = 'You have successfully updated the competency: ';
+$string['overwriteexisting'] = 'Overwrite existing competencies';
+$string['keepconnections'] = 'Keep existing connections';
