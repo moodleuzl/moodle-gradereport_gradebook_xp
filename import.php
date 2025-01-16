@@ -73,17 +73,25 @@ function process_data($courseid, $comname, $comtable, $conname, $contable) {
             $values = str_getcsv($row);
             $record = array_combine($comheaders, $values);
 
-            // Store the old ID.
-            $oldid = $record['id'];
+            // Check if the competency already exists in the course.
+            $existingrecord = $DB->get_record($comname, ['name' => $record['name'], 'courseid' => $courseid]);
 
-            // Set the course ID for the record.
-            $record['courseid'] = $courseid;
+            if (!$existingrecord) {
+                // Set the course ID for the record.
+                $record['courseid'] = $courseid;
 
-            // Insert a new record and store the new ID.
-            $newid = (int) $DB->insert_record($comname, (object) $record);
+                // Insert a new record and store the new ID.
+                $newid = (int) $DB->insert_record($comname, (object) $record);
 
-            // Store mapping of old and new IDs.
-            $mapping[$oldid] = $newid;
+                // Store mapping of old and new IDs.
+                $mapping[$record['id']] = $newid;
+            } else {
+                // Update mapping with existing record ID.
+                $mapping[$record['id']] = $existingrecord->id;
+
+                // Skip if the competency already exists.
+                echo "Skipping existing competency: " . $record['name'] . "<br>";
+            }
         }
     }
 
