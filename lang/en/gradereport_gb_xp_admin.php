@@ -56,3 +56,6 @@ $string['createcompetencysuccess'] = 'You have successfully created the competen
 $string['updatecompetencysuccess'] = 'You have successfully updated the competency: ';
 $string['overwriteexisting'] = 'Overwrite existing competencies';
 $string['keepconnections'] = 'Keep existing connections';
+$string['importcompetencies'] = 'Import competencies';
+$string['importconnections'] = 'Import connections';
+

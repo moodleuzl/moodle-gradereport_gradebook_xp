@@ -59,6 +59,16 @@ class import_form extends moodleform {
         $mform->setType('keepconnections', PARAM_BOOL);
         $mform->setDefault('keepconnections', 0); // Default is unchecked.
 
+        // Add a checkbox to import competencies, checked by default.
+        $mform->addElement('advcheckbox', 'importcompetencies', get_string('importcompetencies', 'gradereport_gb_xp_admin'), null, ['group' => 1]);
+        $mform->setType('importcompetencies', PARAM_BOOL);
+        $mform->setDefault('importcompetencies', 1); // Default is checked.
+
+        // Add a checkbox to import connections, checked by default.
+        $mform->addElement('advcheckbox', 'importconnections', get_string('importconnections', 'gradereport_gb_xp_admin'), null, ['group' => 1]);
+        $mform->setType('importconnections', PARAM_BOOL);
+        $mform->setDefault('importconnections', 1); // Default is checked.
+
         // Add a submit button to submit the form.
         $mform->addElement('submit', 'submitbutton', get_string('import'));
     }

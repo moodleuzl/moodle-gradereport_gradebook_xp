@@ -56,3 +56,6 @@ $string['createcompetencysuccess'] = 'Sie haben die Kompetenz erfolgreich erstel
 $string['updatecompetencysuccess'] = 'Sie haben die Kompetenz erfolgreich aktualisiert: ';
 $string['overwriteexisting'] = 'Vorhandene Kompetenzen überschreiben';
 $string['keepconnections'] = 'Vorhandene Verbindungen beibehalten';
+$string['importcompetencies'] = 'Kompetenzen importieren';
+$string['importconnections'] = 'Verbindungen importieren';
+
