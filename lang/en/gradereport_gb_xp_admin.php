@@ -54,8 +54,10 @@ $string['missinginput'] = 'This field is required. Please do not leave it empty.
 $string['cancelcompetency'] = 'You cancelled the competency form.';
 $string['createcompetencysuccess'] = 'You have successfully created the competency: ';
 $string['updatecompetencysuccess'] = 'You have successfully updated the competency: ';
-$string['overwriteexisting'] = 'Overwrite existing competencies';
-$string['keepconnections'] = 'Keep existing connections';
 $string['importcompetencies'] = 'Import competencies';
 $string['importconnections'] = 'Import connections';
-
+$string['deletecompetencies'] = 'Delete all existing competencies before importing';
+$string['deleteconnections'] = 'Delete all existing connections before importing';
+$string['overwriteexisting'] = 'Overwrite existing competencies';
+$string['overwriteexistingconnections'] = 'Overwrite existing connections';
+$string['file'] = 'File to import';

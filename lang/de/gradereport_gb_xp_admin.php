@@ -54,8 +54,10 @@ $string['missinginput'] = 'Dieses Feld ist erforderlich. Bitte lassen Sie es nic
 $string['cancelcompetency'] = 'Sie haben das Kompetenzformular abgebrochen.';
 $string['createcompetencysuccess'] = 'Sie haben die Kompetenz erfolgreich erstellt: ';
 $string['updatecompetencysuccess'] = 'Sie haben die Kompetenz erfolgreich aktualisiert: ';
-$string['overwriteexisting'] = 'Vorhandene Kompetenzen überschreiben';
-$string['keepconnections'] = 'Vorhandene Verbindungen beibehalten';
 $string['importcompetencies'] = 'Kompetenzen importieren';
 $string['importconnections'] = 'Verbindungen importieren';
-
+$string['deletecompetencies'] = 'Alle vorhandenen Kompetenzen vor dem Import löschen';
+$string['deleteconnections'] = 'Alle vorhandenen Verbindungen vor dem Import löschen';
+$string['overwriteexisting'] = 'Vorhandene Kompetenzen überschreiben';
+$string['overwriteexistingconnections'] = 'Vorhandene Verbindungen überschreiben';
+$string['file'] = 'Zu importierende Datei';
