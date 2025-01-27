@@ -50,21 +50,25 @@ class import_form extends moodleform {
         $mform->addElement('filepicker', 'userfile', get_string('file'), null, ['accepted_types' => '.zip']);
 
         // Add a checkbox to import competencies, checked by default.
-        $mform->addElement('advcheckbox', 'importcompetencies', get_string('importcompetencies', 'gradereport_gb_xp_admin'), null, ['group' => 1]);
+        $mform->addElement('advcheckbox', 'importcompetencies',
+            get_string('importcompetencies', 'gradereport_gb_xp_admin'), null, ['group' => 1]);
         $mform->setType('importcompetencies', PARAM_BOOL);
         $mform->setDefault('importcompetencies', 1); // Default is checked.
 
-        $mform->addElement('advcheckbox', 'overwritecompetencies', '&nbsp;&nbsp;&nbsp;' . get_string('overwriteexisting', 'gradereport_gb_xp_admin'), null, ['group' => 1]);
+        $mform->addElement('advcheckbox', 'overwritecompetencies',
+            '&nbsp;&nbsp;&nbsp;' . get_string('overwriteexisting', 'gradereport_gb_xp_admin'), null, ['group' => 1]);
         $mform->setType('overwritecompetencies', PARAM_BOOL);
         $mform->setDefault('overwritecompetencies', 0); // Default is unchecked.
 
         // Add nested options for competencies.
-        $mform->addElement('advcheckbox', 'deletecompetencies', '&nbsp;&nbsp;&nbsp;' . get_string('deletecompetencies', 'gradereport_gb_xp_admin'), null, ['group' => 1]);
+        $mform->addElement('advcheckbox', 'deletecompetencies',
+            '&nbsp;&nbsp;&nbsp;' . get_string('deletecompetencies', 'gradereport_gb_xp_admin'), null, ['group' => 1]);
         $mform->setType('deletecompetencies', PARAM_BOOL);
         $mform->setDefault('deletecompetencies', 0); // Default is unchecked.
 
         // Add a checkbox to import connections, checked by default.
-        $mform->addElement('advcheckbox', 'importconnections', get_string('importconnections', 'gradereport_gb_xp_admin'), null, ['group' => 1]);
+        $mform->addElement('advcheckbox', 'importconnections',
+            get_string('importconnections', 'gradereport_gb_xp_admin'), null, ['group' => 1]);
         $mform->setType('importconnections', PARAM_BOOL);
         $mform->setDefault('importconnections', 1); // Default is checked.
 
