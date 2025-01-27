@@ -54,11 +54,12 @@ $mform = new import_form();
  * @param bool $overwritecompetencies Whether to overwrite existing competencies.
  * @param bool $deletecompetencies Whether to delete all existing competencies before importing.
  * @param bool $overwriteconnections Whether to overwrite existing connections.
+ * @param bool $deleteconnections Whether to delete all existing connections before importing.
  *
  * @throws dml_exception
  * @package gradereport_gb_xp_admin
  */
-function process_data($courseid, $comname, $comtable, $conname, $contable, $overwritecompetencies, $deletecompetencies, $overwriteconnections) {
+function process_data($courseid, $comname, $comtable, $conname, $contable, $overwritecompetencies, $deletecompetencies, $overwriteconnections, $deleteconnections) {
     global $DB;
 
     // Delete all existing competencies if requested.
@@ -139,6 +140,19 @@ function process_data($courseid, $comname, $comtable, $conname, $contable, $over
         } else {
             // Handle the case where the record with the old ID does not exist.
             echo "Error: Record with ID $oldkey not found in the database.";
+        }
+    }
+
+    if ($deleteconnections) {
+        // Fetch all competency IDs associated with the current course.
+        $competencyids = $DB->get_records_menu($comname, ['courseid' => $courseid], '', 'id, id');
+
+        if (!empty($competencyids)) {
+            list($insql, $inparams) = $DB->get_in_or_equal(array_keys($competencyids), SQL_PARAMS_QM);
+            $DB->delete_records_select($conname, "competencyid $insql", $inparams);
+            echo "Deleted all connections for course $courseid.<br>";
+        } else {
+            echo "No connections to delete for course $courseid.<br>";
         }
     }
 
@@ -242,7 +256,8 @@ if ($mform->is_cancelled()) {
         $overwritecompetencies = !empty($data->overwritecompetencies);
         $deletecompetencies = !empty($data->deletecompetencies);
         $overwriteconnections = !empty($data->overwriteconnections);
-        process_data($courseid, $comname, $comtable, $conname, $contable, $overwritecompetencies, $deletecompetencies, $overwriteconnections);
+        $deleteconnections = !empty($data->deleteconnections);
+        process_data($courseid, $comname, $comtable, $conname, $contable, $overwritecompetencies, $deletecompetencies, $overwriteconnections, $deleteconnections);
         $zip->close();
         echo 'Import successful.';
     } else {
