@@ -51,13 +51,20 @@ $mform = new import_form();
  * @param string $comtable The CSV data for competencies.
  * @param string $conname The name of the connection table in the database.
  * @param string $contable The CSV data for connections.
- * @param bool $overwrite Whether to overwrite existing competencies.
+ * @param bool $overwritecompetencies Whether to overwritecompetencies existing competencies.
+ * @param bool $deletecompetencies Whether to delete all existing competencies before importing.
  *
  * @throws dml_exception
  * @package gradereport_gb_xp_admin
  */
-function process_data($courseid, $comname, $comtable, $conname, $contable, $overwrite) {
+function process_data($courseid, $comname, $comtable, $conname, $contable, $overwritecompetencies, $deletecompetencies) {
     global $DB;
+
+    // Delete all existing competencies if requested.
+    if ($deletecompetencies) {
+        $DB->delete_records($comname, ['courseid' => $courseid]);
+        echo "Deleted all existing competencies for course $courseid.<br>";
+    }
 
     // Parse the CSV data for competencies.
     $comrows = explode("\n", $comtable);
@@ -81,7 +88,7 @@ function process_data($courseid, $comname, $comtable, $conname, $contable, $over
                 // Update mapping with existing record ID.
                 $mapping[$record['id']] = $existingrecord->id;
 
-                if ($overwrite) {
+                if ($overwritecompetencies) {
                     // Overwrite the existing record.
                     $record['id'] = $existingrecord->id;
 
@@ -220,8 +227,9 @@ if ($mform->is_cancelled()) {
                 echo "Skipping file $filename as it doesn't match the expected format.<br>";
             }
         }
-        $overwrite = !empty($data->overwrite);
-        process_data($courseid, $comname, $comtable, $conname, $contable, $overwrite);
+        $overwritecompetencies = !empty($data->overwritecompetencies);
+        $deletecompetencies = !empty($data->deletecompetencies);
+        process_data($courseid, $comname, $comtable, $conname, $contable, $overwritecompetencies, $deletecompetencies);
         $zip->close();
         echo 'Import successful.';
     } else {
