@@ -59,7 +59,8 @@ $mform = new import_form();
  * @throws dml_exception
  * @package gradereport_gb_xp_admin
  */
-function process_data($courseid, $comname, $comtable, $conname, $contable, $overwritecompetencies, $deletecompetencies, $overwriteconnections, $deleteconnections) {
+function process_data($courseid, $comname, $comtable, $conname, $contable,
+    $overwritecompetencies, $deletecompetencies, $overwriteconnections, $deleteconnections) {
     global $DB;
 
     // Delete all existing competencies if requested.
@@ -181,16 +182,19 @@ function process_data($courseid, $comname, $comtable, $conname, $contable, $over
                     // Overwrite the existing connection.
                     $record['id'] = $existingconnection->id;
                     $DB->update_record($conname, (object)$record);
-                    echo "Updated existing connection: Activity " . $record['activityid'] . " to Competency " . $record['competencyid'] . "<br>";
+                    echo "Updated existing connection: Activity " . $record['activityid']
+                        . " to Competency " . $record['competencyid'] . "<br>";
                 } else {
                     // Skip if not overwriting.
-                    echo "Skipped existing connection: Activity " . $record['activityid'] . " to Competency " . $record['competencyid'] . "<br>";
+                    echo "Skipped existing connection: Activity " . $record['activityid']
+                        . " to Competency " . $record['competencyid'] . "<br>";
                 }
             } else {
                 // Insert a new record and store the new ID.
                 $newid = (int) $DB->insert_record($conname, (object)$record);
                 $connectionids[] = $newid;
-                echo "Inserted new connection: Activity " . $record['activityid'] . " to Competency " . $record['competencyid'] . "<br>";
+                echo "Inserted new connection: Activity " . $record['activityid']
+                    . " to Competency " . $record['competencyid'] . "<br>";
             }
         }
     }
@@ -257,7 +261,8 @@ if ($mform->is_cancelled()) {
         $deletecompetencies = !empty($data->deletecompetencies);
         $overwriteconnections = !empty($data->overwriteconnections);
         $deleteconnections = !empty($data->deleteconnections);
-        process_data($courseid, $comname, $comtable, $conname, $contable, $overwritecompetencies, $deletecompetencies, $overwriteconnections, $deleteconnections);
+        process_data($courseid, $comname, $comtable, $conname, $contable,
+            $overwritecompetencies, $deletecompetencies, $overwriteconnections, $deleteconnections);
         $zip->close();
         echo 'Import successful.';
     } else {

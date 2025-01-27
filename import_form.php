@@ -72,12 +72,14 @@ class import_form extends moodleform {
         $mform->setType('importconnections', PARAM_BOOL);
         $mform->setDefault('importconnections', 1); // Default is checked.
 
-        $mform->addElement('advcheckbox', 'overwriteconnections', '&nbsp;&nbsp;&nbsp;' . get_string('overwriteexistingconnections', 'gradereport_gb_xp_admin'), null, ['group' => 1]);
+        $mform->addElement('advcheckbox', 'overwriteconnections',
+            '&nbsp;&nbsp;&nbsp;' . get_string('overwriteexistingconnections', 'gradereport_gb_xp_admin'), null, ['group' => 1]);
         $mform->setType('overwriteconnections', PARAM_BOOL);
         $mform->setDefault('overwriteconnections', 0); // Default is unchecked.
 
         // Add nested options for connections.
-        $mform->addElement('advcheckbox', 'deleteconnections', '&nbsp;&nbsp;&nbsp;' . get_string('deleteconnections', 'gradereport_gb_xp_admin'), null, ['group' => 1]);
+        $mform->addElement('advcheckbox', 'deleteconnections',
+            '&nbsp;&nbsp;&nbsp;' . get_string('deleteconnections', 'gradereport_gb_xp_admin'), null, ['group' => 1]);
         $mform->setType('deleteconnections', PARAM_BOOL);
         $mform->setDefault('deleteconnections', 0); // Default is unchecked.
 
