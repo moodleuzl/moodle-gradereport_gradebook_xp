@@ -61,3 +61,4 @@ $string['deleteconnections'] = 'Delete all existing connections before importing
 $string['overwriteexisting'] = 'Overwrite existing competencies';
 $string['overwriteexistingconnections'] = 'Overwrite existing connections';
 $string['file'] = 'File to import';
+$string['missingfile'] = 'Missing file. Please upload a valid .zip file.';

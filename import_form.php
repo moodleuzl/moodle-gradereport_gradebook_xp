@@ -85,5 +85,11 @@ class import_form extends moodleform {
 
         // Add a submit button to submit the form.
         $mform->addElement('submit', 'submitbutton', get_string('import'));
+
+        // -------------------------------------------------------------------------------
+        // Add rules to the form.
+
+        // Make the filepicker a required field.
+        $mform->addRule('userfile', get_string('missingfile', 'gradereport_gb_xp_admin'), 'required', null, 'client');
     }
 }
