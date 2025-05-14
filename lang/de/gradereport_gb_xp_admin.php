@@ -63,3 +63,4 @@ $string['overwriteexistingconnections'] = 'Vorhandene Verbindungen überschreibe
 $string['file'] = 'Zu importierende Datei';
 $string['missingfile'] = 'Fehlende Datei. Bitte laden Sie eine gültige .zip-Datei hoch.';
 $string['cancelimport'] = 'Sie haben das Kompetenzformular abgebrochen.';
+$string['importsuccess'] = 'Sie haben die Plugin-Daten erfolgreich importiert.';

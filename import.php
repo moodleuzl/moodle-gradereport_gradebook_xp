@@ -269,7 +269,9 @@ if ($mform->is_cancelled()) {
         process_data($courseid, $comname, $comtable, $conname, $contable,
             $overwritecompetencies, $deletecompetencies, $overwriteconnections, $deleteconnections);
         $zip->close();
-        echo 'Import successful.';
+        // Redirect with success message.
+        redirect($returnurl,
+            get_string('importsuccess', 'gradereport_gb_xp_admin'));
     } else {
         echo 'Failed to open the zip file.';
     }

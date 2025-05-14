@@ -63,3 +63,4 @@ $string['overwriteexistingconnections'] = 'Overwrite existing connections';
 $string['file'] = 'File to import';
 $string['missingfile'] = 'Missing file. Please upload a valid .zip file.';
 $string['cancelimport'] = 'You cancelled the import form.';
+$string['importsuccess'] = 'You have successfully imported the plugin data for this course.';
