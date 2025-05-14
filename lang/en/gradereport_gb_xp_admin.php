@@ -62,3 +62,4 @@ $string['overwriteexisting'] = 'Overwrite existing competencies';
 $string['overwriteexistingconnections'] = 'Overwrite existing connections';
 $string['file'] = 'File to import';
 $string['missingfile'] = 'Missing file. Please upload a valid .zip file.';
+$string['cancelimport'] = 'You cancelled the import form.';

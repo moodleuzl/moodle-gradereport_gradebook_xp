@@ -36,6 +36,10 @@ require_course_login($courseid);
 gradereport_gb_xp_admin_setup_page($courseid, 'moodle/grade:manage');
 $PAGE->navbar->add(get_string('preferences'));
 
+// Get return URL.
+$gpr = new grade_plugin_return();
+$returnurl = $gpr->get_return_url('manage_competencies.php?id=' . $courseid);
+
 // Instantiate import_form.
 $mform = new import_form();
 
@@ -222,8 +226,10 @@ function process_data($courseid, $comname, $comtable, $conname, $contable,
 }
 
 if ($mform->is_cancelled()) {
-    // Handle form cancellation.
-    echo 'Import cancelled.';
+    global $mform, $returnurl;
+    // Handle form cancel operation.
+    // Redirect to manage_competencies.php page.
+    redirect($returnurl, get_string('cancelimport', 'gradereport_gb_xp_admin'));
 } else if ($data = $mform->get_data()) {
     $zipcontent = $mform->get_file_content('userfile');
     $name = $mform->get_new_filename('userfile');
