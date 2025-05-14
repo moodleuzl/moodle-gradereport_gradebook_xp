@@ -139,7 +139,7 @@ function handle_action_buttons() {
 
                 // Redirect with success message.
                 redirect($returnurl,
-                    get_string('updatecompetencysuccess', 'gradereport_gb_xp_admin') . ' \'' . $fromform->name . '\'');
+                    get_string('updatecompetencysuccess', 'gradereport_gb_xp_admin') . '\'' . $fromform->name . '\'');
             }
         }
 
