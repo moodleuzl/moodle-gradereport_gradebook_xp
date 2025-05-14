@@ -38,7 +38,7 @@ $PAGE->navbar->add(get_string('preferences'));
 
 // Get return URL.
 $gpr = new grade_plugin_return();
-$returnurl = $gpr->get_return_url('manage_competencies.php?id=' . $courseid);
+$returnurl = $gpr->get_return_url('?id=' . $courseid);
 
 // Instantiate import_form.
 $mform = new import_form();
