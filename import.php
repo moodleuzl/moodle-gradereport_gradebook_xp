@@ -227,7 +227,6 @@ if ($mform->is_cancelled()) {
 } else if ($data = $mform->get_data()) {
     $zipcontent = $mform->get_file_content('userfile');
     $name = $mform->get_new_filename('userfile');
-    echo "<script>alert('$name');</script>";
 
     // Write the zip content to a temporary file.
     $zipfile = sys_get_temp_dir() . '/imported_data.zip';
