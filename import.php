@@ -36,6 +36,10 @@ require_course_login($courseid);
 gradereport_gb_xp_admin_setup_page($courseid, 'moodle/grade:manage');
 $PAGE->navbar->add(get_string('preferences'));
 
+// Get return URL.
+$gpr = new grade_plugin_return();
+$returnurl = $gpr->get_return_url('?id=' . $courseid);
+
 // Instantiate import_form.
 $mform = new import_form();
 
@@ -51,12 +55,23 @@ $mform = new import_form();
  * @param string $comtable The CSV data for competencies.
  * @param string $conname The name of the connection table in the database.
  * @param string $contable The CSV data for connections.
+ * @param bool $overwritecompetencies Whether to overwrite existing competencies.
+ * @param bool $deletecompetencies Whether to delete all existing competencies before importing.
+ * @param bool $overwriteconnections Whether to overwrite existing connections.
+ * @param bool $deleteconnections Whether to delete all existing connections before importing.
  *
  * @throws dml_exception
  * @package gradereport_gb_xp_admin
  */
-function process_data($courseid, $comname, $comtable, $conname, $contable) {
+function process_data($courseid, $comname, $comtable, $conname, $contable,
+    $overwritecompetencies, $deletecompetencies, $overwriteconnections, $deleteconnections) {
     global $DB;
+
+    // Delete all existing competencies if requested.
+    if ($deletecompetencies) {
+        $DB->delete_records($comname, ['courseid' => $courseid]);
+        echo "Deleted all existing competencies for course $courseid.<br>";
+    }
 
     // Parse the CSV data for competencies.
     $comrows = explode("\n", $comtable);
@@ -73,38 +88,76 @@ function process_data($courseid, $comname, $comtable, $conname, $contable) {
             $values = str_getcsv($row);
             $record = array_combine($comheaders, $values);
 
-            // Store the old ID.
-            $oldid = $record['id'];
+            // Check if the competency already exists in the course.
+            $existingrecord = $DB->get_record($comname, ['name' => $record['name'], 'courseid' => $courseid]);
 
-            // Set the course ID for the record.
-            $record['courseid'] = $courseid;
+            if ($existingrecord) {
+                // Update mapping with existing record ID.
+                $mapping[$record['id']] = $existingrecord->id;
 
-            // Insert a new record and store the new ID.
-            $newid = (int) $DB->insert_record($comname, (object) $record);
+                if ($overwritecompetencies) {
+                    // Overwrite the existing record.
+                    $record['id'] = $existingrecord->id;
 
-            // Store mapping of old and new IDs.
-            $mapping[$oldid] = $newid;
+                    // Ensure parent ID is updated correctly using mapping.
+                    if (isset($record['parentid']) && isset($mapping[$record['parentid']])) {
+                        $record['parentid'] = $mapping[$record['parentid']];
+                    }
+
+                    $DB->update_record($comname, (object)$record);
+                    echo "Updated existing competency: " . $record['name'] . "<br>";
+                } else {
+                    // Skip if not overwriting.
+                    echo "Skipped existing competency: " . $record['name'] . "<br>";
+                }
+            } else {
+                // Insert new record.
+                $record['courseid'] = $courseid;
+                $newid = (int) $DB->insert_record($comname, (object)$record);
+
+                // Store mapping of old and new IDs.
+                $mapping[$record['id']] = $newid;
+                echo "Inserted new competency: " . $record['name'] . "<br>";
+            }
         }
     }
 
     // Update the parent IDs for the new competency records.
     foreach ($mapping as $oldkey => $newvalue) {
-        // Get the record with the old ID from the database.
+        // Get the record with the new ID from the database.
         $existingrecord = $DB->get_record($comname, ['id' => $newvalue]);
 
         // Check if the record exists.
         if ($existingrecord) {
-            // Get the new ID corresponding to the old parent ID.
-            $newparentid = isset($mapping[$existingrecord->parentid]) ? $mapping[$existingrecord->parentid] : 0;
+            // Map the parentid if it exists in the mapping.
+            $newparentid = isset($mapping[$existingrecord->parentid])
+                ? $mapping[$existingrecord->parentid]
+                : $existingrecord->parentid;
 
-            // Update the parentid property of the existing record.
-            $existingrecord->parentid = $newparentid;
+            // Update the parentid property only if it has changed.
+            if ($existingrecord->parentid != $newparentid) {
+                $existingrecord->parentid = $newparentid;
 
-            // Update the record in the database.
-            $DB->update_record($comname, $existingrecord);
+                // Update the record in the database.
+                $DB->update_record($comname, $existingrecord);
+                echo "Updated parent ID for competency: " . $existingrecord->name . "<br>";
+            }
         } else {
             // Handle the case where the record with the old ID does not exist.
             echo "Error: Record with ID $oldkey not found in the database.";
+        }
+    }
+
+    if ($deleteconnections) {
+        // Fetch all competency IDs associated with the current course.
+        $competencyids = $DB->get_records_menu($comname, ['courseid' => $courseid], '', 'id, id');
+
+        if (!empty($competencyids)) {
+            list($insql, $inparams) = $DB->get_in_or_equal(array_keys($competencyids), SQL_PARAMS_QM);
+            $DB->delete_records_select($conname, "competencyid $insql", $inparams);
+            echo "Deleted all connections for course $courseid.<br>";
+        } else {
+            echo "No connections to delete for course $courseid.<br>";
         }
     }
 
@@ -122,49 +175,64 @@ function process_data($courseid, $comname, $comtable, $conname, $contable) {
             $values = str_getcsv($row);
             $record = array_combine($conheaders, $values);
 
-            // Store the old ID.
-            $oldid = $record['id'];
+            // Check if the connection already exists based on activityid and competencyid.
+            $existingconnection = $DB->get_record($conname, [
+                'activityid' => $record['activityid'],
+                'competencyid' => $record['competencyid']
+            ]);
 
-            // Set the course ID for the record.
-            $record['courseid'] = $courseid;
-
-            // Insert a new record and store the new ID.
-            $newid = (int) $DB->insert_record($conname, (object) $record);
-
-            // Store the new ID.
-            $connectionids[] = $newid;
+            if ($existingconnection) {
+                if ($overwriteconnections) {
+                    // Overwrite the existing connection.
+                    $record['id'] = $existingconnection->id;
+                    $DB->update_record($conname, (object)$record);
+                    echo "Updated existing connection: Activity " . $record['activityid']
+                        . " to Competency " . $record['competencyid'] . "<br>";
+                } else {
+                    // Skip if not overwriting.
+                    echo "Skipped existing connection: Activity " . $record['activityid']
+                        . " to Competency " . $record['competencyid'] . "<br>";
+                }
+            } else {
+                // Insert a new record and store the new ID.
+                $newid = (int) $DB->insert_record($conname, (object)$record);
+                $connectionids[] = $newid;
+                echo "Inserted new connection: Activity " . $record['activityid']
+                    . " to Competency " . $record['competencyid'] . "<br>";
+            }
         }
     }
 
     // Update the competency IDs for the new connection records.
     foreach ($connectionids as $newvalue) {
-        // Get the record with the old ID from the database.
+        // Get the record with the new ID from the database.
         $existingrecord = $DB->get_record($conname, ['id' => $newvalue]);
 
         // Check if the record exists.
         if ($existingrecord) {
-            // Get the new ID corresponding to the old competency ID.
+            // Map the competencyid to the updated ID if available.
             $newcompetencyid = isset($mapping[$existingrecord->competencyid]) ? $mapping[$existingrecord->competencyid] : 0;
 
-            // Update the competencyid property of the existing record.
-            $existingrecord->competencyid = $newcompetencyid;
-
-            // Update the record in the database.
-            $DB->update_record($conname, $existingrecord);
+            // Update the competencyid if it has changed.
+            if ($existingrecord->competencyid != $newcompetencyid) {
+                $existingrecord->competencyid = $newcompetencyid;
+                $DB->update_record($conname, $existingrecord);
+                echo "Updated competency ID in connection: " . $existingrecord->id . "<br>";
+            }
         } else {
-            // Handle the case where the record with the old ID does not exist.
-            echo "Error: Record with ID $oldid not found in the database.";
+            echo "Error: Connection with ID $newvalue not found in the database.";
         }
     }
 }
 
 if ($mform->is_cancelled()) {
-    // Handle form cancellation.
-    echo 'Import cancelled.';
+    global $mform, $returnurl;
+    // Handle form cancel operation.
+    // Redirect to manage_competencies.php page.
+    redirect($returnurl, get_string('cancelimport', 'gradereport_gb_xp_admin'));
 } else if ($data = $mform->get_data()) {
     $zipcontent = $mform->get_file_content('userfile');
     $name = $mform->get_new_filename('userfile');
-    echo "<script>alert('$name');</script>";
 
     // Write the zip content to a temporary file.
     $zipfile = sys_get_temp_dir() . '/imported_data.zip';
@@ -194,9 +262,16 @@ if ($mform->is_cancelled()) {
                 echo "Skipping file $filename as it doesn't match the expected format.<br>";
             }
         }
-        process_data($courseid, $comname, $comtable, $conname, $contable);
+        $overwritecompetencies = !empty($data->overwritecompetencies);
+        $deletecompetencies = !empty($data->deletecompetencies);
+        $overwriteconnections = !empty($data->overwriteconnections);
+        $deleteconnections = !empty($data->deleteconnections);
+        process_data($courseid, $comname, $comtable, $conname, $contable,
+            $overwritecompetencies, $deletecompetencies, $overwriteconnections, $deleteconnections);
         $zip->close();
-        echo 'Import successful.';
+        // Redirect with success message.
+        redirect($returnurl,
+            get_string('importsuccess', 'gradereport_gb_xp_admin'));
     } else {
         echo 'Failed to open the zip file.';
     }
