@@ -134,6 +134,7 @@ function handle_action_buttons() {
                 $existingcompetency->description = $fromform->description;
                 $existingcompetency->parentid = $fromform->parentid;
                 $existingcompetency->maxcomlvl = $fromform->maxcomlvl;
+                $existingcompetency->islevelsummed = $fromform->islevelsummed;
 
                 update_competency($existingcompetency);
 
@@ -150,6 +151,7 @@ function handle_action_buttons() {
         $competencytoinsert->description = $fromform->description;
         $competencytoinsert->parentid = $fromform->parentid;
         $competencytoinsert->maxcomlvl = $fromform->maxcomlvl;
+        $competencytoinsert->islevelsummed = $fromform->islevelsummed;
 
         insert_competency($competencytoinsert);
 

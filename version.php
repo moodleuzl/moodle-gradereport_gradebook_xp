@@ -24,6 +24,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2025051400;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version = 2025061700;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires = 2020061000;        // Requires this Moodle version.
 $plugin->component = 'gradereport_gb_xp_admin'; // Full name of the plugin (used for diagnostics).
