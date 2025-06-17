@@ -57,7 +57,6 @@ class behat_gradereport_gb_xp_admin extends behat_base {
             $record->name = $competency['name'];
             $record->description = $competency['description'];
             $record->maxcomlvl = $competency['maxcomlvl'];
-            $record->islevelsummed = $competency['islevelsummed'];
 
             // If the parent name is not '0', find the parent competency's ID by its name.
             if ($competency['parentid'] !== '0') {
