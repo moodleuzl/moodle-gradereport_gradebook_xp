@@ -87,6 +87,14 @@ class edit_form extends moodleform {
         $mform->addElement('text', 'maxcomlvl', get_string('maxcomlvl', 'gradereport_gb_xp_admin'));
         $mform->setType('maxcomlvl', PARAM_NOTAGS);
 
+        // Add competency level calculation method select element to form.
+        $mform->addElement('select', 'islevelsummed', get_string('levelcalcmethod', 'gradereport_gb_xp_admin'), [
+            0 => get_string('usemax', 'gradereport_gb_xp_admin'),
+            1 => get_string('usesum', 'gradereport_gb_xp_admin')
+        ]);
+        $mform->setType('islevelsummed', PARAM_BOOL);
+        $mform->setDefault('islevelsummed', isset($current->islevelsummed) ? $current->islevelsummed : 1);
+
         // -------------------------------------------------------------------------------
         // Add rules to the form.
 
