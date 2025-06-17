@@ -93,7 +93,7 @@ class edit_form extends moodleform {
             1 => get_string('usesum', 'gradereport_gb_xp_admin')
         ]);
         $mform->setType('islevelsummed', PARAM_BOOL);
-        $mform->setDefault('islevelsummed', isset($current->islevelsummed) ? $current->islevelsummed : 1);
+        $mform->setDefault('islevelsummed', $current->islevelsummed ?? 1);
 
         // -------------------------------------------------------------------------------
         // Add rules to the form.
