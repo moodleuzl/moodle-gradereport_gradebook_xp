@@ -64,11 +64,18 @@ $mform = new import_form();
  * @package gradereport_gb_xp_admin
  */
 function process_data($courseid, $comname, $comtable, $conname, $contable,
+    $relname, $reltable,
     $overwritecompetencies, $deletecompetencies, $overwriteconnections, $deleteconnections) {
     global $DB;
 
     // Delete all existing competencies if requested.
     if ($deletecompetencies) {
+        // Delete relations first (FK safety), then competencies.
+        $competencyids = $DB->get_records_menu($comname, ['courseid' => $courseid], '', 'id, id');
+        if (!empty($competencyids)) {
+            list($insql, $inparams) = $DB->get_in_or_equal(array_keys($competencyids), SQL_PARAMS_QM);
+            $DB->delete_records_select($relname, "parentid $insql OR childid $insql", array_merge($inparams, $inparams));
+        }
         $DB->delete_records($comname, ['courseid' => $courseid]);
         echo "Deleted all existing competencies for course $courseid.<br>";
     }
@@ -99,11 +106,8 @@ function process_data($courseid, $comname, $comtable, $conname, $contable,
                     // Overwrite the existing record.
                     $record['id'] = $existingrecord->id;
 
-                    // Ensure parent ID is updated correctly using mapping.
-                    if (isset($record['parentid']) && isset($mapping[$record['parentid']])) {
-                        $record['parentid'] = $mapping[$record['parentid']];
-                    }
-
+                    // Strip any legacy parentid column if present in CSV.
+                    unset($record['parentid']);
                     $DB->update_record($comname, (object)$record);
                     echo "Updated existing competency: " . $record['name'] . "<br>";
                 } else {
@@ -113,6 +117,8 @@ function process_data($courseid, $comname, $comtable, $conname, $contable,
             } else {
                 // Insert new record.
                 $record['courseid'] = $courseid;
+                // Remove legacy parentid column if present.
+                unset($record['parentid']);
                 $newid = (int) $DB->insert_record($comname, (object)$record);
 
                 // Store mapping of old and new IDs.
@@ -122,36 +128,11 @@ function process_data($courseid, $comname, $comtable, $conname, $contable,
         }
     }
 
-    // Update the parent IDs for the new competency records.
-    foreach ($mapping as $oldkey => $newvalue) {
-        // Get the record with the new ID from the database.
-        $existingrecord = $DB->get_record($comname, ['id' => $newvalue]);
-
-        // Check if the record exists.
-        if ($existingrecord) {
-            // Map the parentid if it exists in the mapping.
-            $newparentid = isset($mapping[$existingrecord->parentid])
-                ? $mapping[$existingrecord->parentid]
-                : $existingrecord->parentid;
-
-            // Update the parentid property only if it has changed.
-            if ($existingrecord->parentid != $newparentid) {
-                $existingrecord->parentid = $newparentid;
-
-                // Update the record in the database.
-                $DB->update_record($comname, $existingrecord);
-                echo "Updated parent ID for competency: " . $existingrecord->name . "<br>";
-            }
-        } else {
-            // Handle the case where the record with the old ID does not exist.
-            echo "Error: Record with ID $oldkey not found in the database.";
-        }
-    }
+    // No direct parentid updates here; relations CSV will be used instead.
 
     if ($deleteconnections) {
         // Fetch all competency IDs associated with the current course.
         $competencyids = $DB->get_records_menu($comname, ['courseid' => $courseid], '', 'id, id');
-
         if (!empty($competencyids)) {
             list($insql, $inparams) = $DB->get_in_or_equal(array_keys($competencyids), SQL_PARAMS_QM);
             $DB->delete_records_select($conname, "competencyid $insql", $inparams);
@@ -160,6 +141,9 @@ function process_data($courseid, $comname, $comtable, $conname, $contable,
             echo "No connections to delete for course $courseid.<br>";
         }
     }
+
+    // Insert relations using mapping (if provided file present).
+    insert_relations_from_csv($relname, $reltable, $mapping);
 
     // Parse the CSV data for connections.
     $conrows = explode("\n", $contable);
@@ -241,10 +225,12 @@ if ($mform->is_cancelled()) {
     // Open the zip archive.
     $zip = new ZipArchive;
     if ($zip->open($zipfile) === true) {
-        $comname = 'gradereport_gb_xp_admin_com';
+        $comname = 'gradereport_gb_xp_admin_competencies';
         $comtable = null;
-        $conname = 'gradereport_gb_xp_admin_con';
+    $conname = 'gradereport_gb_xp_admin_con';
         $contable = null;
+        $relname = 'gradereport_gb_xp_admin_relations';
+        $reltable = null;
         // Extract each CSV file from the zip archive.
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $filename = $zip->getNameIndex($i);
@@ -258,6 +244,8 @@ if ($mform->is_cancelled()) {
                 $comtable = $csvdata;
             } else if ($tablename == $conname) {
                 $contable = $csvdata;
+            } else if ($tablename == $relname) {
+                $reltable = $csvdata;
             } else {
                 echo "Skipping file $filename as it doesn't match the expected format.<br>";
             }
@@ -266,7 +254,7 @@ if ($mform->is_cancelled()) {
         $deletecompetencies = !empty($data->deletecompetencies);
         $overwriteconnections = !empty($data->overwriteconnections);
         $deleteconnections = !empty($data->deleteconnections);
-        process_data($courseid, $comname, $comtable, $conname, $contable,
+        process_data($courseid, $comname, $comtable, $conname, $contable, $relname, $reltable,
             $overwritecompetencies, $deletecompetencies, $overwriteconnections, $deleteconnections);
         $zip->close();
         // Redirect with success message.
@@ -288,3 +276,34 @@ $mform->display();
 
 // Print footer.
 echo $OUTPUT->footer();
+
+/**
+ * Insert relations based on relations CSV and id mapping.
+ * This function is added at the end to avoid breaking flow above.
+ */
+function insert_relations_from_csv($relname, $reltable, $mapping) {
+    global $DB;
+    if (empty($reltable)) { return; }
+    $rows = explode("\n", $reltable);
+    if (empty($rows)) { return; }
+    $headers = str_getcsv(array_shift($rows));
+    $hasparent = in_array('parentid', $headers);
+    $haschild = in_array('childid', $headers);
+    if (!$hasparent || !$haschild) { return; }
+    foreach ($rows as $row) {
+        if (trim($row) === '') { continue; }
+        $values = str_getcsv($row);
+        $record = array_combine($headers, $values);
+        $oldparent = $record['parentid'] ?? null;
+        $oldchild = $record['childid'] ?? null;
+        if ($oldparent === null || $oldchild === null) { continue; }
+        $newparent = $mapping[$oldparent] ?? null;
+        $newchild = $mapping[$oldchild] ?? null;
+        if ($newparent && $newchild) {
+            // Avoid duplicates based on composite key.
+            if (!$DB->record_exists($relname, ['parentid' => $newparent, 'childid' => $newchild])) {
+                $DB->insert_record($relname, (object)['parentid' => (int)$newparent, 'childid' => (int)$newchild]);
+            }
+        }
+    }
+}
