@@ -44,7 +44,7 @@ $context = context_course::instance($course->id);
 
 // Define table names for competencies and connections.
 $tablecom = 'gradereport_gb_xp_admin_competencies';
-$tablecon = 'gradereport_gb_xp_admin_con';
+$tablecon = 'gradereport_gb_xp_admin_connections';
 $tablerel = 'gradereport_gb_xp_admin_relations';
 
 // Generate CSV files for competencies and connections.

@@ -227,7 +227,7 @@ if ($mform->is_cancelled()) {
     if ($zip->open($zipfile) === true) {
         $comname = 'gradereport_gb_xp_admin_competencies';
         $comtable = null;
-    $conname = 'gradereport_gb_xp_admin_con';
+    $conname = 'gradereport_gb_xp_admin_connections';
         $contable = null;
         $relname = 'gradereport_gb_xp_admin_relations';
         $reltable = null;

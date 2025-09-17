@@ -351,7 +351,7 @@ function get_connection($activityid, $competencyid) {
 
     // Retrieve the matching record from the database based on activity and competency IDs.
     $connection =
-        $DB->get_record("gradereport_gb_xp_admin_con", ["activityid" => $activityid, "competencyid" => $competencyid]);
+        $DB->get_record("gradereport_gb_xp_admin_connections", ["activityid" => $activityid, "competencyid" => $competencyid]);
 
     return $connection;
 }
@@ -366,7 +366,7 @@ function insert_connection($connection) {
     global $DB;
 
     // Insert the new connection record into the database.
-    $DB->insert_record('gradereport_gb_xp_admin_con', $connection);
+    $DB->insert_record('gradereport_gb_xp_admin_connections', $connection);
 }
 
 /**
@@ -379,7 +379,7 @@ function update_connection($connection) {
     global $DB;
 
     // Update the connection record in the database.
-    $DB->update_record("gradereport_gb_xp_admin_con", $connection);
+    $DB->update_record("gradereport_gb_xp_admin_connections", $connection);
 }
 
 /**
@@ -392,7 +392,7 @@ function delete_connection($id) {
     global $DB;
 
     // Delete the connection record from the database.
-    $DB->delete_records("gradereport_gb_xp_admin_con", ['id' => $id]);
+    $DB->delete_records("gradereport_gb_xp_admin_connections", ['id' => $id]);
 }
 
 /**
@@ -406,7 +406,7 @@ function get_connections($competencyid) {
     global $DB;
 
     // Retrieve all connections related to the specified competency.
-    $connections = $DB->get_records("gradereport_gb_xp_admin_con", ["competencyid" => $competencyid]);
+    $connections = $DB->get_records("gradereport_gb_xp_admin_connections", ["competencyid" => $competencyid]);
 
     return $connections;
 }
