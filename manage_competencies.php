@@ -41,8 +41,14 @@ $competencies = get_all_competencies();
 // Enrich competencies with parents info for display.
 foreach ($competencies as $c) {
     $parents = get_parents($c->id);
-    $c->parentids = implode(', ', array_map(function($p){return $p->id;}, $parents));
-    $c->parentnames = implode(', ', array_map(function($p){return $p->name;}, $parents));
+
+    $c->parentids = implode(', ', array_map(function($p) {
+        return $p->id;
+    }, $parents));
+
+    $c->parentnames = implode(', ', array_map(function($p) {
+        return $p->name;
+    }, $parents));
 }
 
 // Render the page.
