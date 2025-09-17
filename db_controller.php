@@ -36,30 +36,28 @@
 function get_available_parents($currentrecordid) {
     global $COURSE, $DB;
 
-    // Recursive SQL query to retrieve all available parent options excluding current record and its descendants.
-    $sql = "WITH RECURSIVE item_descendants AS (
-                SELECT id, parentid, name
-                FROM {gradereport_gb_xp_admin_com}
-                WHERE id = ?
-                UNION
-                SELECT g.id, g.parentid, g.name
-                FROM {gradereport_gb_xp_admin_com} g
-                JOIN item_descendants d ON g.parentid = d.id
-            )
-            SELECT id, name
-            FROM {gradereport_gb_xp_admin_com}
-            WHERE courseid = ?
-            AND id NOT IN (
-                SELECT id FROM item_descendants UNION
-                SELECT ? WHERE parentid IS NULL
-            )
-            AND id != ?
-            ORDER BY id";
+    $courseid = $COURSE->id;
 
-    $params = [$currentrecordid, $COURSE->id, $currentrecordid, $currentrecordid];
-    $availableparents = $DB->get_records_sql($sql, $params); // Execute the query.
+    // Fetch all competencies in course.
+    $all = $DB->get_records('gradereport_gb_xp_admin_competencies', ['courseid' => $courseid]);
 
-    return $availableparents; // Return parent records.
+    if (empty($currentrecordid)) {
+        return $all;
+    }
+
+    // Build a set of descendants (and the node itself) to exclude to avoid cycles.
+    $excluded = array_fill_keys(get_descendants_ids($currentrecordid), true);
+    $excluded[$currentrecordid] = true;
+
+    // Filter out excluded ids.
+    $filtered = [];
+    foreach ($all as $id => $rec) {
+        if (!isset($excluded[$id])) {
+            $filtered[$id] = $rec;
+        }
+    }
+
+    return $filtered;
 }
 
 /**
@@ -72,9 +70,7 @@ function get_available_parents($currentrecordid) {
  */
 function get_competency($id) {
     global $DB;
-
-    // Retrieve competency record from the database.
-    return $DB->get_record('gradereport_gb_xp_admin_com', ['id' => $id]);
+    return $DB->get_record('gradereport_gb_xp_admin_competencies', ['id' => $id]);
 }
 
 /**
@@ -87,14 +83,10 @@ function get_competency($id) {
  */
 function get_all_competencies($courseid = null) {
     global $COURSE, $DB;
-
-    // Default to the current course if no course ID is provided.
     if (is_null($courseid)) {
         $courseid = $COURSE->id;
     }
-
-    // Retrieve all competencies for the specified course, ordered by ID.
-    return $DB->get_records("gradereport_gb_xp_admin_com", ["courseid" => $courseid], 'id ASC');
+    return $DB->get_records('gradereport_gb_xp_admin_competencies', ['courseid' => $courseid], 'id ASC');
 }
 
 /**
@@ -106,11 +98,100 @@ function get_all_competencies($courseid = null) {
  */
 function get_direct_children($id) {
     global $DB;
+    // Join relations to fetch child competency records.
+    $sql = "SELECT c.*
+              FROM {gradereport_gb_xp_admin_relations} r
+              JOIN {gradereport_gb_xp_admin_competencies} c ON c.id = r.childid
+             WHERE r.parentid = ?
+             ORDER BY c.id ASC";
+    return $DB->get_records_sql($sql, [$id]);
+}
 
-    // Retrieve direct child records with the parent ID.
-    $childrenrecords = $DB->get_records('gradereport_gb_xp_admin_com', ['parentid' => $id]);
+/**
+ * Return all direct parents of a competency.
+ * @param int $childid
+ * @return array of competency records
+ */
+function get_parents($childid) {
+    global $DB;
+    $sql = "SELECT c.*
+              FROM {gradereport_gb_xp_admin_relations} r
+              JOIN {gradereport_gb_xp_admin_competencies} c ON c.id = r.parentid
+             WHERE r.childid = ?
+             ORDER BY c.id ASC";
+    return $DB->get_records_sql($sql, [$childid]);
+}
 
-    return $childrenrecords;
+/**
+ * Return all parent ids of a competency.
+ * @param int $childid
+ * @return int[]
+ */
+function get_parent_ids($childid) {
+    global $DB;
+    return array_values($DB->get_records_menu('gradereport_gb_xp_admin_relations', ['childid' => $childid], '', 'parentid, parentid'));
+}
+
+/**
+ * Set parents for a child competency (replace existing relations).
+ * @param int $childid
+ * @param int[] $parentids
+ */
+function set_parents($childid, $parentids) {
+    global $DB;
+    if (!is_array($parentids)) {
+        $parentids = [];
+    }
+    // Remove existing relations for child.
+    $DB->delete_records('gradereport_gb_xp_admin_relations', ['childid' => $childid]);
+    // Insert new relations.
+    foreach ($parentids as $pid) {
+        $pid = (int)$pid;
+        if ($pid > 0) {
+            $DB->insert_record('gradereport_gb_xp_admin_relations', (object)[
+                'parentid' => $pid,
+                'childid' => $childid,
+            ]);
+        }
+    }
+}
+
+/**
+ * Get competencies with no parents (roots) in a course.
+ * @param int $courseid
+ * @return array of competency records
+ */
+function get_root_competencies($courseid) {
+    global $DB;
+    $sql = "SELECT c.*
+              FROM {gradereport_gb_xp_admin_competencies} c
+         LEFT JOIN {gradereport_gb_xp_admin_relations} r ON r.childid = c.id
+             WHERE c.courseid = ? AND r.childid IS NULL
+             ORDER BY c.id ASC";
+    return $DB->get_records_sql($sql, [$courseid]);
+}
+
+/**
+ * Get all descendant ids for a competency (via relations), avoiding cycles.
+ * @param int $parentid
+ * @return int[] array of ids
+ */
+function get_descendants_ids($parentid) {
+    global $DB;
+    $visited = [];
+    $stack = [$parentid];
+    while (!empty($stack)) {
+        $current = array_pop($stack);
+        // Get direct children ids.
+        $childids = $DB->get_records_menu('gradereport_gb_xp_admin_relations', ['parentid' => $current], '', 'childid, childid');
+        foreach ($childids as $cid) {
+            if (!isset($visited[$cid])) {
+                $visited[$cid] = true;
+                $stack[] = $cid;
+            }
+        }
+    }
+    return array_map('intval', array_keys($visited));
 }
 
 /**
@@ -121,9 +202,7 @@ function get_direct_children($id) {
  */
 function update_competency($competency) {
     global $DB;
-
-    // Update the competency record in the database.
-    $DB->update_record('gradereport_gb_xp_admin_com', $competency);
+    $DB->update_record('gradereport_gb_xp_admin_competencies', $competency);
 }
 
 /**
@@ -134,9 +213,8 @@ function update_competency($competency) {
  */
 function insert_competency($competency) {
     global $DB;
-
-    // Insert a new competency record into the database.
-    $DB->insert_record('gradereport_gb_xp_admin_com', $competency);
+    // Insert and return new id.
+    return (int)$DB->insert_record('gradereport_gb_xp_admin_competencies', $competency, true);
 }
 
 /**
@@ -147,9 +225,11 @@ function insert_competency($competency) {
  */
 function delete_competency($id) {
     global $DB;
-
+    // Remove any relations involving this competency.
+    $DB->delete_records('gradereport_gb_xp_admin_relations', ['parentid' => $id]);
+    $DB->delete_records('gradereport_gb_xp_admin_relations', ['childid' => $id]);
     // Delete the competency record from the database.
-    $DB->delete_records('gradereport_gb_xp_admin_com', ['id' => $id]);
+    $DB->delete_records('gradereport_gb_xp_admin_competencies', ['id' => $id]);
 }
 
 /**
