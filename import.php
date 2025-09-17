@@ -227,7 +227,7 @@ if ($mform->is_cancelled()) {
     if ($zip->open($zipfile) === true) {
         $comname = 'gradereport_gb_xp_admin_competencies';
         $comtable = null;
-    $conname = 'gradereport_gb_xp_admin_connections';
+        $conname = 'gradereport_gb_xp_admin_connections';
         $contable = null;
         $relname = 'gradereport_gb_xp_admin_relations';
         $reltable = null;
@@ -283,26 +283,46 @@ echo $OUTPUT->footer();
  */
 function insert_relations_from_csv($relname, $reltable, $mapping) {
     global $DB;
-    if (empty($reltable)) { return; }
+
+    if (empty($reltable)) {
+        return;
+    }
+
     $rows = explode("\n", $reltable);
-    if (empty($rows)) { return; }
+    if (empty($rows)) {
+        return;
+    }
+
     $headers = str_getcsv(array_shift($rows));
     $hasparent = in_array('parentid', $headers);
     $haschild = in_array('childid', $headers);
-    if (!$hasparent || !$haschild) { return; }
+    if (!$hasparent || !$haschild) {
+        return;
+    }
+
     foreach ($rows as $row) {
-        if (trim($row) === '') { continue; }
+        if (trim($row) === '') {
+            continue;
+        }
+
         $values = str_getcsv($row);
         $record = array_combine($headers, $values);
+
         $oldparent = $record['parentid'] ?? null;
         $oldchild = $record['childid'] ?? null;
-        if ($oldparent === null || $oldchild === null) { continue; }
+        if ($oldparent === null || $oldchild === null) {
+            continue;
+        }
+
         $newparent = $mapping[$oldparent] ?? null;
-        $newchild = $mapping[$oldchild] ?? null;
+        $newchild  = $mapping[$oldchild] ?? null;
+
         if ($newparent && $newchild) {
-            // Avoid duplicates based on composite key.
             if (!$DB->record_exists($relname, ['parentid' => $newparent, 'childid' => $newchild])) {
-                $DB->insert_record($relname, (object)['parentid' => (int)$newparent, 'childid' => (int)$newchild]);
+                $DB->insert_record($relname, (object)[
+                    'parentid' => (int)$newparent,
+                    'childid'  => (int)$newchild,
+                ]);
             }
         }
     }
