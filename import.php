@@ -46,19 +46,20 @@ $mform = new import_form();
 /**
  * Process and import data into the specified tables in the database.
  *
- * This function parses CSV data for competencies and connections,
- * inserts them into their respective tables, and updates parent IDs
- * based on the mappings generated during insertion.
+ * This function parses CSV data for competencies, connections and relations,
+ * inserts them into their respective tables, and updates IDs using a mapping.
  *
- * @param int $courseid The ID of the course for which the data is being processed.
- * @param string $comname The name of the competency table in the database.
+ * @param int    $courseid The ID of the course for which the data is processed.
+ * @param string $comname The name of the competencies table.
  * @param string $comtable The CSV data for competencies.
- * @param string $conname The name of the connection table in the database.
+ * @param string $conname The name of the connections table.
  * @param string $contable The CSV data for connections.
- * @param bool $overwritecompetencies Whether to overwrite existing competencies.
- * @param bool $deletecompetencies Whether to delete all existing competencies before importing.
- * @param bool $overwriteconnections Whether to overwrite existing connections.
- * @param bool $deleteconnections Whether to delete all existing connections before importing.
+ * @param string $relname The name of the relations table.
+ * @param string $reltable The CSV data for relations.
+ * @param bool   $overwritecompetencies Whether to overwrite existing competencies.
+ * @param bool   $deletecompetencies Whether to delete all competencies before importing.
+ * @param bool   $overwriteconnections Whether to overwrite existing connections.
+ * @param bool   $deleteconnections Whether to delete all connections before importing.
  *
  * @throws dml_exception
  * @package gradereport_gb_xp_admin
@@ -278,8 +279,16 @@ $mform->display();
 echo $OUTPUT->footer();
 
 /**
- * Insert relations based on relations CSV and id mapping.
- * This function is added at the end to avoid breaking flow above.
+ * Insert relations based on relations CSV and ID mapping.
+ *
+ * Parses CSV rows containing 'parentid' and 'childid', maps legacy IDs using $mapping,
+ * and inserts missing relations into $relname.
+ *
+ * @param string $relname  The relations table name.
+ * @param string $reltable The CSV contents for relations.
+ * @param array  $mapping  Map of old competency IDs to new IDs.
+ * @return void
+ * @throws dml_exception
  */
 function insert_relations_from_csv($relname, $reltable, $mapping) {
     global $DB;
