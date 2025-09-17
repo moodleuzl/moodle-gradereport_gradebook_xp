@@ -58,16 +58,7 @@ function handle_action() {
     global $id, $action, $returnurl, $heading;
 
     if ($action == 'delete') {
-        // Get all children competency of the deleted competency.
-        $childrencompetencies = get_direct_children($id);
-
-        // Update the parentid of all children competencies to 0.
-        foreach ($childrencompetencies as $childcompetency) {
-            $childcompetency->parentid = 0;
-            update_competency($childcompetency);
-        }
-
-        // Delete the competency using ID.
+        // Delete the competency and any relations involving it.
         delete_competency($id);
 
         // Redirect user to manage_competencies.php page.
@@ -132,11 +123,13 @@ function handle_action_buttons() {
                 // Update existing competency.
                 $existingcompetency->name = $fromform->name;
                 $existingcompetency->description = $fromform->description;
-                $existingcompetency->parentid = $fromform->parentid;
                 $existingcompetency->maxcomlvl = $fromform->maxcomlvl;
                 $existingcompetency->islevelsummed = $fromform->islevelsummed;
 
                 update_competency($existingcompetency);
+                // Update parent relations.
+                $parentids = isset($fromform->parentids) ? $fromform->parentids : [];
+                set_parents($existingcompetency->id, $parentids);
 
                 // Redirect with success message.
                 redirect($returnurl,
@@ -149,11 +142,15 @@ function handle_action_buttons() {
         $competencytoinsert->courseid = $fromform->courseid;
         $competencytoinsert->name = $fromform->name;
         $competencytoinsert->description = $fromform->description;
-        $competencytoinsert->parentid = $fromform->parentid;
         $competencytoinsert->maxcomlvl = $fromform->maxcomlvl;
         $competencytoinsert->islevelsummed = $fromform->islevelsummed;
 
-        insert_competency($competencytoinsert);
+        $newid = insert_competency($competencytoinsert);
+        // Set parent relations for new record.
+        $parentids = isset($fromform->parentids) ? $fromform->parentids : [];
+        if ($newid) {
+            set_parents($newid, $parentids);
+        }
 
         // Redirect with success message.
         redirect($returnurl,
