@@ -119,20 +119,24 @@ function gradereport_gb_xp_admin_set_competency_connection($activityid, $compete
  * @return array The hierarchical structure of competencies.
  */
 function get_hierarchy($competencies, $parentid = 0): array {
-    // Build map id -> record
+    // Build map id -> record.
     $map = [];
-    foreach ($competencies as $c) { $map[$c->id] = $c; }
+    foreach ($competencies as $c) {
+        $map[$c->id] = $c;
+    }
 
     // Build children adjacency via relations helper.
     $childrenbyparent = [];
     foreach ($competencies as $c) {
-        // for each competency, get its parents to populate reverse map
+        // For each competency, get its parents to populate reverse map.
         $pids = get_parent_ids($c->id);
         if (empty($pids)) {
-            $pids = [0]; // treat as root when no parents
+            $pids = [0]; // Treat as root when no parents.
         }
         foreach ($pids as $pid) {
-            if (!isset($childrenbyparent[$pid])) { $childrenbyparent[$pid] = []; }
+            if (!isset($childrenbyparent[$pid])) {
+                $childrenbyparent[$pid] = [];
+            }
             $childrenbyparent[$pid][] = $c->id;
         }
     }
@@ -143,12 +147,16 @@ function get_hierarchy($competencies, $parentid = 0): array {
         $result = [];
         $children = $childrenbyparent[$pid] ?? [];
         foreach ($children as $cid) {
-            if (isset($building[$cid])) { continue; } // avoid cycles
+            if (isset($building[$cid])) {
+                continue; // Avoid cycles.
+            }
             $building[$cid] = true;
+
             $node = clone $map[$cid];
             $node->subCompetencies = $build($cid);
             $node->connections = get_connections($cid);
             $result[] = $node;
+
             unset($building[$cid]);
         }
         return $result;
