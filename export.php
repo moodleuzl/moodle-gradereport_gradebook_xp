@@ -43,12 +43,14 @@ require_course_login($courseid);
 $context = context_course::instance($course->id);
 
 // Define table names for competencies and connections.
-$tablecom = 'gradereport_gb_xp_admin_com';
+$tablecom = 'gradereport_gb_xp_admin_competencies';
 $tablecon = 'gradereport_gb_xp_admin_con';
+$tablerel = 'gradereport_gb_xp_admin_relations';
 
 // Generate CSV files for competencies and connections.
 $table1csv = generate_csv($tablecom, sys_get_temp_dir() . '/' . $tablecom . '.csv');
 $table2csv = generate_csv($tablecon, sys_get_temp_dir() . '/' . $tablecon . '.csv');
+$table3csv = generate_csv($tablerel, sys_get_temp_dir() . '/' . $tablerel . '.csv');
 
 // Create a zip archive.
 $zip = new ZipArchive();
@@ -60,6 +62,7 @@ $zip->open($tempzipfile, ZipArchive::CREATE);
 // Add CSV files to the zip archive.
 $zip->addFile($table1csv, $tablecom . '.csv');
 $zip->addFile($table2csv, $tablecon . '.csv');
+$zip->addFile($table3csv, $tablerel . '.csv');
 
 // Close the zip archive.
 if ($zip->close() !== true) {
@@ -79,6 +82,7 @@ readfile($tempzipfile);
 // Delete temporary CSV files and the zip file.
 unlink($table1csv);
 unlink($table2csv);
+unlink($table3csv);
 unlink($tempzipfile);
 
 /**
