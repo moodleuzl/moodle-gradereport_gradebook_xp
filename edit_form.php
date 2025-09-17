@@ -46,13 +46,13 @@ class edit_form extends moodleform {
 
         // Get parent options for select element.
 
-        $parentoptions = [0 => '---']; // Initialize with an empty option.
+        $parentoptions = [];
         if (!empty($current)) { // If record ID is provided.
             $availableparents = get_available_parents($current->id);
         } else { // If no record ID is provided.
             $availableparents = get_all_competencies();
         }
-        $parentoptions += array_column($availableparents, 'name', 'id'); // Add parent options to array.
+        $parentoptions = array_column($availableparents, 'name', 'id'); // Add parent options to array.
 
         // -------------------------------------------------------------------------------
         // Add hidden parameters to the form.
@@ -72,8 +72,9 @@ class edit_form extends moodleform {
         // -------------------------------------------------------------------------------
         // Add visible parameters to the form.
 
-        // Add parent select element to form.
-        $mform->addElement('select', 'parentid', get_string('parent', 'gradereport_gb_xp_admin'), $parentoptions);
+        // Add parent multi-select element to form.
+        $mform->addElement('select', 'parentids', get_string('parent', 'gradereport_gb_xp_admin'), $parentoptions,
+            ['multiple' => 'multiple']);
 
         // Add competency name text element to form.
         $mform->addElement('text', 'name', get_string('name', 'gradereport_gb_xp_admin'));
@@ -115,7 +116,8 @@ class edit_form extends moodleform {
             $mform->setDefault('id', $current->id);
             $mform->setDefault('courseid', $current->courseid);
             $mform->setDefault('name', $current->name);
-            $mform->setDefault('parentid', $current->parentid);
+            // Set default parent ids from relations.
+            $mform->setDefault('parentids', get_parent_ids($current->id));
             $mform->setDefault('description', $current->description);
             $mform->setDefault('maxcomlvl', $current->maxcomlvl);
         }
