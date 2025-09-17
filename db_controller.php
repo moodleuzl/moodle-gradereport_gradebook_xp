@@ -129,7 +129,14 @@ function get_parents($childid) {
  */
 function get_parent_ids($childid) {
     global $DB;
-    return array_values($DB->get_records_menu('gradereport_gb_xp_admin_relations', ['childid' => $childid], '', 'parentid, parentid'));
+    return array_values(
+        $DB->get_records_menu(
+            'gradereport_gb_xp_admin_relations',
+            ['childid' => $childid],
+            '',
+            'parentid, parentid'
+        )
+    );
 }
 
 /**
