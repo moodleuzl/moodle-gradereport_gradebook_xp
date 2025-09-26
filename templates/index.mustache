@@ -1,0 +1,111 @@
+<div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
+    <div style="flex-basis: calc(40% - 10px); margin-right: 20px;">
+        {{#competencyname}}<h3 style="text-align: center;">{{competencyname}}</h3>{{/competencyname}}
+
+        {{#showchart}}
+        <!-- If there are enough competencies, display the chart -->
+        <canvas id="myChart1"></canvas>
+        {{/showchart}}
+
+        {{^showchart}}
+        <!-- If not enough competencies, display this message -->
+        <p>Not enough competencies ({{competencycount}} of 3) to display the chart.</p>
+        {{/showchart}}
+    </div>
+    <div style="flex-basis: calc(30% - 10px);">
+
+        {{#competencyid}}<a href=index.php?id={{courseid}}>Back to top level</a><br>{{/competencyid}}
+        {{#competencyparentid}}<a href=index.php?id={{courseid}}&competencyid={{competencyparentid}}>One level up</a>{{/competencyparentid}}
+        {{#chart_competencies}}
+            <h4>
+                {{#has_subcompetencies}}
+                    <a href=index.php?id={{courseid}}&competencyid={{id}}>{{name}}</a>
+                {{/has_subcompetencies}}
+                {{^has_subcompetencies}}
+                    {{name}}
+                {{/has_subcompetencies}}
+            </h4>
+            {{#is_level_summed}}(Sum all activity levels){{/is_level_summed}}
+            {{^is_level_summed}}(Highest single activity level){{/is_level_summed}}
+            <p>
+                Your level: {{user}} / Maximum level: {{max_level}}
+            </p>
+            <div>
+                <ul style="list-style: none; padding-left: 20px;">
+                    {{#activities}}
+                        <li style="color: {{color}};">Level: {{level}} <a href="/{{type}}/{{module}}/view.php?id={{activityid}}">{{name}}</a></li>
+                    {{/activities}}
+                </ul>
+            </div>
+        {{/chart_competencies}}
+        <!-- TODO: list all activities grades, that influence the competencies -->
+    </div>
+</div>
+
+{{#showchart}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Check if data arrays are not empty
+    if ({{data_user}}.length > 0 && {{data_max_level}}.length > 0) {
+        const ctx = document.getElementById('myChart1');
+        Chart.defaults.font.size = 13;
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: {{{competencies}}},
+                datasets: [
+                    {
+                        label: '{{#str}} chart_series_label_user, gradereport_gb_xp {{/str}}',
+                        data: {{data_user}},
+                        borderColor: 'rgba(14,105,241,0.9)',
+                        backgroundColor: 'rgba(14,105,241,0.5)',
+                        borderWidth: 2,
+                    },
+                    {
+                        label: '{{#str}} chart_competencies_max_level, gradereport_gb_xp {{/str}}',
+                        data: {{data_max_level}},
+                        borderColor: 'rgba(15,124,9,0.55)',
+                        backgroundColor: 'rgba(0,0,0,0)',
+                        borderWidth: 2,
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    r: {
+                        min: 0,
+                        pointLabels: {
+                            display: true, // Hides the labels around the radar chart,
+                            font: {
+                                size: 13
+                            }
+                        },
+                        ticks: {
+                            display: true, // Hides the labels in the middel (numbers)
+                            stepSize: 1
+                        },
+                        grid: {
+                            display: true
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: false,
+                        text: 'Kompetenzen'
+                    },
+                    legend: {
+                        labels: {
+                            // This more specific font property overrides the global property
+                            font: {
+                                size: 13
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+{{/showchart}}
