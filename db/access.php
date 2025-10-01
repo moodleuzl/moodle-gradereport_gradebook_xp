@@ -26,13 +26,24 @@ defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
     'gradereport/gb_xp_admin:view' => [
-            'riskbitmask' => RISK_PERSONAL,
+            'riskbitmask' => RISK_SPAM,
             'captype' => 'read',
             'contextlevel' => CONTEXT_COURSE,
             'archetypes' => [
+                'user' => CAP_ALLOW,
                 'teacher' => CAP_ALLOW,
                 'editingteacher' => CAP_ALLOW,
                 'manager' => CAP_ALLOW,
             ],
+    ],
+    'gradereport/gb_xp_admin:manage' => [
+        'riskbitmask' => RISK_SPAM,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => [
+                'teacher' => CAP_ALLOW,
+                'editingteacher' => CAP_ALLOW,
+                'manager' => CAP_ALLOW,
+        ],
     ],
 ];

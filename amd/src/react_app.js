@@ -22,7 +22,7 @@
  */
 
 import {useCompetencyStore, CompetencyProvider} from 'gradereport_gb_xp_admin/hooks/useCompetencyStore';
-import {CompetencyOverview} from 'gradereport_gb_xp_admin/components/CompetencyOverview';
+import {CompetencyTreeView} from 'gradereport_gb_xp_admin/components/CompetencyTreeView';
 
 /**
  * Main React component for the gradebook admin interface.
@@ -40,11 +40,8 @@ const App = (options) => {
 
     // Main interface
     return createElement('div', {className: 'gb-xp-admin-app container-fluid py-4'}, [
-        createElement('div', {key: 'header', className: 'app-header mb-4'}, [
-            createElement('h2', {key: 'title', className: 'mb-0'}, options.title || 'Competency Management'),
-        ]),
         createElement('div', {key: 'content'},
-            createElement(CompetencyOverview)
+            createElement(CompetencyTreeView)
         )
     ]);
 };

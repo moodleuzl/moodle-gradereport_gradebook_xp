@@ -25,43 +25,48 @@
 require_once('../../../config.php');
 require_once($CFG->dirroot . '/grade/lib.php');
 require_once('lib.php');
-require_once('db_controller.php');
+
+global $CFG;
 
 // Get required and optional parameters.
 $courseid = required_param('id', PARAM_INT);
-$userid = optional_param('userid', $USER->id, PARAM_INT);
 
-// Set up the page.
-require_course_login($courseid);
-gradereport_gb_xp_admin_setup_page($courseid);
+// Setup page and validate access.
+$course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
+require_login($course->id);
+$context = context_course::instance($course->id);
 
-// Get the competencies for the course and sort by ID.
-$competencies = get_all_competencies();
 
-// Enrich competencies with parents info for display.
-foreach ($competencies as $c) {
-    $parents = get_parents($c->id);
+// Set up page URL with parameters.
+$url = new moodle_url('/grade/report/gb_xp_admin/manage_competencies.php', ['id' => $courseid]);
+$PAGE->set_url($url);
+$PAGE->set_pagelayout('default');
+$PAGE->set_context($context);
 
-    $c->parentids = implode(', ', array_map(function($p) {
-        return $p->id;
-    }, $parents));
-
-    $c->parentnames = implode(', ', array_map(function($p) {
-        return $p->name;
-    }, $parents));
+// Check if current edit competencies.
+if (!has_capability('moodle/grade:manage', $context)) {
+    throw new moodle_exception('nopermissions', 'error', '', 'manage grades');
 }
 
-// Render the page.
-$templatecontext = (object) [
-    'competencies' => array_values($competencies),
-    'gobackurl' => new moodle_url('/grade/report/gb_xp_admin/index.php'),
-    'editurl' => new moodle_url('/grade/report/gb_xp_admin/edit.php'),
-    'courseid' => $courseid,
-];
+$PAGE->requires->jquery();
 
 print_grade_page_head(
     $courseid, 'report', 'gb_xp_admin',
-    get_string('pluginname', 'gradereport_gb_xp_admin'), false, '');
+    'Competency Management', false, '', false);
 
-echo $OUTPUT->render_from_template('gradereport_gb_xp_admin/manage_competencies', $templatecontext);
+echo $OUTPUT->render_from_template('gradereport_gb_xp_admin/manage_competencies', [
+//    'react_url' => (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/react.production.min.js'))->out(),
+    'react_url' => (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/react.development.js'))->out(),
+//    'react_dom_url' => (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/react-dom.production.min.js'))->out(),
+    'react_dom_url' => (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/react-dom.development.js'))->out(),
+
+]);
+
+$PAGE->requires->js_call_amd('gradereport_gb_xp_admin/react_app', 'init', [
+    'containerId' => "gradebook-xp-manage-react-app-container",
+    [
+        'courseid' => $courseid,
+    ]
+]);
+
 echo $OUTPUT->footer();

@@ -193,6 +193,52 @@ export const CompetencyProvider = ({children, courseid}) => {
         );
     }, [relations]);
 
+    // Get all descendants of a competency (all children, recursively)
+    const getDescendants = useCallback((competencyId) => {
+        const descendants = [];
+        const visited = new Set();
+        const stack = [competencyId];
+
+        while (stack.length > 0) {
+            const current = stack.pop();
+            // Find all direct children of current competency
+            const childRelations = relations.filter(rel => rel.parentid === current);
+
+            for (const relation of childRelations) {
+                if (!visited.has(relation.childid)) {
+                    visited.add(relation.childid);
+                    descendants.push(relation.childid);
+                    stack.push(relation.childid);
+                }
+            }
+        }
+
+        return descendants;
+    }, [relations]);
+
+    // Get all ancestors of a competency (all parents, recursively)
+    const getAncestors = useCallback((competencyId) => {
+        const ancestors = [];
+        const visited = new Set();
+        const stack = [competencyId];
+
+        while (stack.length > 0) {
+            const current = stack.pop();
+            // Find all direct parents of current competency
+            const parentRelations = relations.filter(rel => rel.childid === current);
+
+            for (const relation of parentRelations) {
+                if (!visited.has(relation.parentid)) {
+                    visited.add(relation.parentid);
+                    ancestors.push(relation.parentid);
+                    stack.push(relation.parentid);
+                }
+            }
+        }
+
+        return ancestors;
+    }, [relations]);
+
     const value = {
         // Data
         competencies,
@@ -212,7 +258,9 @@ export const CompetencyProvider = ({children, courseid}) => {
 
         // Helper functions
         getConnectionsForCompetency,
-        getRelationsForCompetency
+        getRelationsForCompetency,
+        getDescendants,
+        getAncestors
     };
 
     return window.React.createElement(CompetencyContext.Provider, {value}, children);

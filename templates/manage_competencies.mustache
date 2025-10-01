@@ -1,38 +1,10 @@
-<input type="button" class="btn btn-secondary" value="{{#str}} goback, gradereport_gb_xp_admin {{/str}}" onclick="location.href='{{gobackurl}}?id={{courseid}}'">
-<hr>
+<script src="{{react_url}}"></script>
+<script src="{{react_dom_url}}"></script>
 
-<h1>{{#str}} listofcompetencies, gradereport_gb_xp_admin {{/str}}</h1>
-{{#competencies}}
-    <div class="card mt-2 mb-2">
-        <div class="card-body">
-            <h4 style="font-weight: bold;">{{name}}</h4>
-            <table>
-                <tr>
-                    <td><strong>ID:</strong></td>
-                    <td>{{id}}</td>
-                    <td style="padding-left: 20px;"><strong>Parent IDs:</strong></td>
-                    <td>{{parentids}}</td>
-                    <td style="padding-left: 20px;"><strong>Max Level:</strong></td>
-                    <td>{{maxcomlvl}}</td>
-                </tr>
-                <tr>
-                    <td><strong>Name:</strong></td>
-                    <td>{{name}}</td>
-                    <td style="padding-left: 20px;"><strong>Parent Names:</strong></td>
-                    <td>{{parentnames}}</td>
-                    <td style="padding-left: 20px;"><strong>Description:</strong></td>
-                    <td>{{description}}</td>
-                </tr>
-            </table>
-
-
-            <input type="button" class="btn btn-primary" value="{{#str}} editcompetency, gradereport_gb_xp_admin {{/str}}" onclick="location.href='{{editurl}}?courseid={{courseid}}&id={{id}}&action=edit'">
-            <input type="button" class="btn btn-danger local_message_delete_button" name="delete-competency" value="{{#str}} deletecompetency, gradereport_gb_xp_admin {{/str}}" data-confirmation="modal" data-confirmation-type="delete" data-confirmation-title-str='["delete", "core"]'
-                                                                                                                                                                                        data-confirmation-content-str='["areyousure"]' data-confirmation-yes-button-str='["delete", "core"]'
-                                                                                                                                                                                        data-confirmation-destination="{{editurl}}?courseid={{courseid}}&id={{id}}&action=delete'">
-        </div>
+<!-- Toast container wrapping the entire page content -->
+<div id="gb-xp-toast-container" class="toast-container position-relative w-100" style="min-height: 100vh;">
+    <div id="gradebook-xp-manage-react-app-container" class="react-app-wrapper">
+        <!-- React app will mount here -->
     </div>
-{{/competencies}}
-
-<hr>
-<input type="button" class="btn btn-primary" value="{{#str}} addcompetency, gradereport_gb_xp_admin {{/str}}" onclick="location.href='{{editurl}}?courseid={{courseid}}&action=new'">
+    <!-- Toasts will be positioned absolutely within this container -->
+</div>

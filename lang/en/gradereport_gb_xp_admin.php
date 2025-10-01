@@ -67,3 +67,7 @@ $string['file'] = 'File to import';
 $string['missingfile'] = 'Missing file. Please upload a valid .zip file.';
 $string['cancelimport'] = 'You cancelled the import form.';
 $string['importsuccess'] = 'You have successfully imported the plugin data for this course.';
+$string['allusers'] = 'All users';
+$string['selectauser'] = 'Select a user';
+$string['viewinguser'] = 'Viewing user: {$a}';
+$string['nocompetencies'] = 'No competencies have been defined for this course.';
