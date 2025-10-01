@@ -105,19 +105,28 @@ export const CompetencyProvider = ({children, courseid}) => {
     }, []);
 
     const deleteCompetency = useCallback(async (competencyId) => {
-        // TODO: deleting may delete connections and may delete relations, refetch data after deletion
         const competency = competencies.find(c => c.id === competencyId);
         const competencyName = competency?.name || 'Unknown';
 
         try {
             await ApiService.deleteCompetency(competencyId);
+
+            // Refetch relations and connections as they may have been deleted server-side
+            const [relationsData, connectionsData] = await Promise.all([
+                ApiService.getRelations(courseid),
+                ApiService.getConnections(courseid)
+            ]);
+
             setCompetencies(prev => prev.filter(comp => comp.id !== competencyId));
+            setRelations(relationsData);
+            setConnections(connectionsData);
+
             ToastService.competencyDeleted(competencyName);
         } catch (error) {
             ToastService.competencyDeleteFailed();
             throw error;
         }
-    }, [competencies]);
+    }, [competencies, courseid]);
 
     // Connection operations
     const createConnection = useCallback(async ({competencyid, activityid, level = 1}) => {

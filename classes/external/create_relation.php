@@ -93,7 +93,6 @@ class create_relation extends external_api {
         $relation->childid = $params['childid'];
 
         // Insert relation.
-        // TODO Validate that inserting a relation does not create a circle relation
         $relationid = insert_relation($relation);
 
         return [

@@ -22,20 +22,23 @@
  */
 
 import {useCompetencyStore, CompetencyProvider} from 'gradereport_gb_xp_admin/hooks/useCompetencyStore';
+import {useStrings, StringProvider} from 'gradereport_gb_xp_admin/hooks/useStrings';
 import {CompetencyTreeView} from 'gradereport_gb_xp_admin/components/CompetencyTreeView';
 
 /**
  * Main React component for the gradebook admin interface.
  *
- * @param {Object} options Component properties
  * @returns {Object} React element
  */
-const App = (options) => {
+const CompetencyManager = () => {
     const {createElement} = window.React;
-    const {loading} = useCompetencyStore();
+    const {loading: dataLoading} = useCompetencyStore();
+    const {loading: stringsLoading, str} = useStrings();
 
-    if (loading) {
-        return createElement('div', {className: 'loading text-center py-5'}, 'Loading competencies...');
+    if (dataLoading || stringsLoading) {
+        return createElement('div', {className: 'loading text-center py-5'},
+            stringsLoading ? 'Loading...' : str('loadingcompetencies', 'Loading competencies...')
+        );
     }
 
     // Main interface
@@ -68,11 +71,11 @@ export const init = (containerId, options = {}) => {
 
         const root = createRoot(container);
         root.render(
-            createElement(CompetencyProvider, {
-                courseid: options.courseid
-            }, createElement(App, {
-                ...options,
-            }))
+            createElement(StringProvider, {key: "string-provider"},
+                createElement(CompetencyProvider, {
+                    courseid: options.courseid
+                }, createElement(CompetencyManager, {key: "competency-manager"}))
+            )
         );
     }
 };

@@ -67,3 +67,91 @@ $string['file'] = 'Zu importierende Datei';
 $string['missingfile'] = 'Fehlende Datei. Bitte laden Sie eine gültige .zip-Datei hoch.';
 $string['cancelimport'] = 'Sie haben das Kompetenzformular abgebrochen.';
 $string['importsuccess'] = 'Sie haben die Plugin-Daten erfolgreich importiert.';
+$string['allusers'] = 'Alle Benutzer';
+$string['selectauser'] = 'Benutzer auswählen';
+$string['viewinguser'] = 'Benutzer anzeigen: {$a}';
+$string['nocompetencies'] = 'Für diesen Kurs wurden keine Kompetenzen definiert.';
+
+// UI Actions
+$string['cancel'] = 'Abbrechen';
+$string['close'] = 'Schließen';
+$string['create'] = 'Erstellen';
+$string['update'] = 'Aktualisieren';
+$string['save'] = 'Speichern';
+$string['delete'] = 'Löschen';
+$string['edit'] = 'Bearbeiten';
+$string['search'] = 'Suchen';
+$string['remove'] = 'Entfernen';
+
+// Competency Management
+$string['children'] = 'Untergeordnete';
+$string['addsubcompetency'] = 'Unterkompetenz hinzufügen';
+$string['editselectedcompetency'] = 'Ausgewählte Kompetenz bearbeiten';
+$string['deleteselectedcompetency'] = 'Ausgewählte Kompetenz löschen';
+
+// Toast Messages
+$string['dataloaded'] = 'Gradebook XP Daten geladen';
+$string['dataloadfailed'] = 'Fehler beim Laden der Gradebook XP Daten';
+$string['competencycreated'] = 'Kompetenz "{$a}" erstellt';
+$string['competencyupdated'] = 'Kompetenz "{$a}" aktualisiert';
+$string['competencydeleted'] = 'Kompetenz "{$a}" gelöscht';
+$string['competencycreatefailed'] = 'Fehler beim Erstellen der Kompetenz';
+$string['competencyupdatefailed'] = 'Fehler beim Aktualisieren der Kompetenz';
+$string['competencydeletefailed'] = 'Fehler beim Löschen der Kompetenz';
+$string['connectioncreated'] = '"{$a->competency}" mit Aktivität "{$a->activity}" verbunden';
+$string['connectiondeleted'] = '"{$a->competency}" von Aktivität "{$a->activity}" getrennt';
+$string['connectioncreatefailed'] = 'Fehler beim Erstellen der Verbindung';
+$string['connectiondeletefailed'] = 'Fehler beim Löschen der Verbindung';
+$string['relationcreated'] = 'Kompetenzrelation erstellt';
+$string['relationdeleted'] = 'Kompetenzrelation gelöscht';
+$string['relationcreatefailed'] = 'Fehler beim Erstellen der Relation';
+$string['relationdeletefailed'] = 'Fehler beim Löschen der Relation';
+
+// Relations
+$string['addparents'] = 'Übergeordnete hinzufügen';
+$string['addchildren'] = 'Untergeordnete hinzufügen';
+$string['addactivities'] = 'Aktivitäten hinzufügen';
+$string['noparentcompetencies'] = 'Keine übergeordneten Kompetenzen';
+$string['nochildcompetencies'] = 'Keine untergeordneten Kompetenzen';
+$string['noconnectedactivities'] = 'Keine verbundenen Aktivitäten';
+$string['selectcompetencies'] = 'Kompetenzen auswählen, um sie als {$a} hinzuzufügen:';
+$string['selectactivities'] = 'Aktivitäten zum Verbinden auswählen:';
+$string['searchcompetencies'] = 'Kompetenzen suchen...';
+$string['searchactivities'] = 'Aktivitäten suchen...';
+$string['addselected'] = 'Ausgewählte hinzufügen';
+$string['noitemsfound'] = 'Keine Einträge gefunden';
+
+// Confirm Dialog
+$string['confirmdelete'] = 'Löschen bestätigen';
+$string['confirmdeletemessage'] = 'Möchten Sie die Kompetenz "{$a}" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.';
+$string['confirmaction'] = 'Bestätigen';
+
+// Breadcrumb
+$string['root'] = 'Wurzel';
+
+// List Items
+$string['maxlevel'] = 'Max. Stufe';
+$string['levelsummed'] = 'Stufe summiert';
+
+// Competency Form
+$string['createandedit'] = 'Erstellen und Bearbeiten';
+$string['saving'] = 'Speichern...';
+$string['creating'] = 'Erstellen...';
+$string['updating'] = 'Aktualisieren...';
+$string['islevelsummed'] = 'Stufe wird summiert';
+$string['nochildcompetenciesfound'] = 'Keine untergeordneten Kompetenzen für "{$a}" gefunden.';
+
+// Search
+$string['searchplaceholder'] = 'Kompetenzen suchen';
+$string['mincharacters'] = 'mind. 3 Zeichen';
+
+// Export
+$string['exportdata'] = 'Exportieren';
+$string['exportalldata'] = 'Alle Daten als JSON exportieren';
+
+// Loading
+$string['loadingcompetencies'] = 'Kompetenzen werden geladen...';
+
+// Empty States
+$string['nocompetenciesfound'] = 'Keine Kompetenzen gefunden';
+$string['addfirstcompetency'] = 'Fügen Sie Ihre erste Kompetenz hinzu';

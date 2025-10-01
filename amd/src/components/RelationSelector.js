@@ -21,6 +21,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+import {useStrings} from 'gradereport_gb_xp_admin/hooks/useStrings';
+
 /**
  * Fuzzy search implementation.
  * Returns true if searchTerm characters appear in text in order (case-insensitive).
@@ -74,6 +76,7 @@ export const RelationSelector = ({
     idPrefix
 }) => {
     const {createElement, useState} = window.React;
+    const {str} = useStrings();
     const [searchTerm, setSearchTerm] = useState('');
 
     // Filter items based on fuzzy search
@@ -126,24 +129,24 @@ export const RelationSelector = ({
                 createElement('div', {
                     key: 'no-results',
                     className: 'text-muted small text-center py-2'
-                }, 'No items found')
+                }, str('noitemsfound'))
         ),
 
         // Action buttons
-        createElement('div', {key: 'selector-buttons', className: 'd-flex gap-2'}, [
+        createElement('div', {key: 'selector-buttons', className: 'd-flex'}, [
             createElement('button', {
                 key: 'add',
                 type: 'button',
-                className: 'btn btn-sm btn-success',
+                className: 'btn btn-sm btn-success mr-2',
                 onClick: onAdd,
                 disabled: selectedIds.length === 0
-            }, 'Add Selected'),
+            }, str('addselected')),
             createElement('button', {
                 key: 'cancel',
                 type: 'button',
                 className: 'btn btn-sm btn-secondary',
                 onClick: onCancel
-            }, 'Cancel')
+            }, str('cancel'))
         ])
     ]);
 };

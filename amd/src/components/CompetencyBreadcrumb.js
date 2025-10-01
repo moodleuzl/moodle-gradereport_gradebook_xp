@@ -21,6 +21,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+import {useStrings} from 'gradereport_gb_xp_admin/hooks/useStrings';
+
 /**
  * CompetencyBreadcrumb component displays navigation trail.
  *
@@ -32,6 +34,7 @@
  */
 export const CompetencyBreadcrumb = ({breadcrumbPath, onNavigate, showEllipsis = true}) => {
     const {createElement} = window.React;
+    const {str} = useStrings();
 
     if (!breadcrumbPath || breadcrumbPath.length === 0) {
         return createElement('nav', {
@@ -43,7 +46,7 @@ export const CompetencyBreadcrumb = ({breadcrumbPath, onNavigate, showEllipsis =
                     key: 'root',
                     className: 'breadcrumb-item active',
                     'aria-current': 'page'
-                }, 'Root Competencies')
+                }, str('root'))
             ])
         ]);
     }
@@ -65,7 +68,7 @@ export const CompetencyBreadcrumb = ({breadcrumbPath, onNavigate, showEllipsis =
                         e.preventDefault();
                         onNavigate(null);
                     }
-                }, 'Root')
+                }, str('root'))
             ]),
             // Show ellipsis for abbreviated paths
             ...(isAbbreviated ? [

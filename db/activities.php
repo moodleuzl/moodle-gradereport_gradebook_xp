@@ -46,8 +46,9 @@ function get_all_assignments($courseid) {
 
     // SQL query to get all assignment records for the specified course.
     return $DB->get_records_sql("
-        SELECT cm.id, cm.course, a.name, a.intro, 'assign' AS module
+        SELECT cm.id, cm.course, cm.section, s.name AS section_name, a.name, a.intro, 'assign' AS module
         FROM {course_modules} cm
+        INNER JOIN {course_sections} s ON cm.section = s.id
         INNER JOIN {modules} m ON cm.module = m.id
         INNER JOIN {assign} a ON cm.instance = a.id
         WHERE cm.course = ?
@@ -74,8 +75,9 @@ function get_all_quizzes($courseid) {
 
     // SQL query to get all quiz records for the specified course.
     return $DB->get_records_sql("
-        SELECT cm.id, cm.course, q.name, q.intro, 'quiz' AS module
+        SELECT cm.id, cm.course, cm.section, s.name AS section_name, q.name, q.intro, 'quiz' AS module
         FROM {course_modules} cm
+        INNER JOIN {course_sections} s ON cm.section = s.id
         INNER JOIN {modules} m ON cm.module = m.id
         INNER JOIN {quiz} q ON cm.instance = q.id
         WHERE cm.course = ?
@@ -102,8 +104,9 @@ function get_all_vpls($courseid) {
 
     // SQL query to get all VPL records for the specified course.
     return $DB->get_records_sql("
-        SELECT cm.id, cm.course, v.name, v.intro, 'vpl' AS module
+        SELECT cm.id, cm.course, cm.section, s.name AS section_name, v.name, v.intro, 'vpl' AS module
         FROM {course_modules} cm
+        INNER JOIN {course_sections} s ON cm.section = s.id
         INNER JOIN {modules} m ON cm.module = m.id
         INNER JOIN {vpl} v ON cm.instance = v.id
         WHERE cm.course = ?

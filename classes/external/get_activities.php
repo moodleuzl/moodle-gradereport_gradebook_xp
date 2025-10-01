@@ -79,6 +79,7 @@ class get_activities extends external_api {
             $result[] = [
                 'id' => $activity->id,
                 'courseid' => $activity->course,
+                'section_name' => $activity->section_name,
                 'name' => $activity->name,
                 'intro' => $activity->intro,
                 'module' => $activity->module
@@ -98,6 +99,7 @@ class get_activities extends external_api {
             new external_single_structure([
                 'id' => new external_value(PARAM_INT, 'Activity ID'),
                 'courseid' => new external_value(PARAM_INT, 'Course ID'),
+                'section_name' => new external_value(PARAM_TEXT, 'Section name'),
                 'name' => new external_value(PARAM_TEXT, 'Activity name'),
                 'intro' => new external_value(PARAM_RAW, 'Activity introduction'),
                 'module' => new external_value(PARAM_TEXT, 'Module type')

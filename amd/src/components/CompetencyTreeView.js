@@ -22,6 +22,7 @@
  */
 
 import {useCompetencyStore} from 'gradereport_gb_xp_admin/hooks/useCompetencyStore';
+import {useStrings} from 'gradereport_gb_xp_admin/hooks/useStrings';
 import {CompetencyBreadcrumb} from 'gradereport_gb_xp_admin/components/CompetencyBreadcrumb';
 import {CompetencyListItem} from 'gradereport_gb_xp_admin/components/CompetencyListItem';
 import {EditCompetency} from 'gradereport_gb_xp_admin/components/EditCompetency';
@@ -33,8 +34,9 @@ import {ConfirmDialog} from 'gradereport_gb_xp_admin/components/ConfirmDialog';
  * @returns {Object} React element
  */
 export const CompetencyTreeView = () => {
-    const {createElement, useState} = window.React;
-    const {competencies, relations, deleteCompetency} = useCompetencyStore();
+    const {createElement, useState, useEffect, useRef} = window.React;
+    const {competencies, relations, connections, activities, deleteCompetency} = useCompetencyStore();
+    const {str} = useStrings();
 
     const [selectedCompetency, setSelectedCompetency] = useState(null);
     const [breadcrumbPath, setBreadcrumbPath] = useState([]);
@@ -44,6 +46,7 @@ export const CompetencyTreeView = () => {
     const [confirmDialog, setConfirmDialog] = useState({show: false, competencyId: null, competencyName: ''});
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
+    const searchRef = useRef(null);
 
     // Get root competencies (those without parents)
     const getRootCompetencies = () => {
@@ -55,11 +58,6 @@ export const CompetencyTreeView = () => {
     const getChildCompetencies = (parentId) => {
         const childRelations = relations.filter(rel => rel.parentid === parentId);
         return childRelations.map(rel => competencies.find(c => c.id === rel.childid)).filter(Boolean);
-    };
-
-    // Get count of children for a competency
-    const getChildCount = (competencyId) => {
-        return relations.filter(rel => rel.parentid === competencyId).length;
     };
 
     // Get competencies to display based on current selection
@@ -175,7 +173,7 @@ export const CompetencyTreeView = () => {
     const handleSearchChange = (value) => {
         setSearchTerm(value);
 
-        if (value.length >= 3) {
+        if (value.length >= 1) {
             // Perform fuzzy search
             const results = competencies.filter(comp =>
                 fuzzyMatch(comp.name, value) ||
@@ -197,19 +195,64 @@ export const CompetencyTreeView = () => {
         setSearchResults([]);
     };
 
+    // Close search on ESC key or click outside
+    useEffect(() => {
+        const handleEscape = (e) => {
+            if (e.key === 'Escape' && searchResults.length > 0) {
+                setSearchResults([]);
+            }
+        };
+
+        const handleClickOutside = (e) => {
+            if (searchRef.current && !searchRef.current.contains(e.target) && searchResults.length > 0) {
+                setSearchResults([]);
+            }
+        };
+
+        document.addEventListener('keydown', handleEscape);
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [searchResults]);
+
+    // Handle export data as JSON
+    const handleExportData = () => {
+        const exportData = {
+            competencies: competencies,
+            relations: relations,
+            connections: connections,
+            activities: activities,
+            exportDate: new Date().toISOString()
+        };
+
+        const jsonString = JSON.stringify(exportData, null, 2);
+        const blob = new Blob([jsonString], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `competency-export-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
     const displayedCompetencies = getDisplayedCompetencies();
 
     // Show empty state
     if (!competencies.length) {
         return createElement('div', {}, [
             createElement('div', {key: 'empty-state', className: 'text-center py-5'}, [
-                createElement('h4', {key: 'no-data', className: 'text-muted mb-3'}, 'No competencies found'),
+                createElement('h4', {key: 'no-data', className: 'text-muted mb-3'}, str('nocompetenciesfound')),
                 createElement('button', {
                     key: 'add-first',
                     type: 'button',
                     className: 'btn btn-primary',
                     onClick: handleAddCompetency
-                }, 'Add Your First Competency')
+                }, str('addfirstcompetency'))
             ]),
             createElement(EditCompetency, {
                 key: 'edit-modal',
@@ -220,77 +263,94 @@ export const CompetencyTreeView = () => {
         ]);
     }
 
-    return createElement('div', {}, [
-        // Header with Search field only
-        createElement('div', {key: 'header', className: 'mb-3'}, [
+    return createElement('div', {style: {minWidth: '48em', maxWidth: '60em', margin: '0 auto'}}, [
+        // Header with title
+        createElement('h2', {key: 'page-title', className: 'mb-3'}, str('managecompetencies')),
+
+        // Search and Export row
+        createElement('div', {key: 'header', className: 'mb-3 d-flex justify-content-between align-items-start'}, [
             // Search field
-            createElement('div', {key: 'search', className: 'position-relative', style: {maxWidth: '400px'}}, [
-                createElement('input', {
-                    key: 'search-input',
-                    type: 'text',
-                    className: 'form-control',
-                    placeholder: 'Search competencies (min 3 characters)...',
-                    value: searchTerm,
-                    onChange: (e) => handleSearchChange(e.target.value)
-                }),
-                // Search results dropdown
-                searchResults.length > 0 ? createElement('div', {
-                    key: 'search-results',
-                    className: 'position-absolute w-100 mt-1 bg-white border rounded shadow-sm',
-                    style: {maxHeight: '300px', overflowY: 'auto', zIndex: 1000}
-                },
-                    searchResults.map(result =>
-                        createElement('div', {
-                            key: result.id,
-                            className: 'd-flex justify-content-between align-items-center p-2 border-bottom',
-                            style: {cursor: 'pointer'},
-                            onMouseEnter: (e) => {
-                                e.currentTarget.style.backgroundColor = '#f8f9fa';
-                            },
-                            onMouseLeave: (e) => {
-                                e.currentTarget.style.backgroundColor = 'white';
-                            }
-                        }, [
+            createElement('div',
+                {key: 'search', ref: searchRef, className: 'position-relative', style: {maxWidth: '400px', flex: '1'}},
+                [
+                    createElement('input', {
+                        key: 'search-input',
+                        type: 'text',
+                        className: 'form-control',
+                        placeholder: str('searchplaceholder'),
+                        value: searchTerm,
+                        onChange: (e) => handleSearchChange(e.target.value)
+                    }),
+                    // Search results dropdown
+                    searchResults.length > 0 ? createElement('div', {
+                            key: 'search-results',
+                            className: 'position-absolute w-100 mt-1 bg-white border rounded shadow-sm',
+                            style: {maxHeight: '300px', overflowY: 'auto', zIndex: 1000}
+                        },
+                        searchResults.map(result =>
                             createElement('div', {
-                                key: 'name',
-                                className: 'flex-grow-1',
-                                onClick: () => handleSearchResultClick(result)
+                                key: result.id,
+                                className: 'd-flex justify-content-between align-items-center p-2 border-bottom',
+                                style: {cursor: 'pointer'},
+                                onMouseEnter: (e) => {
+                                    e.currentTarget.style.backgroundColor = '#f8f9fa';
+                                },
+                                onMouseLeave: (e) => {
+                                    e.currentTarget.style.backgroundColor = 'white';
+                                }
                             }, [
-                                createElement('div', {key: 'title', className: 'fw-bold'}, result.name),
-                                result.description ? createElement('div', {
-                                    key: 'desc',
-                                    className: 'small text-muted'
-                                }, result.description.substring(0, 60) + (result.description.length > 60 ? '...' : '')) : null
-                            ]),
-                            createElement('div', {key: 'actions', className: 'd-flex gap-1'}, [
-                                createElement('button', {
-                                    key: 'edit',
-                                    type: 'button',
-                                    className: 'btn btn-sm btn-outline-primary',
-                                    onClick: (e) => {
-                                        e.stopPropagation();
-                                        handleEditCompetency(result);
-                                        setSearchTerm('');
-                                        setSearchResults([]);
-                                    },
-                                    title: 'Edit'
-                                }, 'Edit'),
-                                createElement('button', {
-                                    key: 'delete',
-                                    type: 'button',
-                                    className: 'btn btn-sm btn-outline-danger',
-                                    onClick: (e) => {
-                                        e.stopPropagation();
-                                        handleDeleteRequest(result.id);
-                                        setSearchTerm('');
-                                        setSearchResults([]);
-                                    },
-                                    title: 'Delete'
-                                }, 'Delete')
+                                createElement('div', {
+                                    key: 'name',
+                                    className: 'flex-grow-1',
+                                    onClick: () => handleSearchResultClick(result)
+                                }, [
+                                    createElement('div', {key: 'title', className: 'fw-bold'}, result.name),
+                                    result.description ? createElement('div', {
+                                        key: 'desc',
+                                        className: 'small text-muted'
+                                    }, result.description.substring(0, 60) + (result.description.length > 60 ? '...' : '')) : null
+                                ]),
+                                createElement('div', {key: 'actions', className: 'd-flex'}, [
+                                    createElement('button', {
+                                        key: 'edit',
+                                        type: 'button',
+                                        className: 'btn btn-sm btn-outline-primary mr-2',
+                                        onClick: (e) => {
+                                            e.stopPropagation();
+                                            handleEditCompetency(result);
+                                            setSearchTerm('');
+                                            setSearchResults([]);
+                                        },
+                                        title: str('edit')
+                                    }, createElement('i', {className: 'fa fa-pen'})),
+                                    createElement('button', {
+                                        key: 'delete',
+                                        type: 'button',
+                                        className: 'btn btn-sm btn-outline-danger',
+                                        onClick: (e) => {
+                                            e.stopPropagation();
+                                            handleDeleteRequest(result.id);
+                                            setSearchTerm('');
+                                            setSearchResults([]);
+                                        },
+                                        title: str('delete')
+                                    }, createElement('i', {className: 'fa fa-trash'}))
+                                ])
                             ])
-                        ])
-                    )
-                ) : null
+                        )
+                    ) : null
+                ]),
+
+            // Export button
+            createElement('button', {
+                key: 'export-button',
+                type: 'button',
+                className: 'btn btn-outline-secondary ml-3',
+                onClick: handleExportData,
+                title: str('exportalldata')
+            }, [
+                createElement('i', {key: 'icon', className: 'fa fa-download mr-2'}),
+                str('exportdata')
             ])
         ]),
 
@@ -303,28 +363,28 @@ export const CompetencyTreeView = () => {
                 showEllipsis: isAbbreviatedPath
             }),
             // Action buttons
-            createElement('div', {key: 'actions', className: 'd-flex gap-2'}, [
+            createElement('div', {key: 'actions', className: 'd-flex'}, [
                 createElement('button', {
                     key: 'add',
                     type: 'button',
-                    className: 'btn btn-sm btn-success',
+                    className: 'btn btn-sm btn-success mr-2',
                     onClick: handleAddCompetency
-                }, selectedCompetency ? 'Add Sub Competency' : 'Add Competency'),
+                }, selectedCompetency ? str('addsubcompetency') : str('addcompetency')),
                 // Edit and delete buttons for selected competency
                 selectedCompetency ? createElement('button', {
                     key: 'edit-selected',
                     type: 'button',
-                    className: 'btn btn-sm btn-outline-primary',
+                    className: 'btn btn-sm btn-outline-primary mr-2',
                     onClick: () => handleEditCompetency(selectedCompetency),
-                    title: 'Edit selected competency'
-                }, 'Edit') : null,
+                    title: str('editselectedcompetency')
+                }, createElement('i', {className: 'fa fa-pen'})) : null,
                 selectedCompetency ? createElement('button', {
                     key: 'delete-selected',
                     type: 'button',
                     className: 'btn btn-sm btn-outline-danger',
                     onClick: () => handleDeleteRequest(selectedCompetency.id),
-                    title: 'Delete selected competency'
-                }, 'Delete') : null
+                    title: str('deleteselectedcompetency')
+                }, createElement('i', {className: 'fa fa-trash'})) : null
             ])
         ]),
 
@@ -335,7 +395,6 @@ export const CompetencyTreeView = () => {
                     createElement(CompetencyListItem, {
                         key: competency.id,
                         competency: competency,
-                        childCount: getChildCount(competency.id),
                         onSelect: handleSelectCompetency,
                         onEdit: handleEditCompetency,
                         onDelete: handleDeleteRequest
@@ -345,7 +404,7 @@ export const CompetencyTreeView = () => {
         :
             createElement('div', {key: 'no-children', className: 'alert alert-info'}, [
                 createElement('p', {key: 'message', className: 'mb-0'},
-                    `No child competencies found for "${selectedCompetency?.name}".`
+                    str('nochildcompetenciesfound').replace('{$a}', selectedCompetency?.name || '')
                 ),
                 createElement('small', {key: 'hint', className: 'text-muted'},
                     'You can add child competencies by editing this competency.'
@@ -356,9 +415,8 @@ export const CompetencyTreeView = () => {
         createElement(ConfirmDialog, {
             key: 'confirm-dialog',
             show: confirmDialog.show,
-            title: 'Confirm Delete',
-            message: `Are you sure you want to delete the competency "${confirmDialog.competencyName}"?
-            This action cannot be undone.`,
+            title: str('confirmdelete'),
+            message: str('confirmdeletemessage').replace('{$a}', confirmDialog.competencyName),
             onConfirm: handleConfirmDelete,
             onCancel: handleCancelDelete
         }),

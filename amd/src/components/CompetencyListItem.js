@@ -21,19 +21,21 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+import {useStrings} from 'gradereport_gb_xp_admin/hooks/useStrings';
+
 /**
  * CompetencyListItem component displays a single competency with actions.
  *
  * @param {Object} props Component properties
  * @param {Object} props.competency The competency object
- * @param {number} props.childCount Number of child competencies
  * @param {Function} props.onSelect Callback when competency is selected
  * @param {Function} props.onEdit Callback when edit button is clicked
  * @param {Function} props.onDelete Callback when delete button is clicked
  * @returns {Object} React element
  */
-export const CompetencyListItem = ({competency, childCount, onSelect, onEdit, onDelete}) => {
+export const CompetencyListItem = ({competency, onSelect, onEdit, onDelete}) => {
     const {createElement} = window.React;
+    const {str} = useStrings();
 
     return createElement('div', {
         className: 'list-group-item list-group-item-action',
@@ -50,39 +52,33 @@ export const CompetencyListItem = ({competency, childCount, onSelect, onEdit, on
                 onClick: () => onSelect(competency),
                 style: {cursor: 'pointer'}
             }, [
-                createElement('div', {key: 'header', className: 'd-flex align-items-center gap-2'}, [
-                    createElement('h5', {key: 'name', className: 'mb-1'}, competency.name),
-                    childCount > 0 ? createElement('span', {
-                        key: 'badge',
-                        className: 'badge bg-secondary'
-                    }, `${childCount} ${childCount === 1 ? 'child' : 'children'}`) : null
-                ]),
+                createElement('h5', {key: 'name', className: 'mb-1'}, competency.name),
                 competency.description ? createElement('p', {
                     key: 'description',
                     className: 'mb-1 text-muted small'
                 }, competency.description) : null,
                 createElement('small', {key: 'meta', className: 'text-muted'}, [
-                    `Max Level: ${competency.maxcomlvl}`,
-                    competency.islevelsummed === 1 ? ' • Level Summed' : ''
+                    `${str('maxlevel')}: ${competency.maxcomlvl}`,
+                    competency.islevelsummed === 1 ? ` • ${str('levelsummed')}` : ''
                 ])
             ]),
 
             // Right side - action buttons
             createElement('div', {
                 key: 'actions',
-                className: 'd-flex gap-2 ms-3',
+                className: 'd-flex ml-3',
                 style: {flexShrink: 0}
             }, [
                 createElement('button', {
                     key: 'edit',
                     type: 'button',
-                    className: 'btn btn-sm btn-outline-primary',
+                    className: 'btn btn-sm btn-outline-primary mr-2',
                     onClick: (e) => {
                         e.stopPropagation();
                         onEdit(competency);
                     },
-                    title: 'Edit competency'
-                }, 'Edit'),
+                    title: str('editcompetency')
+                }, createElement('i', {className: 'fa fa-pen'})),
                 createElement('button', {
                     key: 'delete',
                     type: 'button',
@@ -91,8 +87,8 @@ export const CompetencyListItem = ({competency, childCount, onSelect, onEdit, on
                         e.stopPropagation();
                         onDelete(competency.id);
                     },
-                    title: 'Delete competency'
-                }, 'Delete')
+                    title: str('deletecompetency')
+                }, createElement('i', {className: 'fa fa-trash'}))
             ])
         ])
     ]);

@@ -22,6 +22,7 @@
  */
 
 import {useCompetencyStore} from 'gradereport_gb_xp_admin/hooks/useCompetencyStore';
+import {useStrings} from 'gradereport_gb_xp_admin/hooks/useStrings';
 import {RelationManager} from 'gradereport_gb_xp_admin/components/RelationManager';
 
 /**
@@ -36,6 +37,7 @@ import {RelationManager} from 'gradereport_gb_xp_admin/components/RelationManage
  */
 export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
     const {createElement, useState, useEffect} = window.React;
+    const {str} = useStrings();
     const {
         createCompetency,
         updateCompetency,
@@ -58,18 +60,21 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
         islevelsummed: 1
     });
 
+    const [originalFormData, setOriginalFormData] = useState(null);
     const [saving, setSaving] = useState(false);
     const [createdCompetency, setCreatedCompetency] = useState(null);
 
     // Update form data when competency prop changes
     useEffect(() => {
         if (show) {
-            setFormData({
+            const initialData = {
                 name: competency?.name || '',
                 description: competency?.description || '',
                 maxcomlvl: competency?.maxcomlvl || 1,
                 islevelsummed: competency?.islevelsummed || 1
-            });
+            };
+            setFormData(initialData);
+            setOriginalFormData(initialData);
             // Reset createdCompetency when modal is reopened
             setCreatedCompetency(null);
         }
@@ -82,13 +87,21 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
     // Use createdCompetency if it exists (after creation), otherwise use competency prop
     const activeCompetency = createdCompetency || competency;
     const isEditing = !!activeCompetency;
-    const modalTitle = isEditing ? 'Edit Competency' : 'Create New Competency';
+    const modalTitle = isEditing ? str('editcompetency') : str('newcompetency');
+
+    // Check if form has been changed (only for basic fields)
+    const hasChanges = originalFormData && (
+        formData.name !== originalFormData.name ||
+        formData.description !== originalFormData.description ||
+        formData.maxcomlvl !== originalFormData.maxcomlvl ||
+        formData.islevelsummed !== originalFormData.islevelsummed
+    );
 
     const handleChange = (field, value) => {
         setFormData(prev => ({...prev, [field]: value}));
     };
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async(e, shouldClose = false) => {
         e.preventDefault();
 
         try {
@@ -96,6 +109,8 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
 
             if (isEditing) {
                 await updateCompetency({...formData, id: activeCompetency.id});
+                // Update original form data to reflect saved state
+                setOriginalFormData({...formData});
                 onClose();
             } else {
                 // Create new competency
@@ -109,10 +124,22 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                     });
                 }
 
-                // Store the created competency to switch to edit mode
-                setCreatedCompetency(newCompetency);
-
-                // Modal stays open in edit mode (don't call onClose)
+                if (shouldClose) {
+                    // Close modal after creation
+                    onClose();
+                } else {
+                    // Store the created competency to switch to edit mode
+                    setCreatedCompetency(newCompetency);
+                    // Update original form data and form data to match new competency
+                    const newFormData = {
+                        name: newCompetency.name,
+                        description: newCompetency.description,
+                        maxcomlvl: newCompetency.maxcomlvl,
+                        islevelsummed: newCompetency.islevelsummed
+                    };
+                    setFormData(newFormData);
+                    setOriginalFormData(newFormData);
+                }
             }
         } catch (error) {
             // Error handling is done in the store
@@ -298,7 +325,7 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                                 createElement('div', {key: 'left-col', className: 'col-md-6'}, [
                                     // Name Field
                                     createElement('div', {key: 'name-field', className: 'mb-3'}, [
-                                        createElement('label', {key: 'name-label', className: 'form-label'}, 'Name *'),
+                                        createElement('label', {key: 'name-label', className: 'form-label'}, str('name') + ' *'),
                                         createElement('input', {
                                             key: 'name-input',
                                             type: 'text',
@@ -315,7 +342,7 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                                         createElement('label', {
                                             key: 'description-label',
                                             className: 'form-label'
-                                        }, 'Description'),
+                                        }, str('description')),
                                         createElement('textarea', {
                                             key: 'description-input',
                                             className: 'form-control',
@@ -331,7 +358,7 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                                         createElement('label', {
                                             key: 'maxlevel-label',
                                             className: 'form-label'
-                                        }, 'Maximum Level *'),
+                                        }, str('maxcomlvl') + ' *'),
                                         createElement('input', {
                                             key: 'maxlevel-input',
                                             type: 'number',
@@ -360,7 +387,7 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                                                 key: 'levelsummed-label',
                                                 className: 'form-check-label',
                                                 htmlFor: 'islevelsummed'
-                                            }, 'Is Level Summed')
+                                            }, str('islevelsummed'))
                                         ])
                                     ])
                                 ]),
@@ -370,17 +397,17 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                                     // Parent Competencies Section
                                     createElement(RelationManager, {
                                         key: 'parents-manager',
-                                        title: 'Parent Competencies',
-                                        addButtonText: 'Add Parents',
+                                        title: str('parent') + ' ' + str('children'),
+                                        addButtonText: str('addparents'),
                                         addButtonClass: 'btn-outline-primary',
                                         currentItems: currentParents,
                                         availableItems: getAvailableParents(),
                                         onAdd: handleAddParents,
                                         onRemove: handleRemoveParent,
                                         renderItem: (item) => item.name,
-                                        emptyMessage: 'No parent competencies',
-                                        selectorTitle: 'Select competencies to add as parents:',
-                                        searchPlaceholder: 'Search competencies...',
+                                        emptyMessage: str('noparentcompetencies'),
+                                        selectorTitle: str('selectcompetencies').replace('{$a}', str('parent').toLowerCase()),
+                                        searchPlaceholder: str('searchcompetencies'),
                                         idPrefix: 'parent',
                                         disabled: saving
                                     }),
@@ -388,17 +415,17 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                                     // Child Competencies Section
                                     createElement(RelationManager, {
                                         key: 'children-manager',
-                                        title: 'Child Competencies',
-                                        addButtonText: 'Add Children',
+                                        title: str('children'),
+                                        addButtonText: str('addchildren'),
                                         addButtonClass: 'btn-outline-primary',
                                         currentItems: currentChildren,
                                         availableItems: getAvailableChildren(),
                                         onAdd: handleAddChildren,
                                         onRemove: handleRemoveChild,
                                         renderItem: (item) => item.name,
-                                        emptyMessage: 'No child competencies',
-                                        selectorTitle: 'Select competencies to add as children:',
-                                        searchPlaceholder: 'Search competencies...',
+                                        emptyMessage: str('nochildcompetencies'),
+                                        selectorTitle: str('selectcompetencies').replace('{$a}', str('children').toLowerCase()),
+                                        searchPlaceholder: str('searchcompetencies'),
                                         idPrefix: 'child',
                                         disabled: saving
                                     }),
@@ -406,8 +433,8 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                                     // Connected Activities Section
                                     createElement(RelationManager, {
                                         key: 'activities-manager',
-                                        title: 'Connected Activities',
-                                        addButtonText: 'Add Activities',
+                                        title: str('connections') + ' ' + str('activities'),
+                                        addButtonText: str('addactivities'),
                                         addButtonClass: 'btn-outline-success',
                                         currentItems: currentConnections,
                                         availableItems: getAvailableActivities(),
@@ -425,9 +452,9 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                                                 return `Unknown (${item.id})`;
                                             }
                                         },
-                                        emptyMessage: 'No connected activities',
-                                        selectorTitle: 'Select activities to connect:',
-                                        searchPlaceholder: 'Search activities...',
+                                        emptyMessage: str('noconnectedactivities'),
+                                        selectorTitle: str('selectactivities'),
+                                        searchPlaceholder: str('searchactivities'),
                                         idPrefix: 'activity',
                                         disabled: saving
                                     })
@@ -437,19 +464,39 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
 
                         // Modal Footer with Buttons
                         createElement('div', {key: 'modal-footer', className: 'modal-footer'}, [
+                            // Cancel/Close button
                             createElement('button', {
                                 key: 'cancel',
                                 type: 'button',
                                 className: 'btn btn-secondary',
                                 onClick: handleClose,
                                 disabled: saving
-                            }, 'Cancel'),
-                            createElement('button', {
-                                key: 'save',
+                            }, isEditing ? (hasChanges ? str('cancel') : str('close')) : str('cancel')),
+
+                            // Create mode: Create button (closes modal)
+                            !isEditing ? createElement('button', {
+                                key: 'create',
+                                type: 'button',
+                                className: 'btn btn-primary mr-2',
+                                onClick: (e) => handleSubmit(e, true),
+                                disabled: saving
+                            }, saving ? str('creating') : str('create')) : null,
+
+                            // Create mode: Create and Edit button (stays open)
+                            !isEditing ? createElement('button', {
+                                key: 'create-edit',
+                                type: 'submit',
+                                className: 'btn btn-success',
+                                disabled: saving
+                            }, saving ? str('creating') : str('createandedit')) : null,
+
+                            // Edit mode: Update button (disabled if no changes)
+                            isEditing ? createElement('button', {
+                                key: 'update',
                                 type: 'submit',
                                 className: 'btn btn-primary',
-                                disabled: saving
-                            }, saving ? 'Saving...' : (isEditing ? 'Update' : 'Create'))
+                                disabled: saving || !hasChanges
+                            }, saving ? str('updating') : str('update')) : null
                         ])
                     ])
                 ])

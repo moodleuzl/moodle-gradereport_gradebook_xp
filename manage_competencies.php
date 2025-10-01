@@ -52,17 +52,17 @@ $PAGE->requires->jquery();
 
 print_grade_page_head(
     $courseid, 'report', 'gb_xp_admin',
-    'Competency Management', false, '', false);
+    false, false, '', false);
 
 echo $OUTPUT->render_from_template('gradereport_gb_xp_admin/manage_competencies', [
-//    'react_url' => (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/react.production.min.js'))->out(),
-    'react_url' => (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/react.development.js'))->out(),
-//    'react_dom_url' => (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/react-dom.production.min.js'))->out(),
-    'react_dom_url' => (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/react-dom.development.js'))->out(),
+    'react_url' => (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/react.production.min.js'))->out(),
+//    'react_url' => (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/react.development.js'))->out(),
+    'react_dom_url' => (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/react-dom.production.min.js'))->out(),
+//    'react_dom_url' => (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/react-dom.development.js'))->out(),
 
 ]);
 
-$PAGE->requires->js_call_amd('gradereport_gb_xp_admin/react_app', 'init', [
+$PAGE->requires->js_call_amd('gradereport_gb_xp_admin/competency_manager', 'init', [
     'containerId' => "gradebook-xp-manage-react-app-container",
     [
         'courseid' => $courseid,

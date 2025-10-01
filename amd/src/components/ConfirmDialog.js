@@ -21,6 +21,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+import {useStrings} from 'gradereport_gb_xp_admin/hooks/useStrings';
+
 /**
  * Confirm dialog component using Bootstrap modal.
  *
@@ -34,6 +36,7 @@
  */
 export const ConfirmDialog = ({show, title, message, onConfirm, onCancel}) => {
     const {createElement} = window.React;
+    const {str} = useStrings();
 
     if (!show) {
         return null;
@@ -61,13 +64,13 @@ export const ConfirmDialog = ({show, title, message, onConfirm, onCancel}) => {
                         type: 'button',
                         className: 'btn btn-secondary',
                         onClick: onCancel
-                    }, 'Cancel'),
+                    }, str('cancel')),
                     createElement('button', {
                         key: 'confirm',
                         type: 'button',
                         className: 'btn btn-danger',
                         onClick: onConfirm
-                    }, 'Delete')
+                    }, str('delete'))
                 ])
             ])
         ])
