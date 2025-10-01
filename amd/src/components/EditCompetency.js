@@ -397,7 +397,7 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                                     // Parent Competencies Section
                                     createElement(RelationManager, {
                                         key: 'parents-manager',
-                                        title: str('parent') + ' ' + str('children'),
+                                        title: str('parent'),
                                         addButtonText: str('addparents'),
                                         addButtonClass: 'btn-outline-primary',
                                         currentItems: currentParents,
