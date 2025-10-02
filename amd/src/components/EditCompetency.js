@@ -465,13 +465,19 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                         // Modal Footer with Buttons
                         createElement('div', {key: 'modal-footer', className: 'modal-footer'}, [
                             // Cancel/Close button
-                            createElement('button', {
-                                key: 'cancel',
-                                type: 'button',
-                                className: 'btn btn-secondary',
-                                onClick: handleClose,
-                                disabled: saving
-                            }, isEditing ? (hasChanges ? str('cancel') : str('close')) : str('cancel')),
+                            (() => {
+                                let buttonText = str('cancel');
+                                if (isEditing && !hasChanges) {
+                                    buttonText = str('close');
+                                }
+                                return createElement('button', {
+                                    key: 'cancel',
+                                    type: 'button',
+                                    className: 'btn btn-secondary',
+                                    onClick: handleClose,
+                                    disabled: saving
+                                }, buttonText);
+                            })(),
 
                             // Create mode: Create button (closes modal)
                             !isEditing ? createElement('button', {

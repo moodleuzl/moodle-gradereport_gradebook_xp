@@ -49,7 +49,7 @@ export const CompetencyProvider = ({children, courseid}) => {
 
     // Load all data on mount
     useEffect(() => {
-        const loadAllData = async () => {
+        const loadAllData = async() => {
             try {
                 setLoading(true);
                 const [competenciesData, activitiesData, connectionsData, relationsData] = await Promise.all([
@@ -76,8 +76,7 @@ export const CompetencyProvider = ({children, courseid}) => {
     }, [courseid]);
 
     // Competency operations
-    const createCompetency = useCallback(async (competencyData) => {
-        // TODO: check for cycles in relations of competencies.
+    const createCompetency = useCallback(async(competencyData) => {
         try {
             const newCompetency = await ApiService.createCompetency({...competencyData, courseid});
             setCompetencies(prev => [...prev, newCompetency]);
@@ -89,8 +88,7 @@ export const CompetencyProvider = ({children, courseid}) => {
         }
     }, [courseid]);
 
-    const updateCompetency = useCallback(async (competencyData) => {
-        // TODO: check for cycles in relations of competencies.
+    const updateCompetency = useCallback(async(competencyData) => {
         try {
             const updatedCompetency = await ApiService.updateCompetency(competencyData);
             setCompetencies(prev =>
@@ -104,7 +102,7 @@ export const CompetencyProvider = ({children, courseid}) => {
         }
     }, []);
 
-    const deleteCompetency = useCallback(async (competencyId) => {
+    const deleteCompetency = useCallback(async(competencyId) => {
         const competency = competencies.find(c => c.id === competencyId);
         const competencyName = competency?.name || 'Unknown';
 
@@ -129,7 +127,7 @@ export const CompetencyProvider = ({children, courseid}) => {
     }, [competencies, courseid]);
 
     // Connection operations
-    const createConnection = useCallback(async ({competencyid, activityid, level = 1}) => {
+    const createConnection = useCallback(async({competencyid, activityid, level = 1}) => {
         try {
             const newConnection = await ApiService.createConnection({
                 competencyid,
@@ -149,7 +147,7 @@ export const CompetencyProvider = ({children, courseid}) => {
         }
     }, [courseid, competencies, activities]);
 
-    const deleteConnection = useCallback(async (connectionId) => {
+    const deleteConnection = useCallback(async(connectionId) => {
         const connection = connections.find(c => c.id === connectionId);
         const competency = competencies.find(c => c.id === connection?.competencyid);
         const activity = activities.find(a => a.id === connection?.activityid);
@@ -168,7 +166,7 @@ export const CompetencyProvider = ({children, courseid}) => {
     }, [connections, competencies, activities]);
 
     // Relation operations
-    const createRelation = useCallback(async (relationData) => {
+    const createRelation = useCallback(async(relationData) => {
         try {
             const newRelation = await ApiService.createRelation(relationData);
             setRelations(prev => [...prev, newRelation]);
@@ -180,7 +178,7 @@ export const CompetencyProvider = ({children, courseid}) => {
         }
     }, []);
 
-    const deleteRelation = useCallback(async (relationId) => {
+    const deleteRelation = useCallback(async(relationId) => {
         try {
             await ApiService.deleteRelation(relationId);
             setRelations(prev => prev.filter(rel => rel.id !== relationId));

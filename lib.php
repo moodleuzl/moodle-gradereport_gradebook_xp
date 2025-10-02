@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -23,10 +37,10 @@ function get_all_descendants($competencyid) {
         return []; // Return empty if competency doesn't exist.
     }
 
-    // Get all relations for the course in one query using get_relations()
+    // Get all relations for the course in one query.
     $relations = get_relations($competency->courseid);
 
-    // Build adjacency list for children (parent -> [children])
+    // Build adjacency list for children.
     $children = [];
     foreach ($relations as $relation) {
         if (!isset($children[$relation->parentid])) {
@@ -35,7 +49,7 @@ function get_all_descendants($competencyid) {
         $children[$relation->parentid][] = $relation->childid;
     }
 
-    // Traverse hierarchy using depth-first search with cycle detection
+    // Traverse hierarchy using depth-first search with cycle detection.
     $visited = [];
     $stack = [$competencyid];
 
@@ -72,10 +86,10 @@ function get_all_ancestors($competencyid) {
         return []; // Return empty if competency doesn't exist.
     }
 
-    // Get all relations for the course in one query using get_relations()
+    // Get all relations for the course in one query.
     $relations = get_relations($competency->courseid);
 
-    // Build adjacency list for parents (child -> [parents])
+    // Build adjacency list for parents.
     $parents = [];
     foreach ($relations as $relation) {
         if (!isset($parents[$relation->childid])) {
@@ -84,7 +98,7 @@ function get_all_ancestors($competencyid) {
         $parents[$relation->childid][] = $relation->parentid;
     }
 
-    // Traverse hierarchy using depth-first search with cycle detection
+    // Traverse hierarchy using depth-first search with cycle detection.
     $visited = [];
     $stack = [$competencyid];
 
@@ -114,16 +128,16 @@ function get_all_ancestors($competencyid) {
 function get_descendant_competencies($competencyid) {
     global $DB;
 
-    $descendant_ids = get_all_descendants($competencyid);
+    $descendantids = get_all_descendants($competencyid);
 
-    if (empty($descendant_ids)) {
+    if (empty($descendantids)) {
         return [];
     }
 
-    // Single query to get all descendant competency objects
-    list($in_sql, $params) = $DB->get_in_or_equal($descendant_ids);
+    // Single query to get all descendant competency objects.
+    list($insql, $params) = $DB->get_in_or_equal($descendantids);
     return $DB->get_records_select('gradereport_gb_xp_admin_competencies',
-        "id $in_sql", $params, 'id ASC');
+        "id $insql", $params, 'id ASC');
 }
 
 /**
@@ -137,43 +151,43 @@ function get_descendant_competencies($competencyid) {
 function get_ancestor_competencies($competencyid) {
     global $DB;
 
-    $ancestor_ids = get_all_ancestors($competencyid);
+    $ancestorids = get_all_ancestors($competencyid);
 
-    if (empty($ancestor_ids)) {
+    if (empty($ancestorids)) {
         return [];
     }
 
-    // Single query to get all ancestor competency objects
-    list($in_sql, $params) = $DB->get_in_or_equal($ancestor_ids);
+    // Single query to get all ancestor competency objects.
+    list($insql, $params) = $DB->get_in_or_equal($ancestorids);
     return $DB->get_records_select('gradereport_gb_xp_admin_competencies',
-        "id $in_sql", $params, 'id ASC');
+        "id $insql", $params, 'id ASC');
 }
 
 
 /**
  * Checks if a competency is a descendant of another competency.
  *
- * @param int $child_id The ID of the potential child competency.
- * @param int $parent_id The ID of the potential parent competency.
+ * @param int $childid The ID of the potential child competency.
+ * @param int $parentid The ID of the potential parent competency.
  * @return bool True if child_id is a descendant of parent_id, false otherwise.
  * @throws dml_exception
  * @package gradereport_gb_xp_admin
  */
-function is_descendant($child_id, $parent_id) {
-    $descendants = get_all_descendants($parent_id);
-    return in_array($child_id, $descendants);
+function is_descendant($childid, $parentid) {
+    $descendants = get_all_descendants($parentid);
+    return in_array($childid, $descendants);
 }
 
 /**
  * Checks if a competency is an ancestor of another competency.
  *
- * @param int $parent_id The ID of the potential parent competency.
- * @param int $child_id The ID of the potential child competency.
+ * @param int $parentid The ID of the potential parent competency.
+ * @param int $childid The ID of the potential child competency.
  * @return bool True if parent_id is an ancestor of child_id, false otherwise.
  * @throws dml_exception
  * @package gradereport_gb_xp_admin
  */
-function is_ancestor($parent_id, $child_id) {
-    $ancestors = get_all_ancestors($child_id);
-    return in_array($parent_id, $ancestors);
+function is_ancestor($parentid, $childid) {
+    $ancestors = get_all_ancestors($childid);
+    return in_array($parentid, $ancestors);
 }

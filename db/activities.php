@@ -25,9 +25,6 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-
 /**
  * Retrieves all assignments of a course visible to the user.
  *
@@ -119,7 +116,7 @@ function get_all_vpls($courseid) {
  * Retrieves all activities (assignments, quizzes, VPLs) of a course visible to the user.
  *
  * @param int $courseid The ID of the course.
- * @return array An array of all activities (assignments, quizzes, VPLs) visible to the user. Returns an empty array if none are found.
+ * @return array An array of all activities (assignments, quizzes, VPLs) visible to the user.
  * @throws dml_exception
  * @package gradereport_gb_xp_admin
  */

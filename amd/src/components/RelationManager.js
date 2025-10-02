@@ -75,7 +75,7 @@ export const RelationManager = ({
         );
     };
 
-    const handleAdd = async () => {
+    const handleAdd = async() => {
         if (selectedIds.length === 0) {
             return;
         }

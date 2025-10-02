@@ -50,7 +50,6 @@ export default class User extends UserSearch {
             instance: this.instance,
             matches: this.getDatasetSize(),
             searchterm: this.getSearchTerm(),
-            // selectall: this.selectAllResultsLink(),
         });
         replaceNodeContents(this.getHTMLElements().searchDropdown, html, js);
         // Remove aria-activedescendant when the available options change.

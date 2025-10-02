@@ -80,13 +80,13 @@ function get_relations($courseid = null) {
  */
 function insert_relation($relation) {
     global $DB;
-    
+
     // Check if this parent-child combination already exists.
     $existing = $DB->get_record('gradereport_gb_xp_admin_relations', [
         'parentid' => $relation->parentid,
         'childid' => $relation->childid
     ]);
-    
+
     if ($existing) {
         // Return existing relation ID.
         return (int)$existing->id;

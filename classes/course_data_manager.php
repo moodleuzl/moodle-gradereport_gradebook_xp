@@ -34,9 +34,9 @@ require_once(__DIR__ . '/../db/relations.php');
 require_once(__DIR__ . '/../db/connections.php');
 require_once(__DIR__ . '/../db/activities.php');
 
-require_once $CFG->libdir.'/gradelib.php';
-require_once $CFG->dirroot.'/grade/lib.php';
-require_once $CFG->dirroot.'/grade/report/user/lib.php';
+require_once($CFG->libdir.'/gradelib.php');
+require_once($CFG->dirroot.'/grade/lib.php');
+require_once($CFG->dirroot.'/grade/report/user/lib.php');
 
 /**
  * Manages and caches course-related data for competencies, relations, and connections.
@@ -63,16 +63,16 @@ class course_data_manager {
     private $connections = null;
 
     /** @var array|null 2D array for direct child relationships. is_child[x][y] = true if y is a direct child of x */
-    private $is_child = null;
+    private $ischild = null;
 
     /** @var array|null 2D array for direct parent relationships. is_parent[x][y] = true if y is a direct parent of x */
-    private $is_parent = null;
+    private $isparent = null;
 
     /** @var array|null 2D array for descendant relationships. is_descendant[x][y] = true if y is a descendant of x */
-    private $is_descendant = null;
+    private $isdescendant = null;
 
     /** @var array|null 2D array for ancestor relationships. is_ancestor[x][y] = true if y is an ancestor of x */
-    private $is_ancestor = null;
+    private $isancestor = null;
 
     /** @var \stdClass|null Cached course object */
     private $course = null;
@@ -81,7 +81,7 @@ class course_data_manager {
     private $context = null;
 
     /** @var object|null Cached user grades */
-    private $user_grades = null;
+    private $usergrades = null;
 
     /** @var array|null Cached course activities */
     private $activities = null;
@@ -96,7 +96,7 @@ class course_data_manager {
         $this->courseid = $courseid;
         $this->userid = $userid;
 
-        // Preload core data to reduce database calls
+        // Preload core data to reduce database calls.
         $this->preload_data();
     }
 
@@ -106,14 +106,14 @@ class course_data_manager {
      * @throws \dml_exception
      */
     private function preload_data(): void {
-        // Preload competencies, relations, connections, and activities
+        // Preload competencies, relations, connections, and activities.
         $this->get_competencies();
         $this->get_relations();
         $this->get_connections();
         $this->get_activities();
         $this->get_user_grades();
 
-        // Preload relationship arrays
+        // Preload relationship arrays.
         $this->preload_relationship_arrays();
     }
 
@@ -124,37 +124,37 @@ class course_data_manager {
         $competencies = $this->get_competencies();
         $relations = $this->get_relations();
 
-        // Initialize arrays
-        $this->is_child = [];
-        $this->is_parent = [];
-        $this->is_descendant = [];
-        $this->is_ancestor = [];
+        // Initialize arrays.
+        $this->ischild = [];
+        $this->isparent = [];
+        $this->isdescendant = [];
+        $this->isancestor = [];
 
-        // Initialize all combinations to false for all competency IDs
-        $competency_ids = array_keys($competencies);
-        foreach ($competency_ids as $x) {
-            foreach ($competency_ids as $y) {
-                $this->is_child[$x][$y] = false;
-                $this->is_parent[$x][$y] = false;
-                $this->is_descendant[$x][$y] = false;
-                $this->is_ancestor[$x][$y] = false;
+        // Initialize all combinations to false for all competency IDs.
+        $competencyids = array_keys($competencies);
+        foreach ($competencyids as $x) {
+            foreach ($competencyids as $y) {
+                $this->ischild[$x][$y] = false;
+                $this->isparent[$x][$y] = false;
+                $this->isdescendant[$x][$y] = false;
+                $this->isancestor[$x][$y] = false;
             }
         }
 
-        // Fill direct child/parent relationships
+        // Fill direct child/parent relationships.
         foreach ($relations as $relation) {
-            $this->is_child[$relation->parentid][$relation->childid] = true;
-            $this->is_parent[$relation->childid][$relation->parentid] = true;
+            $this->ischild[$relation->parentid][$relation->childid] = true;
+            $this->isparent[$relation->childid][$relation->parentid] = true;
         }
 
-        // Calculate descendant/ancestor relationships using transitive closure
-        foreach ($competency_ids as $x) {
-            $descendants_x = $this->get_descendants($x);
-            $ancestors_x = $this->get_ancestors($x);
-            foreach ($competency_ids as $y) {
+        // Calculate descendant/ancestor relationships using transitive closure.
+        foreach ($competencyids as $x) {
+            $descendantsx = $this->get_descendants($x);
+            $ancestorsx = $this->get_ancestors($x);
+            foreach ($competencyids as $y) {
                 if ($x != $y) {
-                    $this->is_descendant[$x][$y] = in_array($y, $descendants_x);
-                    $this->is_ancestor[$x][$y] = in_array($y, $ancestors_x);
+                    $this->isdescendant[$x][$y] = in_array($y, $descendantsx);
+                    $this->isancestor[$x][$y] = in_array($y, $ancestorsx);
                 }
             }
         }
@@ -202,9 +202,9 @@ class course_data_manager {
      */
     public function get_competencies(): array {
         if ($this->competencies === null) {
-            $competencies_raw = get_competencies($this->courseid);
+            $competenciesraw = get_competencies($this->courseid);
             $this->competencies = [];
-            foreach ($competencies_raw as $competency) {
+            foreach ($competenciesraw as $competency) {
                 $this->competencies[$competency->id] = $competency;
             }
         }
@@ -231,9 +231,9 @@ class course_data_manager {
      */
     public function get_relations(): array {
         if ($this->relations === null) {
-            $relations_raw = get_relations($this->courseid);
+            $relationsraw = get_relations($this->courseid);
             $this->relations = [];
-            foreach ($relations_raw as $relation) {
+            foreach ($relationsraw as $relation) {
                 $this->relations[$relation->id] = $relation;
             }
         }
@@ -248,9 +248,9 @@ class course_data_manager {
      */
     public function get_connections(): array {
         if ($this->connections === null) {
-            $connections_raw = get_connections($this->courseid);
+            $connectionsraw = get_connections($this->courseid);
             $this->connections = [];
-            foreach ($connections_raw as $connection) {
+            foreach ($connectionsraw as $connection) {
                 $this->connections[$connection->id] = $connection;
             }
         }
@@ -283,20 +283,20 @@ class course_data_manager {
      * @throws \dml_exception
      */
     public function get_descendants(int $competencyid): array {
-        if ($this->is_descendant !== null && isset($this->is_descendant[$competencyid])) {
+        if ($this->isdescendant !== null && isset($this->isdescendant[$competencyid])) {
             $descendants = [];
-            foreach ($this->is_descendant[$competencyid] as $descendant_id => $is_descendant) {
-                if ($is_descendant) {
-                    $descendants[] = $descendant_id;
+            foreach ($this->isdescendant[$competencyid] as $descendantid => $isdescendant) {
+                if ($isdescendant) {
+                    $descendants[] = $descendantid;
                 }
             }
             return $descendants;
         }
 
-        // Fallback to calculation if precomputed array is not available
+        // Fallback to calculation if precomputed array is not available.
         $relations = $this->get_relations();
 
-        // Build adjacency list for children (parent -> [children])
+        // Build adjacency list for children.
         $children = [];
         foreach ($relations as $relation) {
             if (!isset($children[$relation->parentid])) {
@@ -305,7 +305,7 @@ class course_data_manager {
             $children[$relation->parentid][] = $relation->childid;
         }
 
-        // Traverse hierarchy using depth-first search with cycle detection
+        // Traverse hierarchy using depth-first search with cycle detection.
         $visited = [];
         $stack = [$competencyid];
 
@@ -332,20 +332,20 @@ class course_data_manager {
      * @throws \dml_exception
      */
     public function get_ancestors(int $competencyid): array {
-        if ($this->is_ancestor !== null && isset($this->is_ancestor[$competencyid])) {
+        if ($this->isancestor !== null && isset($this->isancestor[$competencyid])) {
             $ancestors = [];
-            foreach ($this->is_ancestor[$competencyid] as $ancestor_id => $is_ancestor) {
-                if ($is_ancestor) {
-                    $ancestors[] = $ancestor_id;
+            foreach ($this->isancestor[$competencyid] as $ancestorid => $isancestor) {
+                if ($isancestor) {
+                    $ancestors[] = $ancestorid;
                 }
             }
             return $ancestors;
         }
 
-        // Fallback to calculation if precomputed array is not available
+        // Fallback to calculation if precomputed array is not available.
         $relations = $this->get_relations();
 
-        // Build adjacency list for parents (child -> [parents])
+        // Build adjacency list for parents.
         $parents = [];
         foreach ($relations as $relation) {
             if (!isset($parents[$relation->childid])) {
@@ -354,7 +354,7 @@ class course_data_manager {
             $parents[$relation->childid][] = $relation->parentid;
         }
 
-        // Traverse hierarchy using depth-first search with cycle detection
+        // Traverse hierarchy using depth-first search with cycle detection.
         $visited = [];
         $stack = [$competencyid];
 
@@ -376,46 +376,46 @@ class course_data_manager {
     /**
      * Check if one competency is a descendant of another.
      *
-     * @param int $child_id The potential child competency ID.
-     * @param int $parent_id The potential parent competency ID.
+     * @param int $childid The potential child competency ID.
+     * @param int $parentid The potential parent competency ID.
      * @return bool True if child is a descendant of parent.
      * @throws \dml_exception
      */
-    public function is_descendant(int $child_id, int $parent_id): bool {
-        return $this->is_descendant[$parent_id][$child_id] ?? false;
+    public function is_descendant(int $childid, int $parentid): bool {
+        return $this->isdescendant[$parentid][$childid] ?? false;
     }
 
     /**
      * Check if one competency is an ancestor of another.
      *
-     * @param int $parent_id The potential parent competency ID.
-     * @param int $child_id The potential child competency ID.
+     * @param int $parentid The potential parent competency ID.
+     * @param int $childid The potential child competency ID.
      * @return bool True if parent is an ancestor of child.
      */
-    public function is_ancestor(int $parent_id, int $child_id): bool {
-        return $this->is_ancestor[$child_id][$parent_id] ?? false;
+    public function is_ancestor(int $parentid, int $childid): bool {
+        return $this->isancestor[$childid][$parentid] ?? false;
     }
 
     /**
      * Check if one competency is a direct child of another.
      *
-     * @param int $child_id The potential child competency ID.
-     * @param int $parent_id The potential parent competency ID.
+     * @param int $childid The potential child competency ID.
+     * @param int $parentid The potential parent competency ID.
      * @return bool True if child is a direct child of parent.
      */
-    public function is_direct_child(int $child_id, int $parent_id): bool {
-        return $this->is_child[$parent_id][$child_id] ?? false;
+    public function is_direct_child(int $childid, int $parentid): bool {
+        return $this->ischild[$parentid][$childid] ?? false;
     }
 
     /**
      * Check if one competency is a direct parent of another.
      *
-     * @param int $parent_id The potential parent competency ID.
-     * @param int $child_id The potential child competency ID.
+     * @param int $parentid The potential parent competency ID.
+     * @param int $childid The potential child competency ID.
      * @return bool True if parent is a direct parent of child.
      */
-    public function is_direct_parent(int $parent_id, int $child_id): bool {
-        return $this->is_parent[$child_id][$parent_id] ?? false;
+    public function is_direct_parent(int $parentid, int $childid): bool {
+        return $this->isparent[$childid][$parentid] ?? false;
     }
 
     /**
@@ -426,11 +426,11 @@ class course_data_manager {
      */
     public function get_direct_children(?int $competencyid = null): array {
         if ($competencyid === null) {
-            // Get root competencies (those without parents)
+            // Get root competencies (those without parents).
             $competencies = $this->get_competencies();
             $rootcompetencies = [];
             foreach ($competencies as $competency) {
-                // Check if this competency has no parents (is a root)
+                // Check if this competency has no parents (is a root).
                 $hasparent = false;
                 $relations = $this->get_relations();
                 foreach ($relations as $relation) {
@@ -447,9 +447,9 @@ class course_data_manager {
         }
 
         $children = [];
-        if (isset($this->is_child[$competencyid])) {
-            foreach ($this->is_child[$competencyid] as $childid => $is_child) {
-                if ($is_child) {
+        if (isset($this->ischild[$competencyid])) {
+            foreach ($this->ischild[$competencyid] as $childid => $ischild) {
+                if ($ischild) {
                     $children[] = $childid;
                 }
             }
@@ -465,9 +465,9 @@ class course_data_manager {
      */
     public function get_activities(): array {
         if ($this->activities === null) {
-            $activities_raw = get_all_activities($this->courseid);
+            $activitiesraw = get_all_activities($this->courseid);
             $this->activities = [];
-            foreach ($activities_raw as $activity) {
+            foreach ($activitiesraw as $activity) {
                 $this->activities[$activity->id] = $activity;
             }
         }
@@ -497,17 +497,20 @@ class course_data_manager {
     public function get_user_grades(): ?array {
         global $USER;
 
-        if ($this->user_grades === null) {
+        if ($this->usergrades === null) {
             $course = $this->get_course();
             $context = $this->get_context();
 
-            // Get grades
+            // Get grades.
             if (!empty($course->showgrades)) {
-                $gpr = new \grade_plugin_return(['type' => 'report', 'plugin' => 'user', 'courseid' => $course->id, 'userid' => $this->userid]);
+                $gpr = new \grade_plugin_return(['type' => 'report',
+                    'plugin' => 'user',
+                    'courseid' => $course->id,
+                    'userid' => $this->userid]);
                 $report = new \gradereport_user\report\user($course->id, $gpr, $context, $this->userid);
 
                 if ($report->fill_table()) {
-                    // Process grades
+                    // Process grades.
                     $grades = [];
                     if (!empty($report->gradeitemsdata)) {
                         foreach ($report->gradeitemsdata as $rawgrade) {
@@ -524,12 +527,12 @@ class course_data_manager {
                         }
                     }
 
-                    $this->user_grades = ['grades' => $grades, 'gradeinfos' => $gradeinfos];
+                    $this->usergrades = ['grades' => $grades, 'gradeinfos' => $gradeinfos];
                 }
             }
         }
 
-        return $this->user_grades;
+        return $this->usergrades;
     }
 
     /**
@@ -544,12 +547,12 @@ class course_data_manager {
         $this->hierarchy = null;
         $this->course = null;
         $this->context = null;
-        $this->user_grades = null;
+        $this->usergrades = null;
         $this->activities = null;
-        $this->is_child = null;
-        $this->is_parent = null;
-        $this->is_descendant = null;
-        $this->is_ancestor = null;
+        $this->ischild = null;
+        $this->isparent = null;
+        $this->isdescendant = null;
+        $this->isancestor = null;
     }
 
     /**
@@ -560,7 +563,7 @@ class course_data_manager {
      * @throws \dml_exception
      */
     public function calculate_competency_data(int $competencyid): array {
-        // TODO (not for you @CLAUDE): this is a mess, clean it up
+        // TODO this is a mess, clean it up.
         $competency = $this->get_competency($competencyid);
         if (!$competency) {
             return [
@@ -571,9 +574,9 @@ class course_data_manager {
         }
 
         $connections = $this->get_competency_connections($competencyid);
-        $user_grades = $this->get_user_grades();
+        $usergrades = $this->get_user_grades();
 
-        if (!$user_grades) {
+        if (!$usergrades) {
             return [
                 'activities' => [],
                 'user_level' => 0,
@@ -581,8 +584,8 @@ class course_data_manager {
             ];
         }
 
-        $grades = $user_grades['grades'];
-        $gradeinfos = $user_grades['gradeinfos'];
+        $grades = $usergrades['grades'];
+        $gradeinfos = $usergrades['gradeinfos'];
 
         $maxreachablecompetencylevel = 0;
         $userlevel = 0;
@@ -612,14 +615,14 @@ class course_data_manager {
             $activityinfo->module = $gradeinfo->itemmodule;
             $activityinfo->level = $connection->level;
 
-            // Calculate max reachable level
+            // Calculate max reachable level.
             if ($competency->islevelsummed) {
                 $maxreachablecompetencylevel += $connection->level;
             } else {
                 $maxreachablecompetencylevel = max($maxreachablecompetencylevel, $connection->level);
             }
 
-            // Check if user passed this activity
+            // Check if user passed this activity.
             $passed = ($grade["graderaw"] != null && $grade["graderaw"] >= $gradepass);
             $activityinfo->passed = $passed;
 
@@ -634,7 +637,7 @@ class course_data_manager {
             $competencyactivities[] = $activityinfo;
         }
 
-        // Sort activities by level and passed status
+        // Sort activities by level and passed status.
         usort($competencyactivities, function ($a, $b) {
             if ($a->level == $b->level) {
                 return $a->passed === true ? -1 : 1;
@@ -643,14 +646,14 @@ class course_data_manager {
             }
         });
 
-        // Assign colors based on status
+        // Assign colors based on status.
         foreach ($competencyactivities as $activityinfo) {
             if ($activityinfo->passed) {
-                $activityinfo->color = '#0F7C09'; // Green for passed
+                $activityinfo->color = '#0F7C09'; // Green for passed.
             } else if ($activityinfo->level <= $userlevel) {
-                $activityinfo->color = '#848484'; // Grey for within level but not passed
+                $activityinfo->color = '#848484'; // Grey for within level but not passed.
             } else {
-                $activityinfo->color = '#7C0205'; // Red for above user level
+                $activityinfo->color = '#7C0205'; // Red for above user level.
             }
         }
 
@@ -669,10 +672,10 @@ class course_data_manager {
      * @throws \dml_exception
      */
     public function build_data_for_selected_competency(?int $selectedcompetencyid = null): array {
-        // Get child competencies using updated get_direct_children method
+        // Get child competencies using updated get_direct_children method.
         $childcompetencies = $this->get_direct_children($selectedcompetencyid);
 
-        // Build data for each child competency
+        // Build data for each child competency.
         $competencydata = [];
         foreach ($childcompetencies as $competencyid) {
             $competency = $this->get_competency($competencyid);
@@ -719,7 +722,6 @@ class course_data_manager {
             'data_user' => "[" . implode(",", $charcompetenciesuser) . "]",
             'data_max_reachable_level' => "[" . implode(",", $charcompetenciesmaxreachablelevel) . "]",
             'data_max_level' => "[" . implode(",", $charcompetenciesmaxlevel) . "]",
-//            'activities' => $activities,
             'chart_competencies' => array_values($chartcompetencies),
             'competencyid' => $selectedcompetencyid,
             'competencyname' => $currentcompetency ? $currentcompetency->name : null,

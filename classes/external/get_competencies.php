@@ -68,11 +68,6 @@ class get_competencies extends external_api {
         // Context validation.
         $context = context_course::instance($params['courseid']);
         self::validate_context($context);
-        // TODO remove later, just for testing
-//        require_capability('moodle/grade:view', $context);
-//        if (!has_any_capability(['moodle/grade:view', 'moodle/grade:viewall', 'moodle/grade:manage'], $context)) {
-//            throw new moodle_exception('nopermissions', 'error', '', 'view grades');
-//        }
         require_capability('gradereport/gb_xp_admin:view', $context);
 
         // Get competencies.

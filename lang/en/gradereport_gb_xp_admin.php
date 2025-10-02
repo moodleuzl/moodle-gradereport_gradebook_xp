@@ -72,7 +72,7 @@ $string['selectauser'] = 'Select a user';
 $string['viewinguser'] = 'Viewing user: {$a}';
 $string['nocompetencies'] = 'No competencies have been defined for this course.';
 
-// UI Actions
+// UI Actions.
 $string['cancel'] = 'Cancel';
 $string['close'] = 'Close';
 $string['create'] = 'Create';
@@ -83,13 +83,13 @@ $string['edit'] = 'Edit';
 $string['search'] = 'Search';
 $string['remove'] = 'Remove';
 
-// Competency Management
+// Competency Management.
 $string['children'] = 'Children';
 $string['addsubcompetency'] = 'Add Sub Competency';
 $string['editselectedcompetency'] = 'Edit selected competency';
 $string['deleteselectedcompetency'] = 'Delete selected competency';
 
-// Toast Messages
+// Toast Messages.
 $string['dataloaded'] = 'Loaded Gradebook XP data';
 $string['dataloadfailed'] = 'Failed to load Gradebook XP data';
 $string['competencycreated'] = 'Created competency "{$a}"';
@@ -107,7 +107,7 @@ $string['relationdeleted'] = 'Deleted competency relation';
 $string['relationcreatefailed'] = 'Failed to create relation';
 $string['relationdeletefailed'] = 'Failed to delete relation';
 
-// Relations
+// Relations.
 $string['addparents'] = 'Add Parents';
 $string['addchildren'] = 'Add Children';
 $string['addactivities'] = 'Add Activities';
@@ -121,19 +121,19 @@ $string['searchactivities'] = 'Search activities...';
 $string['addselected'] = 'Add Selected';
 $string['noitemsfound'] = 'No items found';
 
-// Confirm Dialog
+// Confirm Dialog.
 $string['confirmdelete'] = 'Confirm Delete';
 $string['confirmdeletemessage'] = 'Are you sure you want to delete the competency "{$a}"? This action cannot be undone.';
 $string['confirmaction'] = 'Confirm';
 
-// Breadcrumb
+// Breadcrumb.
 $string['root'] = 'Root';
 
-// List Items
+// List Items.
 $string['maxlevel'] = 'Max Level';
 $string['levelsummed'] = 'Level Summed';
 
-// Competency Form
+// Competency Form.
 $string['createandedit'] = 'Create and Edit';
 $string['saving'] = 'Saving...';
 $string['creating'] = 'Creating...';
@@ -141,18 +141,18 @@ $string['updating'] = 'Updating...';
 $string['islevelsummed'] = 'Is Level Summed';
 $string['nochildcompetenciesfound'] = 'No child competencies found for "{$a}".';
 
-// Search
+// Search.
 $string['searchplaceholder'] = 'Search competencies';
 $string['mincharacters'] = 'min 3 characters';
 
-// Export
+// Export.
 $string['exportdata'] = 'Export';
 $string['exportalldata'] = 'Export all data as JSON';
 
-// Loading
+// Loading.
 $string['loadingcompetencies'] = 'Loading competencies...';
 
-// Empty States
+// Empty States.
 $string['nocompetenciesfound'] = 'No competencies found';
 $string['addfirstcompetency'] = 'Add Your First Competency';
 

@@ -72,7 +72,7 @@ $string['selectauser'] = 'Benutzer auswählen';
 $string['viewinguser'] = 'Benutzer anzeigen: {$a}';
 $string['nocompetencies'] = 'Für diesen Kurs wurden keine Kompetenzen definiert.';
 
-// UI Actions
+// UI Actions.
 $string['cancel'] = 'Abbrechen';
 $string['close'] = 'Schließen';
 $string['create'] = 'Erstellen';
@@ -83,13 +83,13 @@ $string['edit'] = 'Bearbeiten';
 $string['search'] = 'Suchen';
 $string['remove'] = 'Entfernen';
 
-// Competency Management
+// Competency Management.
 $string['children'] = 'Untergeordnete';
 $string['addsubcompetency'] = 'Unterkompetenz hinzufügen';
 $string['editselectedcompetency'] = 'Ausgewählte Kompetenz bearbeiten';
 $string['deleteselectedcompetency'] = 'Ausgewählte Kompetenz löschen';
 
-// Toast Messages
+// Toast Messages.
 $string['dataloaded'] = 'Gradebook XP Daten geladen';
 $string['dataloadfailed'] = 'Fehler beim Laden der Gradebook XP Daten';
 $string['competencycreated'] = 'Kompetenz "{$a}" erstellt';
@@ -107,7 +107,7 @@ $string['relationdeleted'] = 'Kompetenzrelation gelöscht';
 $string['relationcreatefailed'] = 'Fehler beim Erstellen der Relation';
 $string['relationdeletefailed'] = 'Fehler beim Löschen der Relation';
 
-// Relations
+// Relations.
 $string['addparents'] = 'Übergeordnete hinzufügen';
 $string['addchildren'] = 'Untergeordnete hinzufügen';
 $string['addactivities'] = 'Aktivitäten hinzufügen';
@@ -121,19 +121,19 @@ $string['searchactivities'] = 'Aktivitäten suchen...';
 $string['addselected'] = 'Ausgewählte hinzufügen';
 $string['noitemsfound'] = 'Keine Einträge gefunden';
 
-// Confirm Dialog
+// Confirm Dialog.
 $string['confirmdelete'] = 'Löschen bestätigen';
 $string['confirmdeletemessage'] = 'Möchten Sie die Kompetenz "{$a}" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.';
 $string['confirmaction'] = 'Bestätigen';
 
-// Breadcrumb
+// Breadcrumb.
 $string['root'] = 'Wurzel';
 
-// List Items
+// List Items.
 $string['maxlevel'] = 'Max. Stufe';
 $string['levelsummed'] = 'Stufe summiert';
 
-// Competency Form
+// Competency Form.
 $string['createandedit'] = 'Erstellen und Bearbeiten';
 $string['saving'] = 'Speichern...';
 $string['creating'] = 'Erstellen...';
@@ -141,18 +141,18 @@ $string['updating'] = 'Aktualisieren...';
 $string['islevelsummed'] = 'Stufe wird summiert';
 $string['nochildcompetenciesfound'] = 'Keine untergeordneten Kompetenzen für "{$a}" gefunden.';
 
-// Search
+// Search.
 $string['searchplaceholder'] = 'Kompetenzen suchen';
 $string['mincharacters'] = 'mind. 3 Zeichen';
 
-// Export
+// Export.
 $string['exportdata'] = 'Exportieren';
 $string['exportalldata'] = 'Alle Daten als JSON exportieren';
 
-// Loading
+// Loading.
 $string['loadingcompetencies'] = 'Kompetenzen werden geladen...';
 
-// Empty States
+// Empty States.
 $string['nocompetenciesfound'] = 'Keine Kompetenzen gefunden';
 $string['addfirstcompetency'] = 'Fügen Sie Ihre erste Kompetenz hinzu';
 

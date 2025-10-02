@@ -83,7 +83,6 @@ class gb_xp_action_bar extends action_bar {
             $data = $generalnavselector->export_for_template($output);
         }
 
-        // TODO clean up
         $course = get_course($this->courseid);
         $baseurl = clone($PAGE->url);
         // Reset link removes user selection.

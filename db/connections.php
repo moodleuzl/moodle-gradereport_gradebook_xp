@@ -25,8 +25,6 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Retrieves the connection between an activity and a competency based on their IDs.
  *
@@ -102,7 +100,7 @@ function insert_connection($connection) {
     ]);
 
     if ($existing) {
-        // TODO: Update the other connection values, use the update_connection function
+        // TODO: Update the other connection values, use the update_connection function.
         // Return existing connection ID.
         return (int)$existing->id;
     }

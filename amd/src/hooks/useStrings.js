@@ -152,7 +152,7 @@ export const StringProvider = ({children}) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const loadStrings = async () => {
+        const loadStrings = async() => {
             try {
                 setLoading(true);
 

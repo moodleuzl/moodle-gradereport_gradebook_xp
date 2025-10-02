@@ -81,7 +81,6 @@ class create_relation extends external_api {
             throw new moodle_exception('competenciesnotsamecourse', 'gradereport_gb_xp_admin');
         }
 
-
         // Context validation.
         $context = context_course::instance($parent->courseid);
         self::validate_context($context);

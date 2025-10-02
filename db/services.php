@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $functions = [
-    // Competencies CRUD
+    // Competencies CRUD.
     'gradereport_gb_xp_admin_get_competencies' => [
         'classname' => 'gradereport_gb_xp_admin\external\get_competencies',
         'description' => 'Get all competencies for a course',
@@ -55,7 +55,7 @@ $functions = [
         'capabilities' => 'moodle/grade:manage',
     ],
 
-    // Relations CRUD
+    // Relations CRUD.
     'gradereport_gb_xp_admin_get_relations' => [
         'classname' => 'gradereport_gb_xp_admin\external\get_relations',
         'description' => 'Get all relations for a course',
@@ -78,7 +78,7 @@ $functions = [
         'capabilities' => 'moodle/grade:manage',
     ],
 
-    // Connections CRUD
+    // Connections CRUD.
     'gradereport_gb_xp_admin_get_connections' => [
         'classname' => 'gradereport_gb_xp_admin\external\get_connections',
         'description' => 'Get all connections for a course',
@@ -101,7 +101,7 @@ $functions = [
         'capabilities' => 'moodle/grade:manage',
     ],
 
-    // Activities API
+    // Activities API.
     'gradereport_gb_xp_admin_get_activities' => [
         'classname' => 'gradereport_gb_xp_admin\external\get_activities',
         'description' => 'Get all activities for a course',
@@ -111,7 +111,7 @@ $functions = [
     ],
 ];
 
-// Define services
+// Define services.
 $services = [
     'gradereport_gb_xp_admin_service' => [
         'functions' => [

@@ -83,9 +83,9 @@ print_grade_page_head($courseid, 'report', 'gb_xp_admin',
 
 
 if ($userid !== null) {
-    $course_data_manager = new \gradereport_gb_xp_admin\course_data_manager($courseid, $userid);
+    $coursedatamanager = new \gradereport_gb_xp_admin\course_data_manager($courseid, $userid);
     // Generate chart data for visualization.
-    $templatedata = $course_data_manager->build_template_data_for_selected_competency($competencyid);
+    $templatedata = $coursedatamanager->build_template_data_for_selected_competency($competencyid);
     $templatedata->chartjs_url = (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/chart.umd.min.js'))->out();
 
     $templatedata->competencyparentid = $competencyparentid;
