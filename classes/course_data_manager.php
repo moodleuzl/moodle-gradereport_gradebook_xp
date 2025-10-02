@@ -723,7 +723,6 @@ class course_data_manager {
             'chart_competencies' => array_values($chartcompetencies),
             'competencyid' => $selectedcompetencyid,
             'competencyname' => $currentcompetency ? $currentcompetency->name : null,
-            'competencyparentid' => $currentcompetency ? $currentcompetency->parentid : null,
             'courseid' => $this->courseid,
             'competencycount' => count($chartcompetencies),
             'showchart' => count($chartcompetencies) >= 3,

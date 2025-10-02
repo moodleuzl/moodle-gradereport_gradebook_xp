@@ -30,6 +30,7 @@ require_once('./lib.php');
 $courseid = required_param('id', PARAM_INT);
 $userid = optional_param('userid', null, PARAM_INT);
 $competencyid = optional_param('competencyid', null, PARAM_INT);
+$competencyparentid = optional_param('competencyparentid', null, PARAM_INT);
 
 // Setup page and validate access.
 $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
@@ -81,11 +82,16 @@ print_grade_page_head($courseid, 'report', 'gb_xp_admin',
     false, false, false, true, null, null, null, $actionbar);
 
 
-
 if ($userid !== null) {
     $course_data_manager = new \gradereport_gb_xp_admin\course_data_manager($courseid, $userid);
     // Generate chart data for visualization.
     $templatedata = $course_data_manager->build_template_data_for_selected_competency($competencyid);
+    $templatedata->chartjs_url = (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/chart.umd.min.js'))->out();
+
+    $templatedata->competencyparentid = $competencyparentid;
+    if ($userid !== $USER->id) {
+        $templatedata->urluserid = $userid;
+    }
     // Render the main content using the old gb_xp template.
     echo $OUTPUT->render_from_template('gradereport_gb_xp_admin/index', $templatedata);
 }

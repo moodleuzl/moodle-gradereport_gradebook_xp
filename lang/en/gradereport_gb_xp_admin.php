@@ -155,3 +155,10 @@ $string['loadingcompetencies'] = 'Loading competencies...';
 // Empty States
 $string['nocompetenciesfound'] = 'No competencies found';
 $string['addfirstcompetency'] = 'Add Your First Competency';
+
+$string['chart_series_label_user'] = 'You';
+$string['chart_competencies_max_level'] = 'Maximum Level';
+$string['chart_series_label_success'] = 'Success';
+$string['chart_series_label_average'] = 'Average';
+$string['missing_data'] = 'No data available.';
+$string['allusersnum'] = 'All users ({$a})';

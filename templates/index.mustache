@@ -14,12 +14,12 @@
     </div>
     <div style="flex-basis: calc(30% - 10px);">
 
-        {{#competencyid}}<a href=index.php?id={{courseid}}>Back to top level</a><br>{{/competencyid}}
-        {{#competencyparentid}}<a href=index.php?id={{courseid}}&competencyid={{competencyparentid}}>One level up</a>{{/competencyparentid}}
+        {{#competencyid}}<a href=index.php?id={{courseid}}{{#urluserid}}&userid={{urluserid}}{{/urluserid}}>Back to top level</a><br>{{/competencyid}}
+        {{#competencyparentid}}<a href=index.php?id={{courseid}}{{#urluserid}}&userid={{urluserid}}{{/urluserid}}&competencyid={{competencyparentid}}>One level up</a>{{/competencyparentid}}
         {{#chart_competencies}}
             <h4>
                 {{#has_subcompetencies}}
-                    <a href=index.php?id={{courseid}}&competencyid={{id}}>{{name}}</a>
+                    <a href=index.php?id={{courseid}}{{#urluserid}}&userid={{urluserid}}{{/urluserid}}&competencyid={{id}}{{#competencyid}}&competencyparentid={{competencyid}}{{/competencyid}}>{{name}}</a>
                 {{/has_subcompetencies}}
                 {{^has_subcompetencies}}
                     {{name}}
@@ -43,8 +43,7 @@
 </div>
 
 {{#showchart}}
-<!--    TODO remove cdn, include file-->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{chartjs_url}}"></script>
 
 <script>
     // Check if data arrays are not empty
@@ -57,14 +56,14 @@
                 labels: {{{competencies}}},
                 datasets: [
                     {
-                        label: '{{#str}} chart_series_label_user, gradereport_gb_xp {{/str}}',
+                        label: '{{#str}} chart_series_label_user, gradereport_gb_xp_admin {{/str}}',
                         data: {{data_user}},
                         borderColor: 'rgba(14,105,241,0.9)',
                         backgroundColor: 'rgba(14,105,241,0.5)',
                         borderWidth: 2,
                     },
                     {
-                        label: '{{#str}} chart_competencies_max_level, gradereport_gb_xp {{/str}}',
+                        label: '{{#str}} chart_competencies_max_level, gradereport_gb_xp_admin {{/str}}',
                         data: {{data_max_level}},
                         borderColor: 'rgba(15,124,9,0.55)',
                         backgroundColor: 'rgba(0,0,0,0)',

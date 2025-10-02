@@ -155,3 +155,10 @@ $string['loadingcompetencies'] = 'Kompetenzen werden geladen...';
 // Empty States
 $string['nocompetenciesfound'] = 'Keine Kompetenzen gefunden';
 $string['addfirstcompetency'] = 'Fügen Sie Ihre erste Kompetenz hinzu';
+
+$string['chart_series_label_user'] = 'Sie';
+$string['chart_competencies_max_level'] = 'Maximale Stufe';
+$string['chart_series_label_success'] = 'Erfolg';
+$string['chart_series_label_average'] = 'Durchschnitt';
+$string['missing_data'] = 'Keine Daten verfügbar.';
+$string['allusersnum'] = 'Alle Teilnehmer ({$a})';
