@@ -157,7 +157,7 @@ class behat_gradereport_gb_xp_admin extends behat_base {
      *
      * @When /^I fill the React competency form with:$/
      * @param TableNode $table
- */
+     */
     public function i_fill_the_react_competency_form_with(TableNode $table): void {
         $values = array_values($table->getRow(0));
         $page = $this->getSession()->getPage();
@@ -177,7 +177,6 @@ class behat_gradereport_gb_xp_admin extends behat_base {
         }
         // Text input for "Competency description".
         if (isset($values[1])) {
-            // textarea (description)
             $textareas = $page->findAll('css', 'textarea.form-control');
             if (!empty($textareas)) {
                 $textareas[0]->setValue($values[1]);
