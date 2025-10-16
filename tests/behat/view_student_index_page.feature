@@ -1,4 +1,4 @@
-@gradereport @gradereport_gb_xp
+@gradereport @gradereport_gb_xp_admin
 Feature: View Gradebook XP index page
   In order to verify the Gradebook XP Admin index page is displayed correctly
   As an editing teacher
