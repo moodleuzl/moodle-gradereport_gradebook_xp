@@ -54,17 +54,6 @@ Feature: View Gradebook XP index page
     And I am on "Course 1" course homepage
     And I navigate to "View > Gradebook XP Admin" in the course gradebook
 
-#    When I click on "MyCompetency1" "link"
-#    Then I should see "Gradebook XP Admin"
-#    And I should see "MyCompetency1"
-#    And I should see "MyCompetency11"
-
-#    When I click on "Back to top level" "link"
-#    Then I should see "Gradebook XP Admin"
-#    And I should see "MyCompetency1"
-#    And I should see "MyCompetency2"
-#    And I should see "MyCompetency3"
-
   @javascript
   Scenario: Verify user selection is not visible for students
     Given I log in as "student1"
