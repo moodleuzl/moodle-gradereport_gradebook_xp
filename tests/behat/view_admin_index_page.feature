@@ -27,9 +27,8 @@ Feature: View Gradebook XP Admin index page
     And I am on "Course 1" course homepage
     And I navigate to "View > Gradebook XP Admin" in the course gradebook
     Then I should see "Gradebook XP Admin"
-    And I should see "MyCompetency1"
-    And I should see "MyCompetency2"
-    And I should see "MyCompetency3"
+    And I should see "Search users"
+    And I should see "Edit"
 
   @javascript
   Scenario: View manage_competencies page
@@ -38,6 +37,7 @@ Feature: View Gradebook XP Admin index page
     And I navigate to "View > Gradebook XP Admin" in the course gradebook
     Then I should see "Gradebook XP Admin"
     Then I click on "Edit" "button"
+    And I wait until the page is ready
 #    Then I should see "Manage Competencies"
 
 #    And I should see "MyCompetency1"
@@ -68,7 +68,8 @@ Feature: View Gradebook XP Admin index page
     And I navigate to "View > Gradebook XP Admin" in the course gradebook
     Then I should see "Gradebook XP Admin"
     Then I click on "Edit" "button"
-#    Then I should see "Manage Competencies"
+    And I wait until the page is ready
+    Then I should see "Manage Competencies"
 #    When I click on "Add competency" "button"
 #    And I set the following fields to these values:
 #      | Competency name         | NewCompetency             |
@@ -85,7 +86,8 @@ Feature: View Gradebook XP Admin index page
     And I navigate to "View > Gradebook XP Admin" in the course gradebook
     Then I should see "Gradebook XP Admin"
     Then I click on "Edit" "button"
-#    Then I should see "Manage Competencies"
+    And I wait until the page is ready
+    Then I should see "Manage Competencies"
 #    When I click on the "Edit competency" button for "MyCompetency1"
 #    And I set the following fields to these values:
 #      | Competency name         | EditedCompetency             |
@@ -102,9 +104,10 @@ Feature: View Gradebook XP Admin index page
     And I navigate to "View > Gradebook XP Admin" in the course gradebook
     Then I should see "Gradebook XP Admin"
     Then I click on "Edit" "button"
-#    Then I should see "Manage Competencies"
+    And I wait until the page is ready
+    Then I should see "Manage Competencies"
 
-#    And I should see "MyCompetency1"
+    And I should see "MyCompetency1"
 #
 #    When I click on the "Delete competency" button for "MyCompetency1"
 #    Then I click on "Delete" "button" in the ".modal-dialog" "css_element"
