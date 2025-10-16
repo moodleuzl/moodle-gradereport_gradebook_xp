@@ -67,7 +67,7 @@ Feature: View Gradebook XP Admin index page
     When I click on "Add competency" "button"
     Then I should see "New competency"
     And I fill the React competency form with:
-      | New Competency 1 | Gentle restraint | 3 | 1 |
+      | New Competency 1 | Very new | 3 | 1 |
     And I press "Create"
     # TODO: Check if creation was successful
 

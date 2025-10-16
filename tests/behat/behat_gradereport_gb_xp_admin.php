@@ -151,12 +151,13 @@ class behat_gradereport_gb_xp_admin extends behat_base {
      *
      * Example:
      *   And I fill the React competency form with:
-     *     | Cat Handling     | Gentle restraint | 3 | 1 |
+     *      | New Competency 1 | Very new | 3 | 1 |
      *
      * Column order: name, description, max level, is level summed (1 = checked, 0 = unchecked)
      *
      * @When /^I fill the React competency form with:$/
-     */
+     * @param TableNode $table
+ */
     public function i_fill_the_react_competency_form_with(TableNode $table): void {
         $values = array_values($table->getRow(0));
         $page = $this->getSession()->getPage();
@@ -170,10 +171,11 @@ class behat_gradereport_gb_xp_admin extends behat_base {
             );
         }
 
-        // Fill text fields.
+        // Text input for "Competency name".
         if (isset($values[0])) {
-            $fields[0]->setValue($values[0]); // name
+            $fields[0]->setValue($values[0]);
         }
+        // Text input for "Competency description".
         if (isset($values[1])) {
             // textarea (description)
             $textareas = $page->findAll('css', 'textarea.form-control');
@@ -181,21 +183,22 @@ class behat_gradereport_gb_xp_admin extends behat_base {
                 $textareas[0]->setValue($values[1]);
             }
         }
+        // Text input for "Max Competency Level".
         if (isset($values[2])) {
-            $numberInputs = $page->findAll('css', 'input[type=number].form-control');
-            if (!empty($numberInputs)) {
-                $numberInputs[0]->setValue($values[2]);
+            $numberinputs = $page->findAll('css', 'input[type=number].form-control');
+            if (!empty($numberinputs)) {
+                $numberinputs[0]->setValue($values[2]);
             }
         }
 
-        // Checkbox for islevelsummed.
+        // Checkbox for "Is Level Summed".
         if (isset($values[3])) {
             $checkbox = $page->find('css', 'input[type=checkbox]#islevelsummed');
             if ($checkbox) {
-                $shouldCheck = in_array(strtolower(trim($values[3])), ['1', 'true', 'yes', 'y', 'on', 'checked'], true);
-                if ($shouldCheck && !$checkbox->isChecked()) {
+                $shouldcheck = in_array(strtolower(trim($values[3])), ['1', 'true', 'yes', 'y', 'on', 'checked'], true);
+                if ($shouldcheck && !$checkbox->isChecked()) {
                     $checkbox->click();
-                } elseif (!$shouldCheck && $checkbox->isChecked()) {
+                } else if (!$shouldcheck && $checkbox->isChecked()) {
                     $checkbox->click();
                 }
             }
