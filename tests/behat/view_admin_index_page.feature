@@ -20,7 +20,6 @@ Feature: View Gradebook XP Admin index page
       | C1        | MyCompetency2  | MyDescription2  | 5         | 1             |
       | C1        | MyCompetency3  | MyDescription3  | 2         | 0             |
 
-
   @javascript
   Scenario: View index page
     Given I log in as "teacher1"
