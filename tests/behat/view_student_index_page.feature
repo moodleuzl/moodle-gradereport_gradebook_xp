@@ -22,6 +22,9 @@ Feature: View Gradebook XP index page
       | C1        | MyCompetency2  | MyDescription2  | 5         | 1             |
       | C1        | MyCompetency3  | MyDescription3  | 2         | 0             |
       | C1        | MyCompetency11 | MyDescription11 | 7         | 1             |
+    And the following competency relations in my plugin exist:
+      | parentname    | childname      |
+      | MyCompetency1 | MyCompetency11 |
 
   @javascript
   Scenario: View index page

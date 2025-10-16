@@ -90,6 +90,63 @@ class behat_gradereport_gb_xp_admin extends behat_base {
     }
 
     /**
+     * Create competency-to-competency relations.
+     *
+     * Example:
+     *   And the following competency relations in my plugin exist:
+     *     | parentname   | childname      |
+     *     | Cat Handling | Dog Behaviour  |
+     *     | Cat Handling | Surgery Basics |
+     *
+     * @Given /^the following competency relations in my plugin exist:$/
+     * @param TableNode $table
+     * @throws dml_exception
+     * @throws moodle_exception
+     */
+    public function the_following_competency_relations_in_my_plugin_exist(TableNode $table) {
+        global $DB;
+
+        foreach ($table->getHash() as $row) {
+            if (empty($row['parentname']) || empty($row['childname'])) {
+                throw new moodle_exception('Missing required "parentname" or "childname" column.');
+            }
+
+            $parentname = trim($row['parentname']);
+            $childname  = trim($row['childname']);
+
+            // Look up IDs from the ones we already created in this test run.
+            if (!isset($this->createdcompetencies[$parentname])) {
+                $parentid = $DB->get_field('gradereport_gb_xp_admin_competencies', 'id', ['name' => $parentname], MUST_EXIST);
+            } else {
+                $parentid = $this->createdcompetencies[$parentname];
+            }
+
+            if (!isset($this->createdcompetencies[$childname])) {
+                $childid = $DB->get_field('gradereport_gb_xp_admin_competencies', 'id', ['name' => $childname], MUST_EXIST);
+            } else {
+                $childid = $this->createdcompetencies[$childname];
+            }
+
+            // Prevent self-relations or duplicates.
+            if ($parentid == $childid) {
+                throw new moodle_exception("Competency '{$parentname}' cannot be related to itself.");
+            }
+
+            $exists = $DB->record_exists('gradereport_gb_xp_admin_relations', [
+                'parentid' => $parentid,
+                'childid'  => $childid
+            ]);
+
+            if (!$exists) {
+                $DB->insert_record('gradereport_gb_xp_admin_relations', (object)[
+                    'parentid' => $parentid,
+                    'childid'  => $childid
+                ]);
+            }
+        }
+    }
+
+    /**
      * Verifies that a specific field in the competency section contains the expected value.
      *
      * @Then /^the "(?P<field>[^"]*)" field should contain "(?P<value>[^"]*)" for competency "(?P<competency>[^"]*)"$/
