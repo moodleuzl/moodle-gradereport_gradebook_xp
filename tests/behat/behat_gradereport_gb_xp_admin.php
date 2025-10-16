@@ -36,43 +36,56 @@ use Behat\Mink\Exception\ElementNotFoundException;
  * @package gradereport_gb_xp_admin
  */
 class behat_gradereport_gb_xp_admin extends behat_base {
+    /** @var array map "name" => inserted id, useful for later steps if needed */
+    protected $createdcompetencies = [];
     /**
-     * Adds competencies to the database.
+     * Create basic competencies (no relations).
      *
-     * @Given the following competencies in my plugin exist:
+     * @Given /^the following competencies in my plugin exist:$/
      * @param TableNode $table
      * @throws dml_exception
+     * @throws moodle_exception
      */
     public function the_following_competencies_in_my_plugin_exist(TableNode $table) {
         global $DB;
 
-        $competencies = $table->getHash();
-        foreach ($competencies as $competency) {
-            // Get the course ID by shortname.
-            $courseid = $DB->get_field('course', 'id', ['shortname' => $competency['courseid']]);
-
-            // Initialize the record.
-            $record = new stdClass();
-            $record->courseid = $courseid;
-            $record->name = $competency['name'];
-            $record->description = $competency['description'];
-            $record->maxcomlvl = $competency['maxcomlvl'];
-
-            // If the parent name is not '0', find the parent competency's ID by its name.
-            if ($competency['parentid'] !== '0') {
-                $parentid = $DB->get_field('gradereport_gb_xp_admin_com', 'id',
-                    ['name' => $competency['parentid'], 'courseid' => $courseid]);
-                if (!$parentid) {
-                    throw new Exception(
-                        "The parent competency '{$competency['parentid']}' was not found for course '{$competency['courseid']}'.");
-                }
-                $record->parentid = $parentid;
-            } else {
-                $record->parentid = 0; // No parent competency.
+        foreach ($table->getHash() as $row) {
+            // Validate required fields.
+            if ((!isset($row['course']) && !isset($row['courseid'])) || empty($row['name'])) {
+                throw new moodle_exception('Missing required "course/courseid" or "name" in competencies table.');
             }
 
-            // Insert the competency into your custom table.
-            $DB->insert_record('gradereport_gb_xp_admin_com', $record);
+            // Resolve courseid.
+            if (!empty($row['course'])) {
+                // Prefer explicit 'course' column as a shortname.
+                $courseid = $DB->get_field('course', 'id', ['shortname' => trim($row['course'])], MUST_EXIST);
+            } else {
+                // Fallback to 'courseid' which may be a numeric id or a shortname.
+                $token = trim($row['courseid']);
+                if ($token !== '' && ctype_digit($token)) {
+                    $courseid = (int)$token;
+                    if (!$DB->record_exists('course', ['id' => $courseid])) {
+                        throw new moodle_exception('Invalid course id '.$courseid.' in competencies table.');
+                    }
+                } else {
+                    $courseid = $DB->get_field('course', 'id', ['shortname' => $token], MUST_EXIST);
+                }
+            }
+
+            // Build record with defaults matching XMLDB.
+            $record = (object)[
+                'courseid'      => $courseid,
+                'name'          => trim($row['name']),
+                'description'   => isset($row['description']) && $row['description'] !== '' ? (string)$row['description'] : null,
+                'maxcomlvl'     => isset($row['maxcomlvl']) && $row['maxcomlvl'] !== '' ? (int)$row['maxcomlvl'] : 1,
+                'islevelsummed' => isset($row['islevelsummed']) && $row['islevelsummed'] !== '' ? (int)$row['islevelsummed'] : 1,
+            ];
+
+            // Insert into new table.
+            $id = $DB->insert_record('gradereport_gb_xp_admin_competencies', $record);
+
+            // Keep a reference by name (useful for follow-up steps).
+            $this->createdcompetencies[$record->name] = $id;
         }
     }
 

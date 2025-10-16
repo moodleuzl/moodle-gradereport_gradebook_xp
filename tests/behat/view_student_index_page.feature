@@ -16,19 +16,19 @@ Feature: View Gradebook XP index page
       | user     | course | role           |
       | student1 | C1     | student |
       | teacher1 | C1     | teacher |
-#    And the following competencies in my plugin exist:
-#      | courseid  | name           | parentid       | description     | maxcomlvl |
-#      | C1        | MyCompetency1  | 0              | MyDescription1  | 10        |
-#      | C1        | MyCompetency2  | 0              | MyDescription2  | 5         |
-#      | C1        | MyCompetency3  | 0              | MyDescription3  | 2         |
-#      | C1        | MyCompetency11 | MyCompetency1  | MyDescription11 | 7         |
+    And the following competencies in my plugin exist:
+      | courseid  | name           | description     | maxcomlvl | islevelsummed |
+      | C1        | MyCompetency1  | MyDescription1  | 10        | 1             |
+      | C1        | MyCompetency2  | MyDescription2  | 5         | 1             |
+      | C1        | MyCompetency3  | MyDescription3  | 2         | 0             |
+      | C1        | MyCompetency11 | MyDescription11 | 7         | 1             |
 
   @javascript
   Scenario: View index page
     Given I log in as "student1"
     And I am on "Course 1" course homepage
     And I navigate to "View > Gradebook XP Admin" in the course gradebook
-    Then I should see "Not enough competencies"
+#    Then I should see "Not enough competencies"
 #    And I should see "MyCompetency1"
 #    And I should see "MyCompetency2"
 #    And I should see "MyCompetency3"

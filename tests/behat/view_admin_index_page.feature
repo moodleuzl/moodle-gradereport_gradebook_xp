@@ -14,11 +14,12 @@ Feature: View Gradebook XP Admin index page
     And the following "course enrolments" exist:
       | user     | course | role           |
       | teacher1 | C1     | editingteacher |
-#    And the following competencies in my plugin exist:
-#      | courseid  | name         | parentid | description     | maxcomlvl |
-#      | C1        | MyCompetency1  | 0        | MyDescription1  | 10        |
-#      | C1        | MyCompetency2  | 0        | MyDescription2  | 5         |
-#      | C1        | MyCompetency3  | 0        | MyDescription3  | 2         |
+    And the following competencies in my plugin exist:
+      | courseid  | name           | description     | maxcomlvl | islevelsummed |
+      | C1        | MyCompetency1  | MyDescription1  | 10        | 1             |
+      | C1        | MyCompetency2  | MyDescription2  | 5         | 1             |
+      | C1        | MyCompetency3  | MyDescription3  | 2         | 0             |
+
 
   @javascript
   Scenario: View index page
