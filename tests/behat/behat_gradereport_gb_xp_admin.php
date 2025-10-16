@@ -149,4 +149,62 @@ class behat_gradereport_gb_xp_admin extends behat_base {
         // Click the delete button.
         $deletebutton->click();
     }
+
+    /**
+     * Step definition to check if a specific competency has the correct value for the given level type.
+     *
+     * @param string $leveltype The dataset label (e.g., 'Maximum Level', 'Maximum Reachable Level', 'You').
+     * @param string $competency The name of the competency (e.g., 'MyCompetency1').
+     * @param string $value The expected value for the level type and competency (e.g., '10').
+     * @throws Exception If the competency or value is not found or does not match.
+     *
+     * @Then /^the "([^"]*)" value for "([^"]*)" should be "([^"]*)"$/
+     */
+    public function thelevelvalueforcompetencyshouldbe($leveltype, $competency, $value) {
+        // Get the full page source (HTML including script).
+        $pagesource = $this->getSession()->getPage()->getContent();
+
+        // Extract the labels array from the page source.
+        $labelsstart = strpos($pagesource, "labels: [");
+        if ($labelsstart === false) {
+            throw new Exception("The 'labels' array was not found in the page source.");
+        }
+        $labelsend = strpos($pagesource, "]", $labelsstart);
+        $labelsarray = substr($pagesource, $labelsstart + strlen("labels: ["), $labelsend - $labelsstart - strlen("labels: ["));
+        $labelsarray = explode(",", str_replace(["'", " "], "", $labelsarray)); // Clean and split into array.
+
+        // Find the index of the competency in the labels array.
+        $competencyindex = array_search($competency, $labelsarray);
+        if ($competencyindex === false) {
+            throw new Exception("The competency '{$competency}' was not found in the 'labels' array.");
+        }
+
+        // Find the position of the level type (e.g., 'Maximum Level') in the page source.
+        $levelposition = strpos($pagesource, "label: '{$leveltype}'");
+        if ($levelposition === false) {
+            throw new Exception("The '{$leveltype}' dataset was not found in the page source.");
+        }
+
+        // Extract the data array for the specified level type.
+        $datastart = strpos($pagesource, 'data: [', $levelposition);
+        if ($datastart === false) {
+            throw new Exception("No data array found for the '{$leveltype}' dataset.");
+        }
+        $dataend = strpos($pagesource, ']', $datastart);
+        $dataarray = substr($pagesource, $datastart + strlen('data: ['), $dataend - $datastart - strlen('data: ['));
+        $dataarray = explode(",", str_replace(" ", "", $dataarray)); // Clean and split into array.
+
+        // Check if the value at the competency's index in the data array matches the expected value.
+        if (!isset($dataarray[$competencyindex])) {
+            throw new Exception(
+                "No data found for the competency '{$competency}' at index {$competencyindex} in the '{$leveltype}' dataset.");
+        }
+
+        if ($dataarray[$competencyindex] !== $value) {
+            throw new Exception(
+                "The value '{$dataarray[$competencyindex]}' at index {$competencyindex} "
+                . "for competency '{$competency}' does not match the expected value '{$value}' "
+                . "in the '{$leveltype}' dataset.");
+        }
+    }
 }
