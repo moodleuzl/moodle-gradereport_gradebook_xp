@@ -14,6 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Competency hierarchy helper functions for the Gradebook XP Admin report.
+ *
+ * This file contains helper functions for retrieving, traversing, and validating
+ * hierarchical relationships between competencies within a Moodle course.
+ *
+ * @package    gradereport_gb_xp_admin
+ * @copyright INB University of Luebeck
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once(__DIR__ . '/db/relations.php');
