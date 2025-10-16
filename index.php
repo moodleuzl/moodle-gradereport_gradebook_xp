@@ -78,7 +78,13 @@ $actionbar = null;
 if (has_capability('moodle/grade:viewall', $context)) {
     $actionbar = new \gradereport_gb_xp_admin\output\gb_xp_action_bar($context, $courseid, $userid);
 } else {
-    $actionbar = new general_action_bar($PAGE->context, new moodle_url('/grade/report/gb_xp_admin/index.php', ['id' => $courseid]), "report", "gb_xp_admin");
+    $actionbar = new general_action_bar(
+        $PAGE->context,
+        new moodle_url('/grade/report/gb_xp_admin/index.php',
+        ['id' => $courseid]),
+        "report",
+        "gb_xp_admin"
+    );
 }
 
 // Display page header with action bar.
