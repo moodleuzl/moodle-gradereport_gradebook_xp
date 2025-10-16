@@ -147,6 +147,62 @@ class behat_gradereport_gb_xp_admin extends behat_base {
     }
 
     /**
+     * Fill in competency fields by order of appearance in the React form.
+     *
+     * Example:
+     *   And I fill the React competency form with:
+     *     | Cat Handling     | Gentle restraint | 3 | 1 |
+     *
+     * Column order: name, description, max level, is level summed (1 = checked, 0 = unchecked)
+     *
+     * @When /^I fill the React competency form with:$/
+     */
+    public function i_fill_the_react_competency_form_with(TableNode $table): void {
+        $values = array_values($table->getRow(0));
+        $page = $this->getSession()->getPage();
+
+        // Get all input and textarea elements in DOM order.
+        $fields = $page->findAll('css', 'input.form-control, textarea.form-control, input.form-check-input');
+        if (count($fields) < 3) {
+            throw new \Behat\Mink\Exception\ExpectationException(
+                'Expected at least 3 competency form fields, found '.count($fields),
+                $this->getSession()
+            );
+        }
+
+        // Fill text fields.
+        if (isset($values[0])) {
+            $fields[0]->setValue($values[0]); // name
+        }
+        if (isset($values[1])) {
+            // textarea (description)
+            $textareas = $page->findAll('css', 'textarea.form-control');
+            if (!empty($textareas)) {
+                $textareas[0]->setValue($values[1]);
+            }
+        }
+        if (isset($values[2])) {
+            $numberInputs = $page->findAll('css', 'input[type=number].form-control');
+            if (!empty($numberInputs)) {
+                $numberInputs[0]->setValue($values[2]);
+            }
+        }
+
+        // Checkbox for islevelsummed.
+        if (isset($values[3])) {
+            $checkbox = $page->find('css', 'input[type=checkbox]#islevelsummed');
+            if ($checkbox) {
+                $shouldCheck = in_array(strtolower(trim($values[3])), ['1', 'true', 'yes', 'y', 'on', 'checked'], true);
+                if ($shouldCheck && !$checkbox->isChecked()) {
+                    $checkbox->click();
+                } elseif (!$shouldCheck && $checkbox->isChecked()) {
+                    $checkbox->click();
+                }
+            }
+        }
+    }
+
+    /**
      * Verifies that a specific field in the competency section contains the expected value.
      *
      * @Then /^the "(?P<field>[^"]*)" field should contain "(?P<value>[^"]*)" for competency "(?P<competency>[^"]*)"$/

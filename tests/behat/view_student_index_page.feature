@@ -31,7 +31,6 @@ Feature: View Gradebook XP index page
     Given I log in as "student1"
     And I am on "Course 1" course homepage
     And I navigate to "View > Gradebook XP Admin" in the course gradebook
-#    Then I should see "Not enough competencies"
     And I should see "MyCompetency1"
     And I should see "MyCompetency2"
     And I should see "MyCompetency3"
