@@ -162,3 +162,13 @@ $string['chart_series_label_success'] = 'Erfolg';
 $string['chart_series_label_average'] = 'Durchschnitt';
 $string['missing_data'] = 'Keine Daten verfügbar.';
 $string['allusersnum'] = 'Alle Teilnehmer ({$a})';
+
+// Index page strings.
+$string['notenoughcompetencies'] = 'Nicht genügend Kompetenzen ({$a} von 3) um das Diagramm anzuzeigen.';
+$string['backtotoplevel'] = 'Zurück zur obersten Ebene';
+$string['onelevelup'] = 'Eine Ebene nach oben';
+$string['sumallactivitylevels'] = '(Summe aller Aktivitätsstufen)';
+$string['highestsingleactivitylevel'] = '(Höchste einzelne Aktivitätsstufe)';
+$string['yourlevel'] = 'Ihre Stufe:';
+$string['maximumlevel_display'] = 'Maximale Stufe:';
+$string['levelcolon'] = 'Stufe:';

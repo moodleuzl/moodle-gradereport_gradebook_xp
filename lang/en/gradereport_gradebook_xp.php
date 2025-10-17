@@ -162,3 +162,13 @@ $string['chart_series_label_success'] = 'Success';
 $string['chart_series_label_average'] = 'Average';
 $string['missing_data'] = 'No data available.';
 $string['allusersnum'] = 'All users ({$a})';
+
+// Index page strings.
+$string['notenoughcompetencies'] = 'Not enough competencies ({$a} of 3) to display the chart.';
+$string['backtotoplevel'] = 'Back to top level';
+$string['onelevelup'] = 'One level up';
+$string['sumallactivitylevels'] = '(Sum all activity levels)';
+$string['highestsingleactivitylevel'] = '(Highest single activity level)';
+$string['yourlevel'] = 'Your level:';
+$string['maximumlevel_display'] = 'Maximum level:';
+$string['levelcolon'] = 'Level:';

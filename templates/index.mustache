@@ -9,13 +9,13 @@
 
         {{^showchart}}
         <!-- If not enough competencies, display this message -->
-        <p>Not enough competencies ({{competencycount}} of 3) to display the chart.</p>
+        <p>{{#str}} notenoughcompetencies, gradereport_gradebook_xp, {{competencycount}} {{/str}}</p>
         {{/showchart}}
     </div>
     <div style="flex-basis: calc(30% - 10px);">
 
-        {{#competencyid}}<a href=index.php?id={{courseid}}{{#urluserid}}&userid={{urluserid}}{{/urluserid}}>Back to top level</a><br>{{/competencyid}}
-        {{#competencyparentid}}<a href=index.php?id={{courseid}}{{#urluserid}}&userid={{urluserid}}{{/urluserid}}&competencyid={{competencyparentid}}>One level up</a>{{/competencyparentid}}
+        {{#competencyid}}<a href=index.php?id={{courseid}}{{#urluserid}}&userid={{urluserid}}{{/urluserid}}>{{#str}} backtotoplevel, gradereport_gradebook_xp {{/str}}</a><br>{{/competencyid}}
+        {{#competencyparentid}}<a href=index.php?id={{courseid}}{{#urluserid}}&userid={{urluserid}}{{/urluserid}}&competencyid={{competencyparentid}}>{{#str}} onelevelup, gradereport_gradebook_xp {{/str}}</a>{{/competencyparentid}}
         {{#chart_competencies}}
             <h4>
                 {{#has_subcompetencies}}
@@ -25,15 +25,15 @@
                     {{name}}
                 {{/has_subcompetencies}}
             </h4>
-            {{#is_level_summed}}(Sum all activity levels){{/is_level_summed}}
-            {{^is_level_summed}}(Highest single activity level){{/is_level_summed}}
+<!--            {{#is_level_summed}}{{#str}} sumallactivitylevels, gradereport_gradebook_xp {{/str}}{{/is_level_summed}}-->
+<!--            {{^is_level_summed}}{{#str}} highestsingleactivitylevel, gradereport_gradebook_xp {{/str}}{{/is_level_summed}}-->
             <p>
-                Your level: {{user}} / Maximum level: {{max_level}}
+                {{#str}} yourlevel, gradereport_gradebook_xp {{/str}} {{user_level}} / {{#str}} maximumlevel_display, gradereport_gradebook_xp {{/str}} {{max_level}}
             </p>
             <div>
                 <ul style="list-style: none; padding-left: 20px;">
                     {{#activities}}
-                        <li style="color: {{color}};">Level: {{level}} <a href="/{{type}}/{{module}}/view.php?id={{activityid}}">{{name}}</a></li>
+                        <li style="color: {{color}};">{{#str}} levelcolon, gradereport_gradebook_xp {{/str}} {{level}} <a href="/{{type}}/{{module}}/view.php?id={{activityid}}">{{name}}</a></li>
                     {{/activities}}
                 </ul>
             </div>
