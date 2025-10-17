@@ -26,6 +26,67 @@ import {useStrings} from 'gradereport_gradebook_xp/hooks/useStrings';
 import {RelationManager} from 'gradereport_gradebook_xp/components/RelationManager';
 
 /**
+ * Render modal footer buttons.
+ *
+ * @param {Object} params Parameters
+ * @param {Function} params.createElement React createElement
+ * @param {boolean} params.isEditing Whether in edit mode
+ * @param {boolean} params.hasChanges Whether form has changes
+ * @param {boolean} params.hasValidationError Whether there's a validation error
+ * @param {boolean} params.saving Whether currently saving
+ * @param {Function} params.str String function
+ * @param {Function} params.handleClose Close handler
+ * @param {Function} params.handleSubmit Submit handler
+ * @returns {Array} Array of button elements
+ */
+const renderModalFooterButtons = ({
+    createElement, isEditing, hasChanges, hasValidationError,
+    saving, str, handleClose, handleSubmit
+}) => {
+    const buttons = [];
+
+    // Cancel/Close button
+    const cancelText = (isEditing && !hasChanges) ? str('close') : str('cancel');
+    buttons.push(createElement('button', {
+        key: 'cancel',
+        type: 'button',
+        className: 'btn btn-secondary',
+        onClick: handleClose,
+        disabled: saving
+    }, cancelText));
+
+    // Create mode buttons
+    if (!isEditing) {
+        buttons.push(createElement('button', {
+            key: 'create',
+            type: 'button',
+            className: 'btn btn-primary mr-2',
+            onClick: (e) => handleSubmit(e, true),
+            disabled: saving
+        }, saving ? str('creating') : str('create')));
+
+        buttons.push(createElement('button', {
+            key: 'create-edit',
+            type: 'submit',
+            className: 'btn btn-success',
+            disabled: saving
+        }, saving ? str('creating') : str('createandedit')));
+    }
+
+    // Edit mode button
+    if (isEditing) {
+        buttons.push(createElement('button', {
+            key: 'update',
+            type: 'submit',
+            className: 'btn btn-primary',
+            disabled: saving || !hasChanges || hasValidationError
+        }, saving ? str('updating') : str('update')));
+    }
+
+    return buttons;
+};
+
+/**
  * EditCompetency modal component for creating/editing competencies.
  *
  * @param {Object} props Component properties
@@ -480,47 +541,18 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                         ]),
 
                         // Modal Footer with Buttons
-                        createElement('div', {key: 'modal-footer', className: 'modal-footer'}, [
-                            // Cancel/Close button
-                            (() => {
-                                let buttonText = str('cancel');
-                                if (isEditing && !hasChanges) {
-                                    buttonText = str('close');
-                                }
-                                return createElement('button', {
-                                    key: 'cancel',
-                                    type: 'button',
-                                    className: 'btn btn-secondary',
-                                    onClick: handleClose,
-                                    disabled: saving
-                                }, buttonText);
-                            })(),
-
-                            // Create mode: Create button (closes modal)
-                            !isEditing ? createElement('button', {
-                                key: 'create',
-                                type: 'button',
-                                className: 'btn btn-primary mr-2',
-                                onClick: (e) => handleSubmit(e, true),
-                                disabled: saving
-                            }, saving ? str('creating') : str('create')) : null,
-
-                            // Create mode: Create and Edit button (stays open)
-                            !isEditing ? createElement('button', {
-                                key: 'create-edit',
-                                type: 'submit',
-                                className: 'btn btn-success',
-                                disabled: saving
-                            }, saving ? str('creating') : str('createandedit')) : null,
-
-                            // Edit mode: Update button (disabled if no changes or validation error)
-                            isEditing ? createElement('button', {
-                                key: 'update',
-                                type: 'submit',
-                                className: 'btn btn-primary',
-                                disabled: saving || !hasChanges || hasValidationError
-                            }, saving ? str('updating') : str('update')) : null
-                        ])
+                        createElement('div', {key: 'modal-footer', className: 'modal-footer'},
+                            renderModalFooterButtons({
+                                createElement,
+                                isEditing,
+                                hasChanges,
+                                hasValidationError,
+                                saving,
+                                str,
+                                handleClose,
+                                handleSubmit
+                            })
+                        )
                     ])
                 ])
         ])
