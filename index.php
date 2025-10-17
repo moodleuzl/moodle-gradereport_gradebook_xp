@@ -17,7 +17,7 @@
 /**
  * Displays the competency hierarchy for a course and provides links for managing competencies and connections.
  *
- * @package    gradereport_gb_xp_admin
+ * @package    gradereport_gradebook_xp
  * @copyright INB University of Luebeck
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,29 +26,84 @@ require_once('../../../config.php');
 require_once($CFG->dirroot . '/grade/lib.php');
 require_once('./lib.php');
 
+use \core_grades\output\general_action_bar;
+
 // Get required and optional parameters.
 $courseid = required_param('id', PARAM_INT);
-$userid = optional_param('userid', $USER->id, PARAM_INT);
+$userid = optional_param('userid', null, PARAM_INT);
+$competencyid = optional_param('competencyid', null, PARAM_INT);
+$competencyparentid = optional_param('competencyparentid', null, PARAM_INT);
 
-// Set up the page.
-require_course_login($courseid);
-gradereport_gb_xp_admin_setup_page($courseid);
-$PAGE->navbar->add(get_string('preferences'));
+// Setup page and validate access.
+$course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
+require_login($course->id);
+$context = context_course::instance($course->id);
 
-// Get the competencies for the course and sort by ID.
-$competencies = get_competencies_hierarchy($courseid);
+// Set up page URL with parameters.
+$url = new moodle_url('/grade/report/gradebook_xp/index.php', ['id' => $courseid]);
+if ($userid !== null) {
+    $url->param('userid', $userid);
+}
+if ($competencyid !== null) {
+    $url->param('competencyid', $competencyid);
+}
 
-// Render the page.
-$templatecontext = (object) [
-    'managecompetenciesurl' => new moodle_url('/grade/report/gb_xp_admin/manage_competencies.php'),
-    'manageconnectionsurl' => new moodle_url('/grade/report/gb_xp_admin/manage_connections.php'),
-    'exporturl' => new moodle_url('/grade/report/gb_xp_admin/export.php'),
-    'importurl' => new moodle_url('/grade/report/gb_xp_admin/import.php'),
-    'courseid' => $courseid,
-    'competencies' => $competencies,
-];
+$PAGE->set_url($url);
+$PAGE->set_pagelayout('report');
+$PAGE->set_context($context);
 
-print_grade_page_head($courseid, 'report', 'gb_xp_admin',
-    get_string('pluginname', 'gradereport_gb_xp_admin'), false, '');
-echo $OUTPUT->render_from_template('gradereport_gb_xp_admin/preferences', $templatecontext);
+// Check that the current user has permission to view grades.
+if (!has_any_capability(['moodle/grade:view', 'moodle/grade:viewall'], $context)) {
+    throw new moodle_exception('nopermissions', 'error', '', 'view grades');
+}
+
+// If userid is not set and current user doesn't have viewall capability, set it to current user.
+if ($userid === null && !has_capability('moodle/grade:viewall', $context)) {
+    $userid = $USER->id;
+}
+
+// Check if current user can view this user's grades.
+if ($userid != $USER->id && !has_capability('moodle/grade:viewall', $context)) {
+    throw new moodle_exception('nopermissions', 'error', '', 'view user grades');
+}
+
+// If userid is specified, validate the user exists and user has access to view their grades.
+$targetuser = null;
+if ($userid !== null) {
+    $targetuser = $DB->get_record('user', ['id' => $userid], '*', MUST_EXIST);
+}
+
+// Create action bar if user has viewall capability.
+$actionbar = null;
+if (has_capability('moodle/grade:viewall', $context)) {
+    $actionbar = new \gradereport_gradebook_xp\output\gradebook_xp_action_bar($context, $courseid, $userid);
+} else {
+    $actionbar = new general_action_bar(
+        $PAGE->context,
+        new moodle_url('/grade/report/gradebook_xp/index.php',
+        ['id' => $courseid]),
+        "report",
+        "gradebook_xp"
+    );
+}
+
+// Display page header with action bar.
+print_grade_page_head($courseid, 'report', 'gradebook_xp',
+    false, false, false, true, null, null, null, $actionbar);
+
+
+if ($userid !== null) {
+    $coursedatamanager = new \gradereport_gradebook_xp\course_data_manager($courseid, $userid);
+    // Generate chart data for visualization.
+    $templatedata = $coursedatamanager->build_template_data_for_selected_competency($competencyid);
+    $templatedata->chartjs_url = (new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp/js/chart.umd.min.js'))->out();
+
+    $templatedata->competencyparentid = $competencyparentid;
+    if ($userid !== $USER->id) {
+        $templatedata->urluserid = $userid;
+    }
+    // Render the main content using the old gradebook_xp template.
+    echo $OUTPUT->render_from_template('gradereport_gradebook_xp/index', $templatedata);
+}
+
 echo $OUTPUT->footer();

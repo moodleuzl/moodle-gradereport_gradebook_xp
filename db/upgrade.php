@@ -17,7 +17,7 @@
 /**
  * Gradebook XP upgrade steps.
  *
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  * @copyright INB University of Luebeck
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,7 +28,7 @@
  * @param int $oldversion the version we are upgrading from
  * @return bool result
  */
-function xmldb_gradereport_gb_xp_admin_upgrade($oldversion) {
+function xmldb_gradereport_gradebook_xp_upgrade($oldversion) {
     global $DB;
 
     return true;

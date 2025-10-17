@@ -15,155 +15,190 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Library functions for managing competencies, activity connections, and page setup for the gb_xp_admin report.
+ * Competency hierarchy helper functions for the Gradebook XP report.
  *
- * @package    gradereport_gb_xp_admin
+ * This file contains helper functions for retrieving, traversing, and validating
+ * hierarchical relationships between competencies within a Moodle course.
+ *
+ * @package    gradereport_gradebook_xp
  * @copyright INB University of Luebeck
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot . '/grade/report/user/lib.php');
-require_once($CFG->dirroot . '/grade/report/gb_xp_admin/db_controller.php');
+require_once(__DIR__ . '/db/relations.php');
+require_once(__DIR__ . '/db/competencies.php');
 
 /**
- * Set up a page for the 'gb_xp' report in Moodle.
+ * Retrieves all descendants (children, grandchildren, etc.) of a given competency.
  *
- * This function sets the page URL, layout, and verifies user access before displaying the report.
+ * Uses a single query to load all relations for the course via get_relations(), then traverses
+ * the hierarchy in PHP for optimal performance with many-to-many relationships.
  *
- * @param int $courseid The ID of the course for which the report is being generated.
- * @param string $capability The capability required to view the report. Defaults to 'moodle/grade:manage'.
- *
- * @throws moodle_exception If the course ID is invalid.
+ * @param int $competencyid The ID of the parent competency.
+ * @return array An array of all descendant competency IDs.
+ * @throws dml_exception
+ * @package gradereport_gradebook_xp
  */
-function gradereport_gb_xp_admin_setup_page($courseid, $capability = 'moodle/grade:manage') {
-    global $PAGE, $CFG, $DB, $context;
-
-    // Set page URL and layout.
-    $url = new moodle_url('/grade/report/gb_xp_admin/' . gradereport_gb_xp_admin_get_caller_filename(),
-        ['id' => $courseid]);
-    if ($courseid !== 0) {
-        $url->param('id', $courseid);
-    }
-    $PAGE->set_url($url);
-    $PAGE->set_pagelayout('standard');
-
-    $PAGE->requires->jquery();
-    $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/change_active_tab.js'));
-
-    if (!$course = $DB->get_record('course', ['id' => $courseid])) {
-        throw new \moodle_exception('invalidcourseid');
+function get_all_descendants($competencyid) {
+    // Get the competency to determine the course ID.
+    $competency = get_competency($competencyid);
+    if (!$competency) {
+        return []; // Return empty if competency doesn't exist.
     }
 
-    $context = context_course::instance($course->id);
-    require_capability($capability, $context);
-    $PAGE->set_context($context);
-}
+    // Get all relations for the course in one query.
+    $relations = get_relations($competency->courseid);
 
-/**
- * Get the filename of the calling script in the 'gb_xp' report context.
- *
- * This function retrieves the filename of the script that calls it within the context
- * of the 'gb_xp' report. It uses debug_backtrace to inspect the call stack.
- *
- * @return string The filename of the calling script.
- */
-function gradereport_gb_xp_admin_get_caller_filename() {
-    $trace = debug_backtrace();
-    $caller = $trace[1];
-    return basename($caller['file']);
-}
-
-/**
- * Add a competency to activity connection or overwrite an existing one.
- *
- * @param int $activityid ID of the activity to connect.
- * @param int $competencyid ID of the competency to connect.
- * @param int $level Level of the competency for this activity.
- *
- * @return void
- */
-function gradereport_gb_xp_admin_set_competency_connection($activityid, $competencyid, $level) {
-    $connection = get_connection($activityid, $competencyid);
-
-    // Update or insert record.
-    if ($connection) {
-
-        // Update value.
-        $connection->level = $level;
-
-        // Update record with new competency.
-        update_connection($connection);
-
-    } else {
-
-        // Construct new competency array.
-        $connection = [
-            "activityid" => $activityid,
-            "competencyid" => $competencyid,
-            "level" => $level,
-        ];
-
-        // Insert new record.
-        insert_connection($connection);
+    // Build adjacency list for children.
+    $children = [];
+    foreach ($relations as $relation) {
+        if (!isset($children[$relation->parentid])) {
+            $children[$relation->parentid] = [];
+        }
+        $children[$relation->parentid][] = $relation->childid;
     }
-}
 
-/**
- * Recursively constructs a hierarchical structure of competencies.
- *
- * @param array $competencies An array of competency objects.
- * @param int $parentid The parent ID to start building the hierarchy from. Defaults to 0.
- *
- * @return array The hierarchical structure of competencies.
- */
-function get_hierarchy($competencies, $parentid = 0): array {
-    // Initialize an empty array to store the hierarchy.
-    $hierarchy = [];
+    // Traverse hierarchy using depth-first search with cycle detection.
+    $visited = [];
+    $stack = [$competencyid];
 
-    // Iterate through each competency.
-    foreach ($competencies as $competency) {
-        // Check if the competency's parent ID matches the given parent ID.
-        if ($competency->parentid == $parentid) {
-            // Recursively get subcompetencies.
-            $subcompetencies = get_hierarchy($competencies, $competency->id);
-            // Ensure subcompetencies is an indexed array.
-            $competency->subCompetencies = array_values($subcompetencies);
-
-            // Retrieve connections for the current competency.
-            $competency->connections = get_connections($competency->id);
-
-            // Add the competency to the hierarchy array.
-            $hierarchy[] = $competency;
+    while (!empty($stack)) {
+        $current = array_pop($stack);
+        if (isset($children[$current])) {
+            foreach ($children[$current] as $child) {
+                if (!isset($visited[$child])) {
+                    $visited[$child] = true;
+                    $stack[] = $child;
+                }
+            }
         }
     }
 
-    return $hierarchy;
+    return array_map('intval', array_keys($visited));
 }
 
 /**
- * Get all competencies hierarchy.
+ * Retrieves all ancestors (parents, grandparents, etc.) of a given competency.
  *
- * This function retrieves the hierarchical structure of all competencies for a specified course.
- * It uses recursion to build the competency tree and returns an array representing the hierarchy.
+ * Uses a single query to load all relations for the course via get_relations(), then traverses
+ * the hierarchy in PHP for optimal performance with many-to-many relationships.
  *
- * @param int|null $courseid The ID of the course whose competencies are being retrieved. Defaults to null,
- *                           which means the current course will be used.
- * @param int $competencyid The ID of the parent competency to start building the hierarchy from. Defaults to 0.
- *
- * @return array An array representing the hierarchical structure of all competencies for the specified course.
+ * @param int $competencyid The ID of the child competency.
+ * @return array An array of all ancestor competency IDs.
  * @throws dml_exception
+ * @package gradereport_gradebook_xp
  */
-function get_competencies_hierarchy(int $courseid = null, int $competencyid = 0): array {
-    if (is_null($courseid)) {
-        global $COURSE;
-        $courseid = $COURSE->id;
+function get_all_ancestors($competencyid) {
+    // Get the competency to determine the course ID.
+    $competency = get_competency($competencyid);
+    if (!$competency) {
+        return []; // Return empty if competency doesn't exist.
     }
 
-    // Get all competencies of the specified course with their parent IDs.
-    $competencies = get_all_competencies($courseid);
+    // Get all relations for the course in one query.
+    $relations = get_relations($competency->courseid);
 
-    // Build hierarchy.
-    return get_hierarchy($competencies, $competencyid);
+    // Build adjacency list for parents.
+    $parents = [];
+    foreach ($relations as $relation) {
+        if (!isset($parents[$relation->childid])) {
+            $parents[$relation->childid] = [];
+        }
+        $parents[$relation->childid][] = $relation->parentid;
+    }
+
+    // Traverse hierarchy using depth-first search with cycle detection.
+    $visited = [];
+    $stack = [$competencyid];
+
+    while (!empty($stack)) {
+        $current = array_pop($stack);
+        if (isset($parents[$current])) {
+            foreach ($parents[$current] as $parent) {
+                if (!isset($visited[$parent])) {
+                    $visited[$parent] = true;
+                    $stack[] = $parent;
+                }
+            }
+        }
+    }
+
+    return array_map('intval', array_keys($visited));
+}
+
+/**
+ * Retrieves all descendant competency objects (not just IDs) of a given competency.
+ *
+ * @param int $competencyid The ID of the parent competency.
+ * @return array An array of descendant competency objects.
+ * @throws dml_exception
+ * @package gradereport_gradebook_xp
+ */
+function get_descendant_competencies($competencyid) {
+    global $DB;
+
+    $descendantids = get_all_descendants($competencyid);
+
+    if (empty($descendantids)) {
+        return [];
+    }
+
+    // Single query to get all descendant competency objects.
+    list($insql, $params) = $DB->get_in_or_equal($descendantids);
+    return $DB->get_records_select('gradereport_gradebook_xp_competencies',
+        "id $insql", $params, 'id ASC');
+}
+
+/**
+ * Retrieves all ancestor competency objects (not just IDs) of a given competency.
+ *
+ * @param int $competencyid The ID of the child competency.
+ * @return array An array of ancestor competency objects.
+ * @throws dml_exception
+ * @package gradereport_gradebook_xp
+ */
+function get_ancestor_competencies($competencyid) {
+    global $DB;
+
+    $ancestorids = get_all_ancestors($competencyid);
+
+    if (empty($ancestorids)) {
+        return [];
+    }
+
+    // Single query to get all ancestor competency objects.
+    list($insql, $params) = $DB->get_in_or_equal($ancestorids);
+    return $DB->get_records_select('gradereport_gradebook_xp_competencies',
+        "id $insql", $params, 'id ASC');
+}
+
+
+/**
+ * Checks if a competency is a descendant of another competency.
+ *
+ * @param int $childid The ID of the potential child competency.
+ * @param int $parentid The ID of the potential parent competency.
+ * @return bool True if child_id is a descendant of parent_id, false otherwise.
+ * @throws dml_exception
+ * @package gradereport_gradebook_xp
+ */
+function is_descendant($childid, $parentid) {
+    $descendants = get_all_descendants($parentid);
+    return in_array($childid, $descendants);
+}
+
+/**
+ * Checks if a competency is an ancestor of another competency.
+ *
+ * @param int $parentid The ID of the potential parent competency.
+ * @param int $childid The ID of the potential child competency.
+ * @return bool True if parent_id is an ancestor of child_id, false otherwise.
+ * @throws dml_exception
+ * @package gradereport_gradebook_xp
+ */
+function is_ancestor($parentid, $childid) {
+    $ancestors = get_all_ancestors($childid);
+    return in_array($parentid, $ancestors);
 }
