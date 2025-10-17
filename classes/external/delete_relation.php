@@ -17,12 +17,12 @@
 /**
  * External API for deleting relations.
  *
- * @package    gradereport_gb_xp_admin
+ * @package    gradereport_gradebook_xp
  * @copyright  INB University of Luebeck
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace gradereport_gb_xp_admin\external;
+namespace gradereport_gradebook_xp\external;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -68,19 +68,19 @@ class delete_relation extends external_api {
         // Get existing relation to validate access.
         $existing = get_relation($params['id']);
         if (!$existing) {
-            throw new moodle_exception('relationnotfound', 'gradereport_gb_xp_admin');
+            throw new moodle_exception('relationnotfound', 'gradereport_gradebook_xp');
         }
 
         // Get parent competency to validate course access.
         $parent = get_competency($existing->parentid);
         if (!$parent) {
-            throw new moodle_exception('competencynotfound', 'gradereport_gb_xp_admin');
+            throw new moodle_exception('competencynotfound', 'gradereport_gradebook_xp');
         }
 
         // Context validation.
         $context = context_course::instance($parent->courseid);
         self::validate_context($context);
-        require_capability('gradereport/gb_xp_admin:manage', $context);
+        require_capability('gradereport/gradebook_xp:manage', $context);
 
         // Delete relation.
         delete_relation($params['id']);

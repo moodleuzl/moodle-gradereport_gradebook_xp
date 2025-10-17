@@ -1,6 +1,6 @@
-# gb_xp_admin
+# gradebook_xp
 
-Moodle gb_xp_admin plugin
+Moodle gradebook_xp plugin
 
 ## How To Install:
 Head into your moodle installation folder, then into grade/report.

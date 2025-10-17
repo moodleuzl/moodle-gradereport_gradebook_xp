@@ -17,7 +17,7 @@
 /**
  * Displays the list of competencies for a course and provides options for managing them.
  *
- * @package    gradereport_gb_xp_admin
+ * @package    gradereport_gradebook_xp
  * @copyright INB University of Luebeck
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -38,7 +38,7 @@ $context = context_course::instance($course->id);
 
 
 // Set up page URL with parameters.
-$url = new moodle_url('/grade/report/gb_xp_admin/manage_competencies.php', ['id' => $courseid]);
+$url = new moodle_url('/grade/report/gradebook_xp/manage_competencies.php', ['id' => $courseid]);
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('default');
 $PAGE->set_context($context);
@@ -51,15 +51,15 @@ if (!has_capability('moodle/grade:manage', $context)) {
 $PAGE->requires->jquery();
 
 print_grade_page_head(
-    $courseid, 'report', 'gb_xp_admin',
+    $courseid, 'report', 'gradebook_xp',
     false, false, '', false);
 
-echo $OUTPUT->render_from_template('gradereport_gb_xp_admin/manage_competencies', [
-    'react_url' => (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/react.production.min.js'))->out(),
-    'react_dom_url' => (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/react-dom.production.min.js'))->out(),
+echo $OUTPUT->render_from_template('gradereport_gradebook_xp/manage_competencies', [
+    'react_url' => (new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp/js/react.production.min.js'))->out(),
+    'react_dom_url' => (new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp/js/react-dom.production.min.js'))->out(),
 ]);
 
-$PAGE->requires->js_call_amd('gradereport_gb_xp_admin/competency_manager', 'init', [
+$PAGE->requires->js_call_amd('gradereport_gradebook_xp/competency_manager', 'init', [
     'containerId' => "gradebook-xp-manage-react-app-container",
     [
         'courseid' => $courseid,

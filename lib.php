@@ -15,12 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Competency hierarchy helper functions for the Gradebook XP Admin report.
+ * Competency hierarchy helper functions for the Gradebook XP report.
  *
  * This file contains helper functions for retrieving, traversing, and validating
  * hierarchical relationships between competencies within a Moodle course.
  *
- * @package    gradereport_gb_xp_admin
+ * @package    gradereport_gradebook_xp
  * @copyright INB University of Luebeck
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -39,7 +39,7 @@ require_once(__DIR__ . '/db/competencies.php');
  * @param int $competencyid The ID of the parent competency.
  * @return array An array of all descendant competency IDs.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function get_all_descendants($competencyid) {
     // Get the competency to determine the course ID.
@@ -88,7 +88,7 @@ function get_all_descendants($competencyid) {
  * @param int $competencyid The ID of the child competency.
  * @return array An array of all ancestor competency IDs.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function get_all_ancestors($competencyid) {
     // Get the competency to determine the course ID.
@@ -134,7 +134,7 @@ function get_all_ancestors($competencyid) {
  * @param int $competencyid The ID of the parent competency.
  * @return array An array of descendant competency objects.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function get_descendant_competencies($competencyid) {
     global $DB;
@@ -147,7 +147,7 @@ function get_descendant_competencies($competencyid) {
 
     // Single query to get all descendant competency objects.
     list($insql, $params) = $DB->get_in_or_equal($descendantids);
-    return $DB->get_records_select('gradereport_gb_xp_admin_competencies',
+    return $DB->get_records_select('gradereport_gradebook_xp_competencies',
         "id $insql", $params, 'id ASC');
 }
 
@@ -157,7 +157,7 @@ function get_descendant_competencies($competencyid) {
  * @param int $competencyid The ID of the child competency.
  * @return array An array of ancestor competency objects.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function get_ancestor_competencies($competencyid) {
     global $DB;
@@ -170,7 +170,7 @@ function get_ancestor_competencies($competencyid) {
 
     // Single query to get all ancestor competency objects.
     list($insql, $params) = $DB->get_in_or_equal($ancestorids);
-    return $DB->get_records_select('gradereport_gb_xp_admin_competencies',
+    return $DB->get_records_select('gradereport_gradebook_xp_competencies',
         "id $insql", $params, 'id ASC');
 }
 
@@ -182,7 +182,7 @@ function get_ancestor_competencies($competencyid) {
  * @param int $parentid The ID of the potential parent competency.
  * @return bool True if child_id is a descendant of parent_id, false otherwise.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function is_descendant($childid, $parentid) {
     $descendants = get_all_descendants($parentid);
@@ -196,7 +196,7 @@ function is_descendant($childid, $parentid) {
  * @param int $childid The ID of the potential child competency.
  * @return bool True if parent_id is an ancestor of child_id, false otherwise.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function is_ancestor($parentid, $childid) {
     $ancestors = get_all_ancestors($childid);

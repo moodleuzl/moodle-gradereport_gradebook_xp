@@ -17,12 +17,12 @@
 /**
  * External API for getting relations.
  *
- * @package    gradereport_gb_xp_admin
+ * @package    gradereport_gradebook_xp
  * @copyright  INB University of Luebeck
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace gradereport_gb_xp_admin\external;
+namespace gradereport_gradebook_xp\external;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -68,7 +68,7 @@ class get_relations extends external_api {
         // Context validation.
         $context = context_course::instance($params['courseid']);
         self::validate_context($context);
-        require_capability('gradereport/gb_xp_admin:view', $context);
+        require_capability('gradereport/gradebook_xp:view', $context);
 
         // Get relations.
         $relations = get_relations($params['courseid']);

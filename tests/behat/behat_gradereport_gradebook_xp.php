@@ -17,7 +17,7 @@
 /**
  * Behat steps definitions for the plugin.
  *
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  * @category  test
  * @copyright INB University of Luebeck
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -33,9 +33,9 @@ use Behat\Mink\Exception\ElementNotFoundException;
 /**
  * Steps definitions for the plugin.
  *
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
-class behat_gradereport_gb_xp_admin extends behat_base {
+class behat_gradereport_gradebook_xp extends behat_base {
     /** @var array map "name" => inserted id, useful for later steps if needed */
     protected $createdcompetencies = [];
     /**
@@ -82,7 +82,7 @@ class behat_gradereport_gb_xp_admin extends behat_base {
             ];
 
             // Insert into new table.
-            $id = $DB->insert_record('gradereport_gb_xp_admin_competencies', $record);
+            $id = $DB->insert_record('gradereport_gradebook_xp_competencies', $record);
 
             // Keep a reference by name (useful for follow-up steps).
             $this->createdcompetencies[$record->name] = $id;
@@ -116,13 +116,13 @@ class behat_gradereport_gb_xp_admin extends behat_base {
 
             // Look up IDs from the ones we already created in this test run.
             if (!isset($this->createdcompetencies[$parentname])) {
-                $parentid = $DB->get_field('gradereport_gb_xp_admin_competencies', 'id', ['name' => $parentname], MUST_EXIST);
+                $parentid = $DB->get_field('gradereport_gradebook_xp_competencies', 'id', ['name' => $parentname], MUST_EXIST);
             } else {
                 $parentid = $this->createdcompetencies[$parentname];
             }
 
             if (!isset($this->createdcompetencies[$childname])) {
-                $childid = $DB->get_field('gradereport_gb_xp_admin_competencies', 'id', ['name' => $childname], MUST_EXIST);
+                $childid = $DB->get_field('gradereport_gradebook_xp_competencies', 'id', ['name' => $childname], MUST_EXIST);
             } else {
                 $childid = $this->createdcompetencies[$childname];
             }
@@ -132,13 +132,13 @@ class behat_gradereport_gb_xp_admin extends behat_base {
                 throw new moodle_exception("Competency '{$parentname}' cannot be related to itself.");
             }
 
-            $exists = $DB->record_exists('gradereport_gb_xp_admin_relations', [
+            $exists = $DB->record_exists('gradereport_gradebook_xp_relations', [
                 'parentid' => $parentid,
                 'childid'  => $childid
             ]);
 
             if (!$exists) {
-                $DB->insert_record('gradereport_gb_xp_admin_relations', (object)[
+                $DB->insert_record('gradereport_gradebook_xp_relations', (object)[
                     'parentid' => $parentid,
                     'childid'  => $childid
                 ]);

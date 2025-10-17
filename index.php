@@ -17,7 +17,7 @@
 /**
  * Displays the competency hierarchy for a course and provides links for managing competencies and connections.
  *
- * @package    gradereport_gb_xp_admin
+ * @package    gradereport_gradebook_xp
  * @copyright INB University of Luebeck
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -40,7 +40,7 @@ require_login($course->id);
 $context = context_course::instance($course->id);
 
 // Set up page URL with parameters.
-$url = new moodle_url('/grade/report/gb_xp_admin/index.php', ['id' => $courseid]);
+$url = new moodle_url('/grade/report/gradebook_xp/index.php', ['id' => $courseid]);
 if ($userid !== null) {
     $url->param('userid', $userid);
 }
@@ -76,34 +76,34 @@ if ($userid !== null) {
 // Create action bar if user has viewall capability.
 $actionbar = null;
 if (has_capability('moodle/grade:viewall', $context)) {
-    $actionbar = new \gradereport_gb_xp_admin\output\gb_xp_action_bar($context, $courseid, $userid);
+    $actionbar = new \gradereport_gradebook_xp\output\gradebook_xp_action_bar($context, $courseid, $userid);
 } else {
     $actionbar = new general_action_bar(
         $PAGE->context,
-        new moodle_url('/grade/report/gb_xp_admin/index.php',
+        new moodle_url('/grade/report/gradebook_xp/index.php',
         ['id' => $courseid]),
         "report",
-        "gb_xp_admin"
+        "gradebook_xp"
     );
 }
 
 // Display page header with action bar.
-print_grade_page_head($courseid, 'report', 'gb_xp_admin',
+print_grade_page_head($courseid, 'report', 'gradebook_xp',
     false, false, false, true, null, null, null, $actionbar);
 
 
 if ($userid !== null) {
-    $coursedatamanager = new \gradereport_gb_xp_admin\course_data_manager($courseid, $userid);
+    $coursedatamanager = new \gradereport_gradebook_xp\course_data_manager($courseid, $userid);
     // Generate chart data for visualization.
     $templatedata = $coursedatamanager->build_template_data_for_selected_competency($competencyid);
-    $templatedata->chartjs_url = (new moodle_url($CFG->wwwroot . '/grade/report/gb_xp_admin/js/chart.umd.min.js'))->out();
+    $templatedata->chartjs_url = (new moodle_url($CFG->wwwroot . '/grade/report/gradebook_xp/js/chart.umd.min.js'))->out();
 
     $templatedata->competencyparentid = $competencyparentid;
     if ($userid !== $USER->id) {
         $templatedata->urluserid = $userid;
     }
-    // Render the main content using the old gb_xp template.
-    echo $OUTPUT->render_from_template('gradereport_gb_xp_admin/index', $templatedata);
+    // Render the main content using the old gradebook_xp template.
+    echo $OUTPUT->render_from_template('gradereport_gradebook_xp/index', $templatedata);
 }
 
 echo $OUTPUT->footer();

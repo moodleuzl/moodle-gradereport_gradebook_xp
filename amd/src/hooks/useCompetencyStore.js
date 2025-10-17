@@ -16,13 +16,13 @@
 /**
  * Simple global state hook for competency data.
  *
- * @module    gradereport_gb_xp_admin/useCompetencyStore
+ * @module    gradereport_gradebook_xp/useCompetencyStore
  * @copyright 2025 INB University of Luebeck
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import ApiService from 'gradereport_gb_xp_admin/api_service';
-import ToastService from 'gradereport_gb_xp_admin/toast_service';
+import ApiService from 'gradereport_gradebook_xp/api_service';
+import ToastService from 'gradereport_gradebook_xp/toast_service';
 
 const {createContext, useContext, useState, useCallback, useEffect} = window.React;
 

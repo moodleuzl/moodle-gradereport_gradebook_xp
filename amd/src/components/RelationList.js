@@ -16,7 +16,7 @@
 /**
  * RelationList component for displaying a list of related items.
  *
- * @module    gradereport_gb_xp_admin/components/RelationList
+ * @module    gradereport_gradebook_xp/components/RelationList
  * @copyright 2025 INB University of Luebeck
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

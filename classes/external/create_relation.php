@@ -17,12 +17,12 @@
 /**
  * External API for creating relations.
  *
- * @package    gradereport_gb_xp_admin
+ * @package    gradereport_gradebook_xp
  * @copyright  INB University of Luebeck
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace gradereport_gb_xp_admin\external;
+namespace gradereport_gradebook_xp\external;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -74,17 +74,17 @@ class create_relation extends external_api {
         $child = get_competency($params['childid']);
 
         if (!$parent || !$child) {
-            throw new moodle_exception('competencynotfound', 'gradereport_gb_xp_admin');
+            throw new moodle_exception('competencynotfound', 'gradereport_gradebook_xp');
         }
 
         if ($parent->courseid !== $child->courseid) {
-            throw new moodle_exception('competenciesnotsamecourse', 'gradereport_gb_xp_admin');
+            throw new moodle_exception('competenciesnotsamecourse', 'gradereport_gradebook_xp');
         }
 
         // Context validation.
         $context = context_course::instance($parent->courseid);
         self::validate_context($context);
-        require_capability('gradereport/gb_xp_admin:manage', $context);
+        require_capability('gradereport/gradebook_xp:manage', $context);
 
         // Create relation object.
         $relation = new stdClass();

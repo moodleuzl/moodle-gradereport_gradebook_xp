@@ -17,12 +17,12 @@
 /**
  * External API for deleting connections.
  *
- * @package    gradereport_gb_xp_admin
+ * @package    gradereport_gradebook_xp
  * @copyright  INB University of Luebeck
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace gradereport_gb_xp_admin\external;
+namespace gradereport_gradebook_xp\external;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -68,21 +68,21 @@ class delete_connection extends external_api {
         ]);
 
         // Get existing connection to validate access.
-        $existing = $DB->get_record('gradereport_gb_xp_admin_connections', ['id' => $params['id']]);
+        $existing = $DB->get_record('gradereport_gradebook_xp_connections', ['id' => $params['id']]);
         if (!$existing) {
-            throw new moodle_exception('connectionnotfound', 'gradereport_gb_xp_admin');
+            throw new moodle_exception('connectionnotfound', 'gradereport_gradebook_xp');
         }
 
         // Get competency to validate course access.
         $competency = get_competency($existing->competencyid);
         if (!$competency) {
-            throw new moodle_exception('competencynotfound', 'gradereport_gb_xp_admin');
+            throw new moodle_exception('competencynotfound', 'gradereport_gradebook_xp');
         }
 
         // Context validation.
         $context = context_course::instance($competency->courseid);
         self::validate_context($context);
-        require_capability('gradereport/gb_xp_admin:manage', $context);
+        require_capability('gradereport/gradebook_xp:manage', $context);
 
         // Delete connection.
         delete_connection($params['id']);

@@ -16,12 +16,12 @@
 /**
  * RelationSelector component for selecting items with fuzzy search.
  *
- * @module    gradereport_gb_xp_admin/components/RelationSelector
+ * @module    gradereport_gradebook_xp/components/RelationSelector
  * @copyright 2025 INB University of Luebeck
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {useStrings} from 'gradereport_gb_xp_admin/hooks/useStrings';
+import {useStrings} from 'gradereport_gradebook_xp/hooks/useStrings';
 
 /**
  * Fuzzy search implementation.

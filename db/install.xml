@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="grade/report/gb_xp_admin/db" VERSION="20250917" COMMENT="XMLDB file for Moodle grade/report/gb_xp_admin"
+<XMLDB PATH="grade/report/gradebook_xp/db" VERSION="20250917" COMMENT="XMLDB file for Moodle grade/report/gradebook_xp"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="gradereport_gb_xp_admin_competencies" COMMENT="Stores all competencies bound to a course.">
+    <TABLE NAME="gradereport_gradebook_xp_competencies" COMMENT="Stores all competencies bound to a course.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -18,7 +18,7 @@
         <KEY NAME="courseid_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="gradereport_gb_xp_admin_connections" COMMENT="Stores all competency to activity connections and their weight.">
+    <TABLE NAME="gradereport_gradebook_xp_connections" COMMENT="Stores all competency to activity connections and their weight.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="activityid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -27,10 +27,10 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="competencyid_fk" TYPE="foreign" FIELDS="competencyid" REFTABLE="gradereport_gb_xp_admin_competencies" REFFIELDS="id"/>
+        <KEY NAME="competencyid_fk" TYPE="foreign" FIELDS="competencyid" REFTABLE="gradereport_gradebook_xp_competencies" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="gradereport_gb_xp_admin_relations" COMMENT="Stores all competency to competency relations.">
+    <TABLE NAME="gradereport_gradebook_xp_relations" COMMENT="Stores all competency to competency relations.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="parentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -38,8 +38,8 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="parentid_fk" TYPE="foreign" FIELDS="parentid" REFTABLE="gradereport_gb_xp_admin_competencies" REFFIELDS="id"/>
-        <KEY NAME="childid_fk" TYPE="foreign" FIELDS="childid" REFTABLE="gradereport_gb_xp_admin_competencies" REFFIELDS="id"/>
+        <KEY NAME="parentid_fk" TYPE="foreign" FIELDS="parentid" REFTABLE="gradereport_gradebook_xp_competencies" REFFIELDS="id"/>
+        <KEY NAME="childid_fk" TYPE="foreign" FIELDS="childid" REFTABLE="gradereport_gradebook_xp_competencies" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
   </TABLES>

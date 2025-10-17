@@ -18,9 +18,9 @@
  * Provides utility functions for managing activity-competency connections.
  *
  * Functions include retrieving, inserting, updating, and deleting connections
- * between activities and competencies in the gradebook XP admin system.
+ * between activities and competencies in the gradebook XP system.
  *
- * @package    gradereport_gb_xp_admin
+ * @package    gradereport_gradebook_xp
  * @copyright INB University of Luebeck
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -32,13 +32,13 @@
  * @param int $competencyid The ID of the competency.
  * @return stdClass|false The connection object if found, or false if not found.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function get_connection($activityid, $competencyid) {
     global $DB;
 
     // Retrieve the matching record from the database based on activity and competency IDs.
-    return $DB->get_record('gradereport_gb_xp_admin_connections', [
+    return $DB->get_record('gradereport_gradebook_xp_connections', [
         'activityid' => $activityid,
         'competencyid' => $competencyid
     ]);
@@ -50,13 +50,13 @@ function get_connection($activityid, $competencyid) {
  * @param int $competencyid The ID of the competency.
  * @return array An array of connection records related to the specified competency.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function get_connections_by_competency($competencyid) {
     global $DB;
 
     // Retrieve all connections related to the specified competency.
-    return $DB->get_records('gradereport_gb_xp_admin_connections', ['competencyid' => $competencyid]);
+    return $DB->get_records('gradereport_gradebook_xp_connections', ['competencyid' => $competencyid]);
 }
 
 /**
@@ -65,15 +65,15 @@ function get_connections_by_competency($competencyid) {
  * @param int $courseid course ID.
  * @return array An array of all connections for the specified course.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function get_connections($courseid) {
     global $DB;
 
     // Get all connections for competencies in the specified course.
     $sql = "SELECT conn.*
-              FROM {gradereport_gb_xp_admin_connections} conn
-              JOIN {gradereport_gb_xp_admin_competencies} comp ON comp.id = conn.competencyid
+              FROM {gradereport_gradebook_xp_connections} conn
+              JOIN {gradereport_gradebook_xp_competencies} comp ON comp.id = conn.competencyid
              WHERE comp.courseid = ?
              ORDER BY conn.activityid ASC, conn.competencyid ASC";
     return $DB->get_records_sql($sql, [$courseid]);
@@ -88,13 +88,13 @@ function get_connections($courseid) {
  * @param stdClass $connection The connection object to insert.
  * @return int The ID of the existing or newly created connection.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function insert_connection($connection) {
     global $DB;
 
     // Check if this activity-competency combination already exists.
-    $existing = $DB->get_record('gradereport_gb_xp_admin_connections', [
+    $existing = $DB->get_record('gradereport_gradebook_xp_connections', [
         'activityid' => $connection->activityid,
         'competencyid' => $connection->competencyid
     ]);
@@ -106,7 +106,7 @@ function insert_connection($connection) {
     }
 
     // Insert new connection and return new ID.
-    return (int)$DB->insert_record('gradereport_gb_xp_admin_connections', $connection, true);
+    return (int)$DB->insert_record('gradereport_gradebook_xp_connections', $connection, true);
 }
 
 /**
@@ -114,13 +114,13 @@ function insert_connection($connection) {
  *
  * @param stdClass $connection The connection object to update.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function update_connection($connection) {
     global $DB;
 
     // Update the connection record in the database.
-    $DB->update_record('gradereport_gb_xp_admin_connections', $connection);
+    $DB->update_record('gradereport_gradebook_xp_connections', $connection);
 }
 
 /**
@@ -128,11 +128,11 @@ function update_connection($connection) {
  *
  * @param int $id The ID of the connection to delete.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function delete_connection($id) {
     global $DB;
 
     // Delete the connection record from the database.
-    $DB->delete_records('gradereport_gb_xp_admin_connections', ['id' => $id]);
+    $DB->delete_records('gradereport_gradebook_xp_connections', ['id' => $id]);
 }

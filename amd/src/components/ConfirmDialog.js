@@ -16,12 +16,12 @@
 /**
  * ConfirmDialog component using Bootstrap modal.
  *
- * @module    gradereport_gb_xp_admin/components/ConfirmDialog
+ * @module    gradereport_gradebook_xp/components/ConfirmDialog
  * @copyright 2025 INB University of Luebeck
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {useStrings} from 'gradereport_gb_xp_admin/hooks/useStrings';
+import {useStrings} from 'gradereport_gradebook_xp/hooks/useStrings';
 
 /**
  * Confirm dialog component using Bootstrap modal.

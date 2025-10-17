@@ -15,17 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course data manager for gb_xp_admin gradebook report.
+ * Course data manager for gradebook_xp gradebook report.
  *
  * Centralizes data fetching and management for course competencies, relations,
  * connections, and grades to provide easy access for visualization and reporting.
  *
- * @package    gradereport_gb_xp_admin
+ * @package    gradereport_gradebook_xp
  * @copyright  INB University of Luebeck
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace gradereport_gb_xp_admin;
+namespace gradereport_gradebook_xp;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -698,7 +698,7 @@ class course_data_manager {
     }
 
     /**
-     * Build template data for selected competency based on gradereport_gb_xp_admin_generate_chart_data from lib.php.
+     * Build template data for selected competency based on gradereport_gradebook_xp_generate_chart_data from lib.php.
      *
      * Generates template data for visualization, similar to the original function but using
      * the cached data from the course_data_manager for improved performance.

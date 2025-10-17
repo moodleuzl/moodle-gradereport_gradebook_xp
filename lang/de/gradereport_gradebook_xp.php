@@ -15,13 +15,13 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'gb_xp_admin', language 'de'
+ * Strings for component 'gradebook_xp', language 'de'
  *
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  * @copyright INB University of Luebeck
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$string['pluginname'] = 'Gradebook XP Admin';
+$string['pluginname'] = 'Gradebook XP';
 $string['newcompetency'] = 'Neue Kompetenz';
 $string['editcompetency'] = 'Kompetenz bearbeiten';
 $string['deletecompetency'] = 'Kompetenz löschen';

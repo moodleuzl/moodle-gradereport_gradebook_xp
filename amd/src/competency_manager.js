@@ -14,16 +14,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * React application for gb_xp_admin gradebook report.
+ * React application for gradebook_xp gradebook report.
  *
- * @module    gradereport_gb_xp_admin/react_app
+ * @module    gradereport_gradebook_xp/react_app
  * @copyright 2025 INB University of Luebeck
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {useCompetencyStore, CompetencyProvider} from 'gradereport_gb_xp_admin/hooks/useCompetencyStore';
-import {useStrings, StringProvider} from 'gradereport_gb_xp_admin/hooks/useStrings';
-import {CompetencyTreeView} from 'gradereport_gb_xp_admin/components/CompetencyTreeView';
+import {useCompetencyStore, CompetencyProvider} from 'gradereport_gradebook_xp/hooks/useCompetencyStore';
+import {useStrings, StringProvider} from 'gradereport_gradebook_xp/hooks/useStrings';
+import {CompetencyTreeView} from 'gradereport_gradebook_xp/components/CompetencyTreeView';
 
 /**
  * Main React component for the gradebook admin interface.

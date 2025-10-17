@@ -14,9 +14,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * API service for gb_xp_admin gradebook report.
+ * API service for gradebook_xp gradebook report.
  *
- * @module    gradereport_gb_xp_admin/api_service
+ * @module    gradereport_gradebook_xp/api_service
  * @copyright 2025 INB University of Luebeck
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -35,7 +35,7 @@ export default class ApiService {
      */
     static async getCompetencies(courseid) {
         const promises = call([{
-            methodname: 'gradereport_gb_xp_admin_get_competencies',
+            methodname: 'gradereport_gradebook_xp_get_competencies',
             args: {courseid}
         }]);
         return await promises[0];
@@ -49,7 +49,7 @@ export default class ApiService {
      */
     static async createCompetency(data) {
         const promises = call([{
-            methodname: 'gradereport_gb_xp_admin_create_competency',
+            methodname: 'gradereport_gradebook_xp_create_competency',
             args: data
         }]);
         return await promises[0];
@@ -63,7 +63,7 @@ export default class ApiService {
      */
     static async updateCompetency(data) {
         const promises = call([{
-            methodname: 'gradereport_gb_xp_admin_update_competency',
+            methodname: 'gradereport_gradebook_xp_update_competency',
             args: data
         }]);
         return await promises[0];
@@ -77,7 +77,7 @@ export default class ApiService {
      */
     static async deleteCompetency(id) {
         const promises = call([{
-            methodname: 'gradereport_gb_xp_admin_delete_competency',
+            methodname: 'gradereport_gradebook_xp_delete_competency',
             args: {id}
         }]);
         return await promises[0];
@@ -91,7 +91,7 @@ export default class ApiService {
      */
     static async getActivities(courseid) {
         const promises = call([{
-            methodname: 'gradereport_gb_xp_admin_get_activities',
+            methodname: 'gradereport_gradebook_xp_get_activities',
             args: {courseid}
         }]);
         return await promises[0];
@@ -105,7 +105,7 @@ export default class ApiService {
      */
     static async getConnections(courseid) {
         const promises = call([{
-            methodname: 'gradereport_gb_xp_admin_get_connections',
+            methodname: 'gradereport_gradebook_xp_get_connections',
             args: {courseid}
         }]);
         return await promises[0];
@@ -119,7 +119,7 @@ export default class ApiService {
      */
     static async createConnection(data) {
         const promises = call([{
-            methodname: 'gradereport_gb_xp_admin_create_connection',
+            methodname: 'gradereport_gradebook_xp_create_connection',
             args: data
         }]);
         return await promises[0];
@@ -133,7 +133,7 @@ export default class ApiService {
      */
     static async deleteConnection(id) {
         const promises = call([{
-            methodname: 'gradereport_gb_xp_admin_delete_connection',
+            methodname: 'gradereport_gradebook_xp_delete_connection',
             args: {id}
         }]);
         return await promises[0];
@@ -147,7 +147,7 @@ export default class ApiService {
      */
     static async getRelations(courseid) {
         const promises = call([{
-            methodname: 'gradereport_gb_xp_admin_get_relations',
+            methodname: 'gradereport_gradebook_xp_get_relations',
             args: {courseid}
         }]);
         return await promises[0];
@@ -161,7 +161,7 @@ export default class ApiService {
      */
     static async createRelation(data) {
         const promises = call([{
-            methodname: 'gradereport_gb_xp_admin_create_relation',
+            methodname: 'gradereport_gradebook_xp_create_relation',
             args: data
         }]);
         return await promises[0];
@@ -175,7 +175,7 @@ export default class ApiService {
      */
     static async deleteRelation(id) {
         const promises = call([{
-            methodname: 'gradereport_gb_xp_admin_delete_relation',
+            methodname: 'gradereport_gradebook_xp_delete_relation',
             args: {id}
         }]);
         return await promises[0];

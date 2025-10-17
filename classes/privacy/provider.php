@@ -15,16 +15,16 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Privacy Subsystem implementation for 'gb_xp_admin'
+ * Privacy Subsystem implementation for 'gradebook_xp'
  *
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  * @copyright INB University of Luebeck
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace gradereport_gb_xp_admin\privacy;
+namespace gradereport_gradebook_xp\privacy;
 
 /**
- * Privacy Subsystem for gb_xp_admin implementing null_provider.
+ * Privacy Subsystem for gradebook_xp implementing null_provider.
  *
  * @copyright INB University of Luebeck
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

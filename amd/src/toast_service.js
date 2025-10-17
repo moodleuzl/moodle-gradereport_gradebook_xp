@@ -14,9 +14,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Toast notification service for gb_xp_admin gradebook report.
+ * Toast notification service for gradebook_xp gradebook report.
  *
- * @module    gradereport_gb_xp_admin/toast_service
+ * @module    gradereport_gradebook_xp/toast_service
  * @copyright 2025 INB University of Luebeck
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -100,49 +100,49 @@ export default class ToastService {
 
     // Data loading toasts
     static async dataLoaded() {
-        const msg = await getString('dataloaded', 'gradereport_gb_xp_admin');
+        const msg = await getString('dataloaded', 'gradereport_gradebook_xp');
         ToastService.success(msg);
     }
 
     static async dataLoadFailed() {
-        const msg = await getString('dataloadfailed', 'gradereport_gb_xp_admin');
+        const msg = await getString('dataloadfailed', 'gradereport_gradebook_xp');
         ToastService.error(msg);
     }
 
     // Competency-specific toasts
     static async competencyCreated(name) {
-        const msg = await getString('competencycreated', 'gradereport_gb_xp_admin', name);
+        const msg = await getString('competencycreated', 'gradereport_gradebook_xp', name);
         ToastService.success(msg);
     }
 
     static async competencyUpdated(name) {
-        const msg = await getString('competencyupdated', 'gradereport_gb_xp_admin', name);
+        const msg = await getString('competencyupdated', 'gradereport_gradebook_xp', name);
         ToastService.success(msg);
     }
 
     static async competencyDeleted(name) {
-        const msg = await getString('competencydeleted', 'gradereport_gb_xp_admin', name);
+        const msg = await getString('competencydeleted', 'gradereport_gradebook_xp', name);
         ToastService.success(msg);
     }
 
     static async competencyCreateFailed() {
-        const msg = await getString('competencycreatefailed', 'gradereport_gb_xp_admin');
+        const msg = await getString('competencycreatefailed', 'gradereport_gradebook_xp');
         ToastService.error(msg);
     }
 
     static async competencyUpdateFailed() {
-        const msg = await getString('competencyupdatefailed', 'gradereport_gb_xp_admin');
+        const msg = await getString('competencyupdatefailed', 'gradereport_gradebook_xp');
         ToastService.error(msg);
     }
 
     static async competencyDeleteFailed() {
-        const msg = await getString('competencydeletefailed', 'gradereport_gb_xp_admin');
+        const msg = await getString('competencydeletefailed', 'gradereport_gradebook_xp');
         ToastService.error(msg);
     }
 
     // Connection-specific toasts
     static async connectionCreated(compName, actName) {
-        const msg = await getString('connectioncreated', 'gradereport_gb_xp_admin', {
+        const msg = await getString('connectioncreated', 'gradereport_gradebook_xp', {
             competency: compName,
             activity: actName
         });
@@ -150,7 +150,7 @@ export default class ToastService {
     }
 
     static async connectionDeleted(compName, actName) {
-        const msg = await getString('connectiondeleted', 'gradereport_gb_xp_admin', {
+        const msg = await getString('connectiondeleted', 'gradereport_gradebook_xp', {
             competency: compName,
             activity: actName
         });
@@ -158,33 +158,33 @@ export default class ToastService {
     }
 
     static async connectionCreateFailed() {
-        const msg = await getString('connectioncreatefailed', 'gradereport_gb_xp_admin');
+        const msg = await getString('connectioncreatefailed', 'gradereport_gradebook_xp');
         ToastService.error(msg);
     }
 
     static async connectionDeleteFailed() {
-        const msg = await getString('connectiondeletefailed', 'gradereport_gb_xp_admin');
+        const msg = await getString('connectiondeletefailed', 'gradereport_gradebook_xp');
         ToastService.error(msg);
     }
 
     // Relation-specific toasts
     static async relationCreated() {
-        const msg = await getString('relationcreated', 'gradereport_gb_xp_admin');
+        const msg = await getString('relationcreated', 'gradereport_gradebook_xp');
         ToastService.success(msg);
     }
 
     static async relationDeleted() {
-        const msg = await getString('relationdeleted', 'gradereport_gb_xp_admin');
+        const msg = await getString('relationdeleted', 'gradereport_gradebook_xp');
         ToastService.success(msg);
     }
 
     static async relationCreateFailed() {
-        const msg = await getString('relationcreatefailed', 'gradereport_gb_xp_admin');
+        const msg = await getString('relationcreatefailed', 'gradereport_gradebook_xp');
         ToastService.error(msg);
     }
 
     static async relationDeleteFailed() {
-        const msg = await getString('relationdeletefailed', 'gradereport_gb_xp_admin');
+        const msg = await getString('relationdeletefailed', 'gradereport_gradebook_xp');
         ToastService.error(msg);
     }
 }

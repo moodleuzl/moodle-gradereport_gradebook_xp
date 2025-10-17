@@ -1,6 +1,6 @@
-@gradereport @gradereport_gb_xp_admin
-Feature: View Gradebook XP index page
-  In order to verify the Gradebook XP Admin index page is displayed correctly
+@gradereport @gradereport_gradebook_xp
+Feature: View Gradebook XP index page as Student
+  In order to verify the Gradebook XP index page is displayed correctly
   As an editing teacher
   I need to be able to navigate to the page and see its contents
 
@@ -30,7 +30,7 @@ Feature: View Gradebook XP index page
   Scenario: View index page
     Given I log in as "student1"
     And I am on "Course 1" course homepage
-    And I navigate to "View > Gradebook XP Admin" in the course gradebook
+    And I navigate to "View > Gradebook XP" in the course gradebook
     And I should see "MyCompetency1"
     And I should see "MyCompetency2"
     And I should see "MyCompetency3"
@@ -39,7 +39,7 @@ Feature: View Gradebook XP index page
   Scenario: Verify competency names and values are processed correctly
     Given I log in as "student1"
     And I am on "Course 1" course homepage
-    And I navigate to "View > Gradebook XP Admin" in the course gradebook
+    And I navigate to "View > Gradebook XP" in the course gradebook
 
     # Need to add Activity + Connection + Rating to make this work properly
 #    Then the "You" value for "MyCompetency1" should be "0"
@@ -54,18 +54,18 @@ Feature: View Gradebook XP index page
   Scenario: Navigate charts
     Given I log in as "student1"
     And I am on "Course 1" course homepage
-    And I navigate to "View > Gradebook XP Admin" in the course gradebook
+    And I navigate to "View > Gradebook XP" in the course gradebook
 
   @javascript
   Scenario: Verify user selection is not visible for students
     Given I log in as "student1"
     And I am on "Course 1" course homepage
-    And I navigate to "View > Gradebook XP Admin" in the course gradebook
+    And I navigate to "View > Gradebook XP" in the course gradebook
     Then I should not see "Search users"
 
   @javascript
   Scenario: Verify user selection is visible for teachers
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
-    And I navigate to "View > Gradebook XP Admin" in the course gradebook
+    And I navigate to "View > Gradebook XP" in the course gradebook
     Then I should see "Search users"

@@ -17,12 +17,12 @@
 /**
  * External API for creating competencies.
  *
- * @package    gradereport_gb_xp_admin
+ * @package    gradereport_gradebook_xp
  * @copyright  INB University of Luebeck
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace gradereport_gb_xp_admin\external;
+namespace gradereport_gradebook_xp\external;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -80,7 +80,7 @@ class create_competency extends external_api {
         // Context validation.
         $context = context_course::instance($params['courseid']);
         self::validate_context($context);
-        require_capability('gradereport/gb_xp_admin:manage', $context);
+        require_capability('gradereport/gradebook_xp:manage', $context);
 
         // Create competency object.
         $competency = new stdClass();

@@ -18,9 +18,9 @@
  * Provides utility functions for managing course activities.
  *
  * Functions include retrieving assignments, quizzes, VPLs and other activities
- * from Moodle courses for the gradebook XP admin system.
+ * from Moodle courses for the gradebook XP system.
  *
- * @package    gradereport_gb_xp_admin
+ * @package    gradereport_gradebook_xp
  * @copyright INB University of Luebeck
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -31,7 +31,7 @@
  * @param int $courseid The ID of the course.
  * @return array An array of all assignments visible to the user. Returns an empty array if none are found.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function get_all_assignments($courseid) {
     global $DB;
@@ -60,7 +60,7 @@ function get_all_assignments($courseid) {
  * @param int $courseid The ID of the course.
  * @return array An array of all quizzes visible to the user. Returns an empty array if none are found.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function get_all_quizzes($courseid) {
     global $DB;
@@ -89,7 +89,7 @@ function get_all_quizzes($courseid) {
  * @param int $courseid The ID of the course.
  * @return array An array of all VPLs visible to the user. Returns an empty array if none are found.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function get_all_vpls($courseid) {
     global $DB;
@@ -118,7 +118,7 @@ function get_all_vpls($courseid) {
  * @param int $courseid The ID of the course.
  * @return array An array of all activities (assignments, quizzes, VPLs) visible to the user.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function get_all_activities($courseid) {
     // Merge all activities (assignments, quizzes, and VPLs) into a single array.

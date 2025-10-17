@@ -1,6 +1,6 @@
-@gradereport @gradereport_gb_xp_admin
-Feature: View Gradebook XP Admin index page
-  In order to verify the Gradebook XP Admin index page is displayed correctly
+@gradereport @gradereport_gradebook_xp
+Feature: View Gradebook XP index page as Teacher
+  In order to verify the Gradebook XP index page is displayed correctly
   As an editing teacher
   I need to be able to navigate to the page and see its contents
 
@@ -24,8 +24,8 @@ Feature: View Gradebook XP Admin index page
   Scenario: View index page
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
-    And I navigate to "View > Gradebook XP Admin" in the course gradebook
-    Then I should see "Gradebook XP Admin"
+    And I navigate to "View > Gradebook XP" in the course gradebook
+    Then I should see "Gradebook XP"
     And I should see "Search users"
     And I should see "Edit"
 
@@ -33,8 +33,8 @@ Feature: View Gradebook XP Admin index page
   Scenario: View manage_competencies page
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
-    And I navigate to "View > Gradebook XP Admin" in the course gradebook
-    Then I should see "Gradebook XP Admin"
+    And I navigate to "View > Gradebook XP" in the course gradebook
+    Then I should see "Gradebook XP"
     Then I click on "Edit" "button"
     And I wait until the page is ready
     Then I should see "Manage Competencies"
@@ -59,8 +59,8 @@ Feature: View Gradebook XP Admin index page
   Scenario: Add a competency
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
-    And I navigate to "View > Gradebook XP Admin" in the course gradebook
-    Then I should see "Gradebook XP Admin"
+    And I navigate to "View > Gradebook XP" in the course gradebook
+    Then I should see "Gradebook XP"
     Then I click on "Edit" "button"
     And I wait until the page is ready
     Then I should see "Manage Competencies"
@@ -75,8 +75,8 @@ Feature: View Gradebook XP Admin index page
   Scenario: Edit a competency
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
-    And I navigate to "View > Gradebook XP Admin" in the course gradebook
-    Then I should see "Gradebook XP Admin"
+    And I navigate to "View > Gradebook XP" in the course gradebook
+    Then I should see "Gradebook XP"
     Then I click on "Edit" "button"
     And I wait until the page is ready
     Then I should see "Manage Competencies"
@@ -86,8 +86,8 @@ Feature: View Gradebook XP Admin index page
   Scenario: Delete a competency
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
-    And I navigate to "View > Gradebook XP Admin" in the course gradebook
-    Then I should see "Gradebook XP Admin"
+    And I navigate to "View > Gradebook XP" in the course gradebook
+    Then I should see "Gradebook XP"
     Then I click on "Edit" "button"
     And I wait until the page is ready
     Then I should see "Manage Competencies"

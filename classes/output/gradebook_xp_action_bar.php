@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace gradereport_gb_xp_admin\output;
+namespace gradereport_gradebook_xp\output;
 
 use core_grades\output\action_bar;
 use core_grades\output\general_action_bar;
@@ -22,13 +22,13 @@ use moodle_url;
 use single_button;
 
 /**
- * Renderable class for the action bar elements in the gb_xp_admin index page.
+ * Renderable class for the action bar elements in the gradebook_xp index page.
  *
- * @package    gradereport_gb_xp_admin
+ * @package    gradereport_gradebook_xp
  * @copyright  INB University of Luebeck
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class gb_xp_action_bar extends action_bar {
+class gradebook_xp_action_bar extends action_bar {
 
     /** @var int|null $userid The user ID. */
     protected $userid;
@@ -55,7 +55,7 @@ class gb_xp_action_bar extends action_bar {
      * @return string
      */
     public function get_template(): string {
-        return 'gradereport_gb_xp_admin/action_bar';
+        return 'gradereport_gradebook_xp/action_bar';
     }
 
     /**
@@ -78,8 +78,8 @@ class gb_xp_action_bar extends action_bar {
         if ($this->context->contextlevel === CONTEXT_COURSE) {
             // Get the data used to output the general navigation selector.
             $generalnavselector = new general_action_bar($this->context,
-                new moodle_url('/grade/report/gb_xp_admin/index.php', ['id' => $this->courseid]),
-                'gradereport', 'gb_xp_admin');
+                new moodle_url('/grade/report/gradebook_xp/index.php', ['id' => $this->courseid]),
+                'gradereport', 'gradebook_xp');
             $data = $generalnavselector->export_for_template($output);
         }
 
@@ -88,7 +88,7 @@ class gb_xp_action_bar extends action_bar {
         // Reset link removes user selection.
         $resetlink = clone($baseurl);
         $resetlink->remove_params(['userid', 'usersearch']);
-        $PAGE->requires->js_call_amd('gradereport_gb_xp_admin/user', 'init', [$baseurl->out(false)]);
+        $PAGE->requires->js_call_amd('gradereport_gradebook_xp/user', 'init', [$baseurl->out(false)]);
         $search = optional_param('usersearch', '', PARAM_RAW);
 
         $userselector = new \core_course\output\actionbar\user_selector(
@@ -105,7 +105,7 @@ class gb_xp_action_bar extends action_bar {
 
         // Add edit button if user has manage capability.
         if (has_capability('moodle/grade:manage', $this->context)) {
-            $editbuttonlink = new moodle_url('/grade/report/gb_xp_admin/manage_competencies.php', ['id' => $this->courseid]);
+            $editbuttonlink = new moodle_url('/grade/report/gradebook_xp/manage_competencies.php', ['id' => $this->courseid]);
             $editbutton = new single_button($editbuttonlink, get_string('edit'), 'get', single_button::BUTTON_PRIMARY);
             $data['editbutton'] = $editbutton->export_for_template($output);
         }

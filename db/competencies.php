@@ -20,7 +20,7 @@
  * Functions include retrieving, inserting, updating, and deleting competencies,
  * as well as managing parent-child relationships and hierarchy traversal.
  *
- * @package    gradereport_gb_xp_admin
+ * @package    gradereport_gradebook_xp
  * @copyright INB University of Luebeck
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -35,11 +35,11 @@ require_once(__DIR__ . '/relations.php');
  * @param int $id The ID of the competency to retrieve.
  * @return array|false An associative array containing the competency's details if found, false otherwise.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function get_competency($id) {
     global $DB;
-    return $DB->get_record('gradereport_gb_xp_admin_competencies', ['id' => $id]);
+    return $DB->get_record('gradereport_gradebook_xp_competencies', ['id' => $id]);
 }
 
 
@@ -49,14 +49,14 @@ function get_competency($id) {
  * @param int|null $courseid Optional. Specify another course ID or pass null for the current course.
  * @return array An associative array containing competencies of the specified course, or an empty array if none are found.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function get_competencies($courseid = null) {
     global $COURSE, $DB;
     if (is_null($courseid)) {
         $courseid = $COURSE->id;
     }
-    return $DB->get_records('gradereport_gb_xp_admin_competencies', ['courseid' => $courseid], 'id ASC');
+    return $DB->get_records('gradereport_gradebook_xp_competencies', ['courseid' => $courseid], 'id ASC');
 }
 
 /**
@@ -64,11 +64,11 @@ function get_competencies($courseid = null) {
  *
  * @param stdClass $competency The competency object containing updated data.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function update_competency($competency) {
     global $DB;
-    $DB->update_record('gradereport_gb_xp_admin_competencies', $competency);
+    $DB->update_record('gradereport_gradebook_xp_competencies', $competency);
 }
 
 /**
@@ -77,12 +77,12 @@ function update_competency($competency) {
  * @param stdClass $competency The competency object to insert.
  * @return int The ID of the newly created competency.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function insert_competency($competency) {
     global $DB;
     // Insert and return new id.
-    return (int)$DB->insert_record('gradereport_gb_xp_admin_competencies', $competency, true);
+    return (int)$DB->insert_record('gradereport_gradebook_xp_competencies', $competency, true);
 }
 
 /**
@@ -90,16 +90,16 @@ function insert_competency($competency) {
  *
  * @param int $id The ID of the competency to delete.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function delete_competency($id) {
     global $DB;
     // Remove any relations involving this competency.
-    $DB->delete_records('gradereport_gb_xp_admin_relations', ['parentid' => $id]);
-    $DB->delete_records('gradereport_gb_xp_admin_relations', ['childid' => $id]);
+    $DB->delete_records('gradereport_gradebook_xp_relations', ['parentid' => $id]);
+    $DB->delete_records('gradereport_gradebook_xp_relations', ['childid' => $id]);
     // TODO: delete connections with this competency
     // Delete the competency record from the database.
-    $DB->delete_records('gradereport_gb_xp_admin_competencies', ['id' => $id]);
+    $DB->delete_records('gradereport_gradebook_xp_competencies', ['id' => $id]);
 }
 
 /**
@@ -108,14 +108,14 @@ function delete_competency($id) {
  * @param int $id The ID of the parent competency.
  * @return array An array of direct children records of the specified competency.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function get_competency_children($id) {
     global $DB;
     // Join relations to fetch child competency records.
     $sql = "SELECT c.*
-              FROM {gradereport_gb_xp_admin_relations} r
-              JOIN {gradereport_gb_xp_admin_competencies} c ON c.id = r.childid
+              FROM {gradereport_gradebook_xp_relations} r
+              JOIN {gradereport_gradebook_xp_competencies} c ON c.id = r.childid
              WHERE r.parentid = ?
              ORDER BY c.id ASC";
     return $DB->get_records_sql($sql, [$id]);
@@ -127,13 +127,13 @@ function get_competency_children($id) {
  * @param int $id The ID of the child competency.
  * @return array An array of direct parent competency records.
  * @throws dml_exception
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  */
 function get_competency_parents($id) {
     global $DB;
     $sql = "SELECT c.*
-              FROM {gradereport_gb_xp_admin_relations} r
-              JOIN {gradereport_gb_xp_admin_competencies} c ON c.id = r.parentid
+              FROM {gradereport_gradebook_xp_relations} r
+              JOIN {gradereport_gradebook_xp_competencies} c ON c.id = r.parentid
              WHERE r.childid = ?
              ORDER BY c.id ASC";
     return $DB->get_records_sql($sql, [$id]);

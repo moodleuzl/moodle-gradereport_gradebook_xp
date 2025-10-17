@@ -16,17 +16,17 @@
 /**
  * CompetencyTreeView component for hierarchical competency navigation.
  *
- * @module    gradereport_gb_xp_admin/components/CompetencyTreeView
+ * @module    gradereport_gradebook_xp/components/CompetencyTreeView
  * @copyright 2025 INB University of Luebeck
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {useCompetencyStore} from 'gradereport_gb_xp_admin/hooks/useCompetencyStore';
-import {useStrings} from 'gradereport_gb_xp_admin/hooks/useStrings';
-import {CompetencyBreadcrumb} from 'gradereport_gb_xp_admin/components/CompetencyBreadcrumb';
-import {CompetencyListItem} from 'gradereport_gb_xp_admin/components/CompetencyListItem';
-import {EditCompetency} from 'gradereport_gb_xp_admin/components/EditCompetency';
-import {ConfirmDialog} from 'gradereport_gb_xp_admin/components/ConfirmDialog';
+import {useCompetencyStore} from 'gradereport_gradebook_xp/hooks/useCompetencyStore';
+import {useStrings} from 'gradereport_gradebook_xp/hooks/useStrings';
+import {CompetencyBreadcrumb} from 'gradereport_gradebook_xp/components/CompetencyBreadcrumb';
+import {CompetencyListItem} from 'gradereport_gradebook_xp/components/CompetencyListItem';
+import {EditCompetency} from 'gradereport_gradebook_xp/components/EditCompetency';
+import {ConfirmDialog} from 'gradereport_gradebook_xp/components/ConfirmDialog';
 
 /**
  * CompetencyTreeView component for hierarchical competency navigation.

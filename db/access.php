@@ -17,7 +17,7 @@
 /**
  * Defines capabilities for the Gradebook XP plugin
  *
- * @package gradereport_gb_xp_admin
+ * @package gradereport_gradebook_xp
  * @copyright INB University of Luebeck
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
-    'gradereport/gb_xp_admin:view' => [
+    'gradereport/gradebook_xp:view' => [
             'riskbitmask' => RISK_SPAM,
             'captype' => 'read',
             'contextlevel' => CONTEXT_COURSE,
@@ -36,7 +36,7 @@ $capabilities = [
                 'manager' => CAP_ALLOW,
             ],
     ],
-    'gradereport/gb_xp_admin:manage' => [
+    'gradereport/gradebook_xp:manage' => [
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,

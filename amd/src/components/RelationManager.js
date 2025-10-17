@@ -16,13 +16,13 @@
 /**
  * RelationManager component that combines list and selector.
  *
- * @module    gradereport_gb_xp_admin/components/RelationManager
+ * @module    gradereport_gradebook_xp/components/RelationManager
  * @copyright 2025 INB University of Luebeck
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {RelationSelector} from 'gradereport_gb_xp_admin/components/RelationSelector';
-import {RelationList} from 'gradereport_gb_xp_admin/components/RelationList';
+import {RelationSelector} from 'gradereport_gradebook_xp/components/RelationSelector';
+import {RelationList} from 'gradereport_gradebook_xp/components/RelationList';
 
 /**
  * RelationManager component that manages selection and display of related items.

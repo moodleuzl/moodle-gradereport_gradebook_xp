@@ -16,7 +16,7 @@
 /**
  * String localization hook with prefetching.
  *
- * @module    gradereport_gb_xp_admin/hooks/useStrings
+ * @module    gradereport_gradebook_xp/hooks/useStrings
  * @copyright 2025 INB University of Luebeck
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -158,7 +158,7 @@ export const StringProvider = ({children}) => {
 
                 // Fetch all strings in parallel
                 const stringPromises = STRING_KEYS.map(key =>
-                    getString(key, 'gradereport_gb_xp_admin')
+                    getString(key, 'gradereport_gradebook_xp')
                         .then(value => ({key, value}))
                         .catch(() => ({key, value: key})) // Fallback to key if string not found
                 );

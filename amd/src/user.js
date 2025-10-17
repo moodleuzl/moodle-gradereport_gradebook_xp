@@ -16,7 +16,7 @@
 /**
  * Allow the user to search for learners within the user report.
  *
- * @module    gradereport_gb_xp_admin/user
+ * @module    gradereport_gradebook_xp/user
  * @copyright 2023 Mathew May <mathew.solutions>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -44,7 +44,7 @@ export default class User extends UserSearch {
      * Build the content then replace the node.
      */
     async renderDropdown() {
-        const {html, js} = await renderForPromise('gradereport_gb_xp_admin/resultset', {
+        const {html, js} = await renderForPromise('gradereport_gradebook_xp/resultset', {
             users: this.getMatchedResults().slice(0, 5),
             hasresults: this.getMatchedResults().length > 0,
             instance: this.instance,

@@ -16,14 +16,14 @@
 /**
  * EditCompetency component for creating/editing competencies in a modal.
  *
- * @module    gradereport_gb_xp_admin/components/EditCompetency
+ * @module    gradereport_gradebook_xp/components/EditCompetency
  * @copyright 2025 INB University of Luebeck
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {useCompetencyStore} from 'gradereport_gb_xp_admin/hooks/useCompetencyStore';
-import {useStrings} from 'gradereport_gb_xp_admin/hooks/useStrings';
-import {RelationManager} from 'gradereport_gb_xp_admin/components/RelationManager';
+import {useCompetencyStore} from 'gradereport_gradebook_xp/hooks/useCompetencyStore';
+import {useStrings} from 'gradereport_gradebook_xp/hooks/useStrings';
+import {RelationManager} from 'gradereport_gradebook_xp/components/RelationManager';
 
 /**
  * EditCompetency modal component for creating/editing competencies.
