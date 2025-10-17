@@ -68,7 +68,7 @@ function get_connections_by_competency($competencyid) {
  * @package gradereport_gb_xp_admin
  */
 function get_connections($courseid) {
-    global $COURSE, $DB;
+    global $DB;
 
     // Get all connections for competencies in the specified course.
     $sql = "SELECT conn.*
