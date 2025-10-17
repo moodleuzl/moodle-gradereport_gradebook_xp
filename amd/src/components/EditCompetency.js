@@ -281,6 +281,13 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
         activity: activities.find(a => a.id === conn.activityid)
     }));
 
+    // Validation: When islevelsummed is checked, maxcomlvl should be at least the number of connected activities
+    const numConnectedActivities = currentConnections.length;
+    const hasValidationError = formData.islevelsummed === 1 &&
+        activeCompetency &&
+        numConnectedActivities > 0 &&
+        formData.maxcomlvl < numConnectedActivities;
+
     return createElement('div', {
         className: 'modal fade show',
         style: {display: 'block', backgroundColor: 'rgba(0,0,0,0.5)', overflowY: 'auto'}
@@ -389,7 +396,17 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                                                 htmlFor: 'islevelsummed'
                                             }, str('islevelsummed'))
                                         ])
-                                    ])
+                                    ]),
+
+                                    // Validation error message
+                                    hasValidationError ? createElement('div', {
+                                        key: 'validation-error',
+                                        className: 'alert alert-warning',
+                                        role: 'alert'
+                                    },
+                                    `Maximum level must be at least ${numConnectedActivities} ` +
+                                    `(number of connected activities) when "Is Level Summed" is enabled.`
+                                    ) : null
                                 ]),
 
                                 // Right Column - Relationship Management
@@ -496,12 +513,12 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                                 disabled: saving
                             }, saving ? str('creating') : str('createandedit')) : null,
 
-                            // Edit mode: Update button (disabled if no changes)
+                            // Edit mode: Update button (disabled if no changes or validation error)
                             isEditing ? createElement('button', {
                                 key: 'update',
                                 type: 'submit',
                                 className: 'btn btn-primary',
-                                disabled: saving || !hasChanges
+                                disabled: saving || !hasChanges || hasValidationError
                             }, saving ? str('updating') : str('update')) : null
                         ])
                     ])
