@@ -104,6 +104,8 @@ const STRING_KEYS = [
     'addselected',
     'remove',
     'noitemsfound',
+    'nocompetenciesfound',
+    'addfirstcompetency',
 
     // Confirm dialog
     'confirmdelete',
