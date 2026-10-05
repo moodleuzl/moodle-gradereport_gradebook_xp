@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="grade/report/gradebook_xp/db" VERSION="20250917" COMMENT="XMLDB file for Moodle grade/report/gradebook_xp"
+<XMLDB PATH="grade/report/gradebook_xp/db" VERSION="20260916" COMMENT="XMLDB file for Moodle grade/report/gradebook_xp"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
 >
@@ -11,6 +11,7 @@
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="description" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="maxcomlvl" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="targetcomlvl" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Progress value required to achieve the learning objective"/>
         <FIELD NAME="islevelsummed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
@@ -21,14 +22,20 @@
     <TABLE NAME="gradereport_gradebook_xp_connections" COMMENT="Stores all competency to activity connections and their weight.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="activityid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="activityid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Legacy course-module ID for migrated connections"/>
+        <FIELD NAME="gradeitemid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Gradebook item used to calculate progress"/>
         <FIELD NAME="competencyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="level" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="competencyid_fk" TYPE="foreign" FIELDS="competencyid" REFTABLE="gradereport_gradebook_xp_competencies" REFFIELDS="id"/>
+        <KEY NAME="gradeitemid_fk" TYPE="foreign" FIELDS="gradeitemid" REFTABLE="grade_items" REFFIELDS="id"/>
       </KEYS>
+      <INDEXES>
+        <INDEX NAME="activity_competency_uix" UNIQUE="true" FIELDS="activityid, competencyid"/>
+        <INDEX NAME="gradeitem_competency_uix" UNIQUE="true" FIELDS="gradeitemid, competencyid"/>
+      </INDEXES>
     </TABLE>
     <TABLE NAME="gradereport_gradebook_xp_relations" COMMENT="Stores all competency to competency relations.">
       <FIELDS>
@@ -41,6 +48,9 @@
         <KEY NAME="parentid_fk" TYPE="foreign" FIELDS="parentid" REFTABLE="gradereport_gradebook_xp_competencies" REFFIELDS="id"/>
         <KEY NAME="childid_fk" TYPE="foreign" FIELDS="childid" REFTABLE="gradereport_gradebook_xp_competencies" REFFIELDS="id"/>
       </KEYS>
+      <INDEXES>
+        <INDEX NAME="parent_child_uix" UNIQUE="true" FIELDS="parentid, childid"/>
+      </INDEXES>
     </TABLE>
   </TABLES>
 </XMLDB>

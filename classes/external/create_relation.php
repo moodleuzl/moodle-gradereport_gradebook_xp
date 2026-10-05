@@ -77,7 +77,7 @@ class create_relation extends external_api {
             throw new moodle_exception('competencynotfound', 'gradereport_gradebook_xp');
         }
 
-        if ($parent->courseid !== $child->courseid) {
+        if ((int)$parent->courseid !== (int)$child->courseid) {
             throw new moodle_exception('competenciesnotsamecourse', 'gradereport_gradebook_xp');
         }
 

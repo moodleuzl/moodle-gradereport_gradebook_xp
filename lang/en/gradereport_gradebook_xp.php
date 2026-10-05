@@ -28,9 +28,9 @@ $string['deletecompetency'] = 'Delete competency';
 $string['id'] = 'ID';
 $string['name'] = 'Competency name';
 $string['description'] = 'Competency description';
-$string['level'] = 'Competency level';
+$string['level'] = 'Progress contribution';
 $string['connections'] = 'Connections';
-$string['activities'] = 'Activities';
+$string['activities'] = 'Grade items';
 $string['assignments'] = 'Assignments';
 $string['quizzes'] = 'Quizzes';
 $string['vpls'] = 'VPLs';
@@ -45,10 +45,15 @@ $string['addcompetency'] = "Add competency";
 $string['privacy:metadata'] = 'The Gradebook XP plugin does not store any personal data.';
 $string['export'] = 'Export';
 $string['import'] = 'Import';
-$string['maxcomlvl'] = 'Max Competency Level';
-$string['levelcalcmethod'] = 'Competency level calculation method';
-$string['usemax'] = 'Use maximum level';
-$string['usesum'] = 'Sum all levels';
+$string['maxcomlvl'] = 'Maximum progress value';
+$string['targetcomlvl'] = 'Target value required to achieve the learning objective';
+$string['levelcalcmethod'] = 'Calculation method';
+$string['usemax'] = 'Use the highest achieved progress contribution';
+$string['usesum'] = 'Add progress contributions';
+$string['maxcontributionerror'] = 'The maximum progress value must be at least {$a}.';
+$string['targetvalueerror'] = 'The learning-objective target must be between 1 and the maximum progress value.';
+$string['manualgradeitem'] = 'Manual grade item';
+$string['nopassgrade'] = 'No pass grade configured';
 $string['nonNumericError'] = 'Invalid input. Please enter only numbers.';
 $string['strexceedslimit255'] = 'Please only enter up to 255 Characters.';
 $string['strexceedslimit100'] = 'Please only enter up to 100 Characters.';
@@ -110,14 +115,14 @@ $string['relationdeletefailed'] = 'Failed to delete relation';
 // Relations.
 $string['addparents'] = 'Add Parents';
 $string['addchildren'] = 'Add Children';
-$string['addactivities'] = 'Add Activities';
+$string['addactivities'] = 'Add grade items';
 $string['noparentcompetencies'] = 'No parent competencies';
 $string['nochildcompetencies'] = 'No child competencies';
-$string['noconnectedactivities'] = 'No connected activities';
+$string['noconnectedactivities'] = 'No connected grade items';
 $string['selectcompetencies'] = 'Select competencies to add as {$a}:';
-$string['selectactivities'] = 'Select activities to connect:';
+$string['selectactivities'] = 'Select grade items to connect:';
 $string['searchcompetencies'] = 'Search competencies...';
-$string['searchactivities'] = 'Search activities...';
+$string['searchactivities'] = 'Search grade items...';
 $string['addselected'] = 'Add Selected';
 $string['noitemsfound'] = 'No items found';
 
@@ -130,15 +135,15 @@ $string['confirmaction'] = 'Confirm';
 $string['root'] = 'Root';
 
 // List Items.
-$string['maxlevel'] = 'Max Level';
-$string['levelsummed'] = 'Level Summed';
+$string['maxlevel'] = 'Maximum progress value';
+$string['levelsummed'] = 'Progress contributions are added';
 
 // Competency Form.
 $string['createandedit'] = 'Create and Edit';
 $string['saving'] = 'Saving...';
 $string['creating'] = 'Creating...';
 $string['updating'] = 'Updating...';
-$string['islevelsummed'] = 'Is Level Summed';
+$string['islevelsummed'] = 'Progress contributions are added';
 $string['nochildcompetenciesfound'] = 'No child competencies found for "{$a}".';
 
 // Search.
@@ -157,7 +162,8 @@ $string['nocompetenciesfound'] = 'No competencies found';
 $string['addfirstcompetency'] = 'Add Your First Competency';
 
 $string['chart_series_label_user'] = 'You';
-$string['chart_competencies_max_level'] = 'Maximum Level';
+$string['chart_series_label_target'] = 'Learning objective';
+$string['chart_competencies_max_level'] = 'Maximum progress value';
 $string['chart_series_label_success'] = 'Success';
 $string['chart_series_label_average'] = 'Average';
 $string['missing_data'] = 'No data available.';
@@ -167,8 +173,9 @@ $string['allusersnum'] = 'All users ({$a})';
 $string['notenoughcompetencies'] = 'Not enough competencies ({$a} of 3) to display the chart.';
 $string['backtotoplevel'] = 'Back to top level';
 $string['onelevelup'] = 'One level up';
-$string['sumallactivitylevels'] = '(Sum all activity levels)';
-$string['highestsingleactivitylevel'] = '(Highest single activity level)';
-$string['yourlevel'] = 'Your level:';
-$string['maximumlevel_display'] = 'Maximum level:';
-$string['levelcolon'] = 'Level:';
+$string['sumallactivitylevels'] = '(Progress contributions added)';
+$string['highestsingleactivitylevel'] = '(Highest achieved progress contribution)';
+$string['yourlevel'] = 'Your progress value:';
+$string['maximumlevel_display'] = 'Maximum progress value:';
+$string['targetlevel_display'] = 'Learning objective:';
+$string['levelcolon'] = 'Progress contribution:';

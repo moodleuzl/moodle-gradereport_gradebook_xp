@@ -94,12 +94,15 @@ function insert_competency($competency) {
  */
 function delete_competency($id) {
     global $DB;
+    $transaction = $DB->start_delegated_transaction();
     // Remove any relations involving this competency.
     $DB->delete_records('gradereport_gradebook_xp_relations', ['parentid' => $id]);
     $DB->delete_records('gradereport_gradebook_xp_relations', ['childid' => $id]);
-    // TODO: delete connections with this competency
+    // Remove activity connections before deleting the competency.
+    $DB->delete_records('gradereport_gradebook_xp_connections', ['competencyid' => $id]);
     // Delete the competency record from the database.
     $DB->delete_records('gradereport_gradebook_xp_competencies', ['id' => $id]);
+    $transaction->allow_commit();
 }
 
 /**

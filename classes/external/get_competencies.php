@@ -82,6 +82,7 @@ class get_competencies extends external_api {
                 'name' => $competency->name,
                 'description' => $competency->description,
                 'maxcomlvl' => $competency->maxcomlvl,
+                'targetcomlvl' => $competency->targetcomlvl,
                 'islevelsummed' => $competency->islevelsummed
             ];
         }
@@ -102,6 +103,7 @@ class get_competencies extends external_api {
                 'name' => new external_value(PARAM_TEXT, 'Competency name'),
                 'description' => new external_value(PARAM_TEXT, 'Competency description'),
                 'maxcomlvl' => new external_value(PARAM_INT, 'Maximum competency level'),
+                'targetcomlvl' => new external_value(PARAM_INT, 'Target competency level'),
                 'islevelsummed' => new external_value(PARAM_INT, 'Is level summed flag')
             ])
         );

@@ -59,6 +59,7 @@ export const CompetencyListItem = ({competency, onSelect, onEdit, onDelete}) => 
                 }, competency.description) : null,
                 createElement('small', {key: 'meta', className: 'text-muted'}, [
                     `${str('maxlevel')}: ${competency.maxcomlvl}`,
+                    ` • ${str('targetcomlvl')}: ${competency.targetcomlvl}`,
                     competency.islevelsummed === 1 ? ` • ${str('levelsummed')}` : ''
                 ])
             ]),

@@ -36,6 +36,7 @@ use stdClass;
 
 require_once(__DIR__ . '/../../db/competencies.php');
 require_once(__DIR__ . '/../../db/connections.php');
+require_once($CFG->libdir . '/gradelib.php');
 
 /**
  * External API for creating connections.
@@ -49,7 +50,7 @@ class create_connection extends external_api {
      */
     public static function execute_parameters() {
         return new external_function_parameters([
-            'activityid' => new external_value(PARAM_INT, 'Activity ID'),
+            'gradeitemid' => new external_value(PARAM_INT, 'Grade item ID'),
             'competencyid' => new external_value(PARAM_INT, 'Competency ID'),
             'level' => new external_value(PARAM_INT, 'Connection level')
         ]);
@@ -58,16 +59,17 @@ class create_connection extends external_api {
     /**
      * Create a new activity-competency connection.
      *
-     * @param int $activityid Activity ID
+     * @param int $gradeitemid Grade item ID
      * @param int $competencyid Competency ID
      * @param int $level Connection level
      * @return array Created connection data
      * @throws moodle_exception
      */
-    public static function execute($activityid, $competencyid, $level) {
+    public static function execute($gradeitemid, $competencyid, $level) {
+        global $DB;
         // Parameter validation.
         $params = self::validate_parameters(self::execute_parameters(), [
-            'activityid' => $activityid,
+            'gradeitemid' => $gradeitemid,
             'competencyid' => $competencyid,
             'level' => $level
         ]);
@@ -83,9 +85,45 @@ class create_connection extends external_api {
         self::validate_context($context);
         require_capability('gradereport/gradebook_xp:manage', $context);
 
+        if ($params['level'] < 1 || $params['level'] > (int)$competency->maxcomlvl) {
+            throw new moodle_exception(
+                'invalidparameter',
+                'error',
+                '',
+                'Connection level is outside the competency range'
+            );
+        }
+
+        $gradeitem = $DB->get_record('grade_items', ['id' => $params['gradeitemid']]);
+        if (!$gradeitem || (int)$gradeitem->courseid !== (int)$competency->courseid ||
+                !in_array($gradeitem->itemtype, ['mod', 'manual'], true) ||
+                (int)$gradeitem->gradetype === GRADE_TYPE_NONE) {
+            throw new moodle_exception('invalidparameter', 'error', '', 'Grade item is not selectable in this course');
+        }
+
+        if ((int)$competency->islevelsummed === 1) {
+            $existing = get_connection($params['gradeitemid'], $params['competencyid']);
+            $sql = "SELECT COALESCE(SUM(level), 0)
+                      FROM {gradereport_gradebook_xp_connections}
+                     WHERE competencyid = :competencyid";
+            $currenttotal = (int)$DB->get_field_sql($sql, ['competencyid' => $params['competencyid']]);
+            if ($existing) {
+                $currenttotal -= (int)$existing->level;
+            }
+            if ($currenttotal + $params['level'] > (int)$competency->maxcomlvl) {
+                throw new moodle_exception(
+                    'invalidparameter',
+                    'error',
+                    '',
+                    'Summed connection levels exceed the maximum competency level'
+                );
+            }
+        }
+
         // Create connection object.
         $connection = new stdClass();
-        $connection->activityid = $params['activityid'];
+        $connection->activityid = null;
+        $connection->gradeitemid = $params['gradeitemid'];
         $connection->competencyid = $params['competencyid'];
         $connection->level = $params['level'];
 
@@ -94,7 +132,8 @@ class create_connection extends external_api {
 
         return [
             'id' => $connectionid,
-            'activityid' => $connection->activityid,
+            'gradeitemid' => $connection->gradeitemid,
+            'activityid' => 0,
             'competencyid' => $connection->competencyid,
             'level' => $connection->level
         ];
@@ -108,7 +147,8 @@ class create_connection extends external_api {
     public static function execute_returns() {
         return new external_single_structure([
             'id' => new external_value(PARAM_INT, 'Connection ID'),
-            'activityid' => new external_value(PARAM_INT, 'Activity ID'),
+            'gradeitemid' => new external_value(PARAM_INT, 'Grade item ID'),
+            'activityid' => new external_value(PARAM_INT, 'Legacy activity ID'),
             'competencyid' => new external_value(PARAM_INT, 'Competency ID'),
             'level' => new external_value(PARAM_INT, 'Connection level')
         ]);

@@ -104,7 +104,7 @@ class gradebook_xp_action_bar extends action_bar {
         ];
 
         // Add edit button if user has manage capability.
-        if (has_capability('moodle/grade:manage', $this->context)) {
+        if (has_capability('gradereport/gradebook_xp:manage', $this->context)) {
             $editbuttonlink = new moodle_url('/grade/report/gradebook_xp/manage_competencies.php', ['id' => $this->courseid]);
             $editbutton = new single_button($editbuttonlink, get_string('edit'), 'get', single_button::BUTTON_PRIMARY);
             $data['editbutton'] = $editbutton->export_for_template($output);

@@ -52,6 +52,7 @@ class update_competency extends external_api {
             'name' => new external_value(PARAM_TEXT, 'Competency name'),
             'description' => new external_value(PARAM_TEXT, 'Competency description', VALUE_DEFAULT, ''),
             'maxcomlvl' => new external_value(PARAM_INT, 'Maximum competency level', VALUE_DEFAULT, 1),
+            'targetcomlvl' => new external_value(PARAM_INT, 'Target competency level', VALUE_DEFAULT, 1),
             'islevelsummed' => new external_value(PARAM_INT, 'Is level summed flag', VALUE_DEFAULT, 1)
         ]);
     }
@@ -67,13 +68,16 @@ class update_competency extends external_api {
      * @return array Updated competency data
      * @throws moodle_exception
      */
-    public static function execute($id, $name, $description = '', $maxcomlvl = 1, $islevelsummed = 1) {
+    public static function execute($id, $name, $description = '', $maxcomlvl = 1, $targetcomlvl = 1,
+            $islevelsummed = 1) {
+        global $DB;
         // Parameter validation.
         $params = self::validate_parameters(self::execute_parameters(), [
             'id' => $id,
             'name' => $name,
             'description' => $description,
             'maxcomlvl' => $maxcomlvl,
+            'targetcomlvl' => $targetcomlvl,
             'islevelsummed' => $islevelsummed
         ]);
 
@@ -88,6 +92,34 @@ class update_competency extends external_api {
         self::validate_context($context);
         require_capability('gradereport/gradebook_xp:manage', $context);
 
+        $params['name'] = trim($params['name']);
+        if ($params['name'] === '') {
+            throw new moodle_exception('invalidparameter', 'error', '', 'Competency name must not be empty');
+        }
+        if ($params['maxcomlvl'] < 1) {
+            throw new moodle_exception('invalidparameter', 'error', '', 'Maximum competency level must be positive');
+        }
+        if ($params['targetcomlvl'] < 1 || $params['targetcomlvl'] > $params['maxcomlvl']) {
+            throw new moodle_exception('invalidparameter', 'error', '', 'Target level must be between one and the maximum');
+        }
+        if (!in_array($params['islevelsummed'], [0, 1], true)) {
+            throw new moodle_exception('invalidparameter', 'error', '', 'Invalid level-summed flag');
+        }
+
+        $sql = $params['islevelsummed'] === 1
+            ? "SELECT COALESCE(SUM(level), 0)"
+            : "SELECT COALESCE(MAX(level), 0)";
+        $sql .= " FROM {gradereport_gradebook_xp_connections} WHERE competencyid = :competencyid";
+        $requiredlevel = (int)$DB->get_field_sql($sql, ['competencyid' => $params['id']]);
+        if ($requiredlevel > $params['maxcomlvl']) {
+            throw new moodle_exception(
+                'invalidparameter',
+                'error',
+                '',
+                'Maximum competency level is lower than the connected activity levels'
+            );
+        }
+
         // Update competency object.
         $competency = new stdClass();
         $competency->id = $params['id'];
@@ -95,6 +127,7 @@ class update_competency extends external_api {
         $competency->name = $params['name'];
         $competency->description = $params['description'];
         $competency->maxcomlvl = $params['maxcomlvl'];
+        $competency->targetcomlvl = $params['targetcomlvl'];
         $competency->islevelsummed = $params['islevelsummed'];
 
         // Update competency.
@@ -106,6 +139,7 @@ class update_competency extends external_api {
             'name' => $competency->name,
             'description' => $competency->description,
             'maxcomlvl' => $competency->maxcomlvl,
+            'targetcomlvl' => $competency->targetcomlvl,
             'islevelsummed' => $competency->islevelsummed
         ];
     }
@@ -122,6 +156,7 @@ class update_competency extends external_api {
             'name' => new external_value(PARAM_TEXT, 'Competency name'),
             'description' => new external_value(PARAM_TEXT, 'Competency description'),
             'maxcomlvl' => new external_value(PARAM_INT, 'Maximum competency level'),
+            'targetcomlvl' => new external_value(PARAM_INT, 'Target competency level'),
             'islevelsummed' => new external_value(PARAM_INT, 'Is level summed flag')
         ]);
     }

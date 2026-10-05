@@ -28,12 +28,17 @@
 <!--            {{#is_level_summed}}{{#str}} sumallactivitylevels, gradereport_gradebook_xp {{/str}}{{/is_level_summed}}-->
 <!--            {{^is_level_summed}}{{#str}} highestsingleactivitylevel, gradereport_gradebook_xp {{/str}}{{/is_level_summed}}-->
             <p>
-                {{#str}} yourlevel, gradereport_gradebook_xp {{/str}} {{user_level}} / {{#str}} maximumlevel_display, gradereport_gradebook_xp {{/str}} {{max_level}}
+                {{#str}} yourlevel, gradereport_gradebook_xp {{/str}} {{user_level}} ·
+                {{#str}} targetlevel_display, gradereport_gradebook_xp {{/str}} {{target_level}} ·
+                {{#str}} maximumlevel_display, gradereport_gradebook_xp {{/str}} {{max_level}}
             </p>
             <div>
                 <ul style="list-style: none; padding-left: 20px;">
                     {{#activities}}
-                        <li style="color: {{color}};">{{#str}} levelcolon, gradereport_gradebook_xp {{/str}} {{level}} <a href="/{{type}}/{{module}}/view.php?id={{activityid}}">{{name}}</a></li>
+                        <li style="color: {{color}};">{{#str}} levelcolon, gradereport_gradebook_xp {{/str}} {{level}}
+                            {{#hasurl}}<a href="{{url}}">{{name}}</a>{{/hasurl}}
+                            {{^hasurl}}{{name}}{{/hasurl}}
+                        </li>
                     {{/activities}}
                 </ul>
             </div>
@@ -47,7 +52,7 @@
 
 <script>
     // Check if data arrays are not empty
-    if ({{data_user}}.length > 0 && {{data_max_level}}.length > 0) {
+    if ({{data_user}}.length > 0 && {{data_target}}.length > 0) {
         const ctx = document.getElementById('myChart1');
         Chart.defaults.font.size = 13;
         new Chart(ctx, {
@@ -59,22 +64,34 @@
                         label: '{{#str}} chart_series_label_user, gradereport_gradebook_xp {{/str}}',
                         data: {{data_user}},
                         borderColor: 'rgba(14,105,241,0.9)',
-                        backgroundColor: 'rgba(14,105,241,0.5)',
-                        borderWidth: 2,
+                        backgroundColor: 'rgba(14,105,241,0.22)',
+                        borderWidth: 2.5,
+                        pointRadius: 3,
+                        pointBackgroundColor: 'rgba(14,105,241,0.9)',
+                        pointBorderColor: 'rgba(14,105,241,0.9)',
+                        tension: 0,
+                        fill: true,
                     },
                     {
-                        label: '{{#str}} chart_competencies_max_level, gradereport_gradebook_xp {{/str}}',
-                        data: {{data_max_level}},
-                        borderColor: 'rgba(15,124,9,0.55)',
+                        label: '{{#str}} chart_series_label_target, gradereport_gradebook_xp {{/str}}',
+                        data: {{data_target}},
+                        borderColor: 'rgba(200,35,45,0.95)',
                         backgroundColor: 'rgba(0,0,0,0)',
-                        borderWidth: 2,
+                        borderWidth: 2.5,
+                        pointRadius: 3,
+                        pointBackgroundColor: 'rgba(200,35,45,0.95)',
+                        pointBorderColor: 'rgba(200,35,45,0.95)',
+                        tension: 0,
+                        fill: false,
                     }
                 ]
             },
             options: {
+                aspectRatio: 1,
                 scales: {
                     r: {
                         min: 0,
+                        max: {{chart_scale_max}},
                         pointLabels: {
                             display: true, // Hides the labels around the radar chart,
                             font: {
@@ -86,7 +103,8 @@
                             stepSize: 1
                         },
                         grid: {
-                            display: true
+                            display: true,
+                            circular: true
                         }
                     }
                 },

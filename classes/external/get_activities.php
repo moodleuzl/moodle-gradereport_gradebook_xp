@@ -68,7 +68,7 @@ class get_activities extends external_api {
         // Context validation.
         $context = context_course::instance($params['courseid']);
         self::validate_context($context);
-        require_capability('gradereport/gradebook_xp:view', $context);
+        require_capability('gradereport/gradebook_xp:manage', $context);
 
         // Get activities.
         $activities = get_all_activities($params['courseid']);
@@ -78,11 +78,15 @@ class get_activities extends external_api {
         foreach ($activities as $activity) {
             $result[] = [
                 'id' => $activity->id,
-                'courseid' => $activity->course,
-                'section_name' => $activity->section_name,
+                'courseid' => $activity->courseid,
+                'section_name' => $activity->section_name ?? '',
                 'name' => $activity->name,
-                'intro' => $activity->intro,
-                'module' => $activity->module
+                'intro' => '',
+                'module' => $activity->module ?? 'manual',
+                'itemtype' => $activity->itemtype,
+                'cmid' => $activity->cmid ?? 0,
+                'passconfigured' => (float)$activity->gradepass > 0,
+                'hidden' => !empty($activity->hidden)
             ];
         }
 
@@ -97,12 +101,16 @@ class get_activities extends external_api {
     public static function execute_returns() {
         return new external_multiple_structure(
             new external_single_structure([
-                'id' => new external_value(PARAM_INT, 'Activity ID'),
+                'id' => new external_value(PARAM_INT, 'Grade item ID'),
                 'courseid' => new external_value(PARAM_INT, 'Course ID'),
                 'section_name' => new external_value(PARAM_TEXT, 'Section name'),
                 'name' => new external_value(PARAM_TEXT, 'Activity name'),
                 'intro' => new external_value(PARAM_RAW, 'Activity introduction'),
-                'module' => new external_value(PARAM_TEXT, 'Module type')
+                'module' => new external_value(PARAM_TEXT, 'Module type'),
+                'itemtype' => new external_value(PARAM_ALPHANUMEXT, 'Grade item type'),
+                'cmid' => new external_value(PARAM_INT, 'Course-module ID or zero'),
+                'passconfigured' => new external_value(PARAM_BOOL, 'Whether a pass grade is configured'),
+                'hidden' => new external_value(PARAM_BOOL, 'Whether the grade item is hidden')
             ])
         );
     }

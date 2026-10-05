@@ -45,7 +45,12 @@ const STRING_KEYS = [
 
     // Form fields
     'maxcomlvl',
+    'targetcomlvl',
     'levelcalcmethod',
+    'usesum',
+    'usemax',
+    'maxcontributionerror',
+    'targetvalueerror',
 
     // Actions
     'export',
@@ -101,6 +106,8 @@ const STRING_KEYS = [
     'selectactivities',
     'searchcompetencies',
     'searchactivities',
+    'manualgradeitem',
+    'nopassgrade',
     'addselected',
     'remove',
     'noitemsfound',

@@ -35,6 +35,7 @@ use moodle_exception;
 use stdClass;
 
 require_once(__DIR__ . '/../../db/competencies.php');
+require_once(__DIR__ . '/../../db/relations.php');
 
 /**
  * External API for creating competencies.
@@ -52,7 +53,9 @@ class create_competency extends external_api {
             'name' => new external_value(PARAM_TEXT, 'Competency name'),
             'description' => new external_value(PARAM_TEXT, 'Competency description', VALUE_DEFAULT, ''),
             'maxcomlvl' => new external_value(PARAM_INT, 'Maximum competency level', VALUE_DEFAULT, 1),
-            'islevelsummed' => new external_value(PARAM_INT, 'Is level summed flag', VALUE_DEFAULT, 1)
+            'targetcomlvl' => new external_value(PARAM_INT, 'Target competency level', VALUE_DEFAULT, 1),
+            'islevelsummed' => new external_value(PARAM_INT, 'Is level summed flag', VALUE_DEFAULT, 1),
+            'parentid' => new external_value(PARAM_INT, 'Optional parent competency ID', VALUE_DEFAULT, 0)
         ]);
     }
 
@@ -67,14 +70,17 @@ class create_competency extends external_api {
      * @return array Created competency data
      * @throws moodle_exception
      */
-    public static function execute($courseid, $name, $description = '', $maxcomlvl = 1, $islevelsummed = 1) {
+    public static function execute($courseid, $name, $description = '', $maxcomlvl = 1, $targetcomlvl = 1,
+            $islevelsummed = 1, $parentid = 0) {
         // Parameter validation.
         $params = self::validate_parameters(self::execute_parameters(), [
             'courseid' => $courseid,
             'name' => $name,
             'description' => $description,
             'maxcomlvl' => $maxcomlvl,
-            'islevelsummed' => $islevelsummed
+            'targetcomlvl' => $targetcomlvl,
+            'islevelsummed' => $islevelsummed,
+            'parentid' => $parentid
         ]);
 
         // Context validation.
@@ -82,16 +88,49 @@ class create_competency extends external_api {
         self::validate_context($context);
         require_capability('gradereport/gradebook_xp:manage', $context);
 
+        $params['name'] = trim($params['name']);
+        if ($params['name'] === '') {
+            throw new moodle_exception('invalidparameter', 'error', '', 'Competency name must not be empty');
+        }
+        if ($params['maxcomlvl'] < 1) {
+            throw new moodle_exception('invalidparameter', 'error', '', 'Maximum competency level must be positive');
+        }
+        if ($params['targetcomlvl'] < 1 || $params['targetcomlvl'] > $params['maxcomlvl']) {
+            throw new moodle_exception('invalidparameter', 'error', '', 'Target level must be between one and the maximum');
+        }
+        if (!in_array($params['islevelsummed'], [0, 1], true)) {
+            throw new moodle_exception('invalidparameter', 'error', '', 'Invalid level-summed flag');
+        }
+
+        $parent = null;
+        if ($params['parentid'] > 0) {
+            $parent = get_competency($params['parentid']);
+            if (!$parent || (int)$parent->courseid !== (int)$params['courseid']) {
+                throw new moodle_exception('invalidparameter', 'error', '', 'Parent competency is not in this course');
+            }
+        }
+
         // Create competency object.
         $competency = new stdClass();
         $competency->courseid = $params['courseid'];
         $competency->name = $params['name'];
         $competency->description = $params['description'];
         $competency->maxcomlvl = $params['maxcomlvl'];
+        $competency->targetcomlvl = $params['targetcomlvl'];
         $competency->islevelsummed = $params['islevelsummed'];
 
-        // Insert competency.
+        // Insert the competency and its initial parent relation atomically.
+        global $DB;
+        $transaction = $DB->start_delegated_transaction();
         $competencyid = insert_competency($competency);
+        $relationid = 0;
+        if ($parent) {
+            $relation = new stdClass();
+            $relation->parentid = (int)$parent->id;
+            $relation->childid = $competencyid;
+            $relationid = insert_relation($relation);
+        }
+        $transaction->allow_commit();
 
         return [
             'id' => $competencyid,
@@ -99,7 +138,9 @@ class create_competency extends external_api {
             'name' => $competency->name,
             'description' => $competency->description,
             'maxcomlvl' => $competency->maxcomlvl,
-            'islevelsummed' => $competency->islevelsummed
+            'targetcomlvl' => $competency->targetcomlvl,
+            'islevelsummed' => $competency->islevelsummed,
+            'relationid' => $relationid
         ];
     }
 
@@ -115,7 +156,9 @@ class create_competency extends external_api {
             'name' => new external_value(PARAM_TEXT, 'Competency name'),
             'description' => new external_value(PARAM_TEXT, 'Competency description'),
             'maxcomlvl' => new external_value(PARAM_INT, 'Maximum competency level'),
-            'islevelsummed' => new external_value(PARAM_INT, 'Is level summed flag')
+            'targetcomlvl' => new external_value(PARAM_INT, 'Target competency level'),
+            'islevelsummed' => new external_value(PARAM_INT, 'Is level summed flag'),
+            'relationid' => new external_value(PARAM_INT, 'Created parent relation ID or zero')
         ]);
     }
 }

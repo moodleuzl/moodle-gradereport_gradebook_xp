@@ -34,12 +34,12 @@
  * @throws dml_exception
  * @package gradereport_gradebook_xp
  */
-function get_connection($activityid, $competencyid) {
+function get_connection($gradeitemid, $competencyid) {
     global $DB;
 
-    // Retrieve the matching record from the database based on activity and competency IDs.
+    // Retrieve the matching record based on grade item and competency IDs.
     return $DB->get_record('gradereport_gradebook_xp_connections', [
-        'activityid' => $activityid,
+        'gradeitemid' => $gradeitemid,
         'competencyid' => $competencyid
     ]);
 }
@@ -75,7 +75,7 @@ function get_connections($courseid) {
               FROM {gradereport_gradebook_xp_connections} conn
               JOIN {gradereport_gradebook_xp_competencies} comp ON comp.id = conn.competencyid
              WHERE comp.courseid = ?
-             ORDER BY conn.activityid ASC, conn.competencyid ASC";
+             ORDER BY conn.gradeitemid ASC, conn.competencyid ASC";
     return $DB->get_records_sql($sql, [$courseid]);
 }
 
@@ -93,15 +93,15 @@ function get_connections($courseid) {
 function insert_connection($connection) {
     global $DB;
 
-    // Check if this activity-competency combination already exists.
+    // Check if this grade-item/competency combination already exists.
     $existing = $DB->get_record('gradereport_gradebook_xp_connections', [
-        'activityid' => $connection->activityid,
+        'gradeitemid' => $connection->gradeitemid,
         'competencyid' => $connection->competencyid
     ]);
 
     if ($existing) {
-        // TODO: Update the other connection values, use the update_connection function.
-        // Return existing connection ID.
+        $existing->level = $connection->level;
+        $DB->update_record('gradereport_gradebook_xp_connections', $existing);
         return (int)$existing->id;
     }
 

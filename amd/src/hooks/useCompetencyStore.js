@@ -80,6 +80,13 @@ export const CompetencyProvider = ({children, courseid}) => {
         try {
             const newCompetency = await ApiService.createCompetency({...competencyData, courseid});
             setCompetencies(prev => [...prev, newCompetency]);
+            if (newCompetency.relationid && competencyData.parentid) {
+                setRelations(prev => [...prev, {
+                    id: newCompetency.relationid,
+                    parentid: competencyData.parentid,
+                    childid: newCompetency.id
+                }]);
+            }
             ToastService.competencyCreated(competencyData.name);
             return newCompetency;
         } catch (error) {
@@ -127,17 +134,17 @@ export const CompetencyProvider = ({children, courseid}) => {
     }, [competencies, courseid]);
 
     // Connection operations
-    const createConnection = useCallback(async({competencyid, activityid, level = 1}) => {
+    const createConnection = useCallback(async({competencyid, gradeitemid, level = 1}) => {
         try {
             const newConnection = await ApiService.createConnection({
                 competencyid,
-                activityid,
+                gradeitemid,
                 level
             });
             setConnections(prev => [...prev, newConnection]);
 
             const competency = competencies.find(c => c.id === competencyid);
-            const activity = activities.find(a => a.id === activityid);
+            const activity = activities.find(a => a.id === gradeitemid);
             ToastService.connectionCreated(competency?.name || 'Unknown', activity?.name || 'Unknown');
 
             return newConnection;
@@ -150,7 +157,7 @@ export const CompetencyProvider = ({children, courseid}) => {
     const deleteConnection = useCallback(async(connectionId) => {
         const connection = connections.find(c => c.id === connectionId);
         const competency = competencies.find(c => c.id === connection?.competencyid);
-        const activity = activities.find(a => a.id === connection?.activityid);
+        const activity = activities.find(a => a.id === connection?.gradeitemid);
 
         try {
             await ApiService.deleteConnection(connectionId);

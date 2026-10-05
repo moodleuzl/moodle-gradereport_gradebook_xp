@@ -512,10 +512,14 @@ class course_data_manager {
                 if ($report->fill_table()) {
                     // Process grades.
                     $grades = [];
+                    $gradesbycmid = [];
                     if (!empty($report->gradeitemsdata)) {
                         foreach ($report->gradeitemsdata as $rawgrade) {
+                            if (array_key_exists('id', $rawgrade)) {
+                                $grades[$rawgrade['id']] = $rawgrade;
+                            }
                             if (array_key_exists('cmid', $rawgrade)) {
-                                $grades[$rawgrade['cmid']] = $rawgrade;
+                                $gradesbycmid[$rawgrade['cmid']] = $rawgrade;
                             }
                         }
                     }
@@ -527,7 +531,11 @@ class course_data_manager {
                         }
                     }
 
-                    $this->usergrades = ['grades' => $grades, 'gradeinfos' => $gradeinfos];
+                    $this->usergrades = [
+                        'grades' => $grades,
+                        'gradesbycmid' => $gradesbycmid,
+                        'gradeinfos' => $gradeinfos,
+                    ];
                 }
             }
         }
@@ -585,6 +593,7 @@ class course_data_manager {
         }
 
         $grades = $usergrades['grades'];
+        $gradesbycmid = $usergrades['gradesbycmid'];
         $gradeinfos = $usergrades['gradeinfos'];
 
         $maxreachablecompetencylevel = 0;
@@ -592,28 +601,39 @@ class course_data_manager {
         $competencyactivities = [];
 
         foreach ($connections as $connection) {
-            if (!isset($grades[$connection->activityid])) {
+            $gradeitemid = (int)($connection->gradeitemid ?? 0);
+            $grade = $gradeitemid > 0 ? ($grades[$gradeitemid] ?? null) : null;
+            if (!$grade && !empty($connection->activityid)) {
+                $grade = $gradesbycmid[$connection->activityid] ?? null;
+            }
+            if (!$grade) {
                 continue;
             }
 
-            $grade = $grades[$connection->activityid];
             $gradeinfo = $gradeinfos[$grade["id"]] ?? null;
 
             if (!$gradeinfo) {
                 continue;
             }
 
-            $gradepass = $gradeinfo->gradepass;
-            if ($gradepass == 0) {
-                $gradepass = $gradeinfo->grademax;
-            }
+            $gradepass = (float)$gradeinfo->gradepass;
+            $passconfigured = $gradepass > 0;
 
             $activityinfo = new \stdClass();
-            $activityinfo->activityid = $connection->activityid;
+            $activityinfo->gradeitemid = (int)$gradeinfo->id;
+            $activityinfo->activityid = (int)($grade['cmid'] ?? 0);
             $activityinfo->name = $gradeinfo->itemname;
             $activityinfo->type = $gradeinfo->itemtype;
             $activityinfo->module = $gradeinfo->itemmodule;
             $activityinfo->level = $connection->level;
+            $activityinfo->passconfigured = $passconfigured;
+            $activityinfo->hasurl = $activityinfo->activityid > 0 && !empty($gradeinfo->itemmodule);
+            if ($activityinfo->hasurl) {
+                $activityinfo->url = (new \moodle_url(
+                    '/mod/' . $gradeinfo->itemmodule . '/view.php',
+                    ['id' => $activityinfo->activityid]
+                ))->out(false);
+            }
 
             // Calculate max reachable level.
             if ($competency->islevelsummed) {
@@ -623,7 +643,8 @@ class course_data_manager {
             }
 
             // Check if user passed this activity.
-            $passed = ($grade["graderaw"] != null && $grade["graderaw"] >= $gradepass);
+            $passed = $passconfigured && $grade["graderaw"] !== null &&
+                (float)$grade["graderaw"] >= $gradepass;
             $activityinfo->passed = $passed;
 
             if ($passed) {
@@ -687,6 +708,7 @@ class course_data_manager {
                     'user_level' => $data['user_level'],
                     'max_reachable_level' => $data['max_reachable_level'],
                     'max_level' => $competency->maxcomlvl ?? 0,
+                    'target_level' => $competency->targetcomlvl ?? $competency->maxcomlvl ?? 0,
                     'activities' => $data['activities'],
                     'has_subcompetencies' => !empty($this->get_direct_children($competencyid)),
                     'is_level_summed' => $competency->islevelsummed ?? false,
@@ -716,12 +738,15 @@ class course_data_manager {
         $charcompetenciesuser = array_map(fn($competency) => $competency['user_level'], $chartcompetencies);
         $charcompetenciesmaxreachablelevel = array_map(fn($competency) => $competency['max_reachable_level'], $chartcompetencies);
         $charcompetenciesmaxlevel = array_map(fn($competency) => $competency['max_level'], $chartcompetencies);
+        $charcompetenciestarget = array_map(fn($competency) => $competency['target_level'], $chartcompetencies);
 
         return (object)[
             'competencies' => "[" . implode(",", $charcompetenciesname) . "]",
             'data_user' => "[" . implode(",", $charcompetenciesuser) . "]",
             'data_max_reachable_level' => "[" . implode(",", $charcompetenciesmaxreachablelevel) . "]",
             'data_max_level' => "[" . implode(",", $charcompetenciesmaxlevel) . "]",
+            'data_target' => "[" . implode(",", $charcompetenciestarget) . "]",
+            'chart_scale_max' => empty($charcompetenciesmaxlevel) ? 1 : max($charcompetenciesmaxlevel),
             'chart_competencies' => array_values($chartcompetencies),
             'competencyid' => $selectedcompetencyid,
             'competencyname' => $currentcompetency ? $currentcompetency->name : null,

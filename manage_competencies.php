@@ -44,7 +44,7 @@ $PAGE->set_pagelayout('default');
 $PAGE->set_context($context);
 
 // Check if current edit competencies.
-if (!has_capability('moodle/grade:manage', $context)) {
+if (!has_capability('gradereport/gradebook_xp:manage', $context)) {
     throw new moodle_exception('nopermissions', 'error', '', 'manage grades');
 }
 

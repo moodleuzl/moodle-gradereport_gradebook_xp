@@ -62,14 +62,14 @@ const renderModalFooterButtons = ({
             type: 'button',
             className: 'btn btn-primary mr-2',
             onClick: (e) => handleSubmit(e, true),
-            disabled: saving
+            disabled: saving || hasValidationError
         }, saving ? str('creating') : str('create')));
 
         buttons.push(createElement('button', {
             key: 'create-edit',
             type: 'submit',
             className: 'btn btn-success',
-            disabled: saving
+            disabled: saving || hasValidationError
         }, saving ? str('creating') : str('createandedit')));
     }
 
@@ -118,6 +118,7 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
         name: '',
         description: '',
         maxcomlvl: 1,
+        targetcomlvl: 1,
         islevelsummed: 1
     });
 
@@ -132,7 +133,8 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                 name: competency?.name || '',
                 description: competency?.description || '',
                 maxcomlvl: competency?.maxcomlvl || 1,
-                islevelsummed: competency?.islevelsummed || 1
+                targetcomlvl: competency?.targetcomlvl ?? competency?.maxcomlvl ?? 1,
+                islevelsummed: competency?.islevelsummed ?? 1
             };
             setFormData(initialData);
             setOriginalFormData(initialData);
@@ -155,6 +157,7 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
         formData.name !== originalFormData.name ||
         formData.description !== originalFormData.description ||
         formData.maxcomlvl !== originalFormData.maxcomlvl ||
+        formData.targetcomlvl !== originalFormData.targetcomlvl ||
         formData.islevelsummed !== originalFormData.islevelsummed
     );
 
@@ -175,15 +178,10 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                 onClose();
             } else {
                 // Create new competency
-                const newCompetency = await createCompetency(formData);
-
-                // If there's a default parent, create the relation
-                if (defaultParent && newCompetency) {
-                    await createRelation({
-                        parentid: defaultParent.id,
-                        childid: newCompetency.id
-                    });
-                }
+                const newCompetency = await createCompetency({
+                    ...formData,
+                    parentid: defaultParent?.id || 0
+                });
 
                 if (shouldClose) {
                     // Close modal after creation
@@ -196,6 +194,7 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                         name: newCompetency.name,
                         description: newCompetency.description,
                         maxcomlvl: newCompetency.maxcomlvl,
+                        targetcomlvl: newCompetency.targetcomlvl,
                         islevelsummed: newCompetency.islevelsummed
                     };
                     setFormData(newFormData);
@@ -266,7 +265,7 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
     };
 
     const getAvailableActivities = () => {
-        const connectedActivityIds = getCompetencyConnections().map(conn => conn.activityid);
+        const connectedActivityIds = getCompetencyConnections().map(conn => conn.gradeitemid);
         return activities.filter(activity => !connectedActivityIds.includes(activity.id));
     };
 
@@ -308,10 +307,10 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
             return;
         }
 
-        for (const activityId of selectedIds) {
+        for (const gradeitemid of selectedIds) {
             await createConnection({
                 competencyid: activeCompetency.id,
-                activityid: activityId
+                gradeitemid
             });
         }
     };
@@ -338,16 +337,17 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
     // Map connections to display items
     const currentConnections = getCompetencyConnections().map(conn => ({
         id: conn.id,
-        activityId: conn.activityid,
-        activity: activities.find(a => a.id === conn.activityid)
+        gradeitemid: conn.gradeitemid,
+        activity: activities.find(a => a.id === conn.gradeitemid)
     }));
 
-    // Validation: When islevelsummed is checked, maxcomlvl should be at least the number of connected activities
-    const numConnectedActivities = currentConnections.length;
-    const hasValidationError = formData.islevelsummed === 1 &&
-        activeCompetency &&
-        numConnectedActivities > 0 &&
-        formData.maxcomlvl < numConnectedActivities;
+    // The configured maximum must cover the selected calculation method.
+    const requiredMaximum = formData.islevelsummed === 1
+        ? getCompetencyConnections().reduce((sum, connection) => sum + connection.level, 0)
+        : getCompetencyConnections().reduce((maximum, connection) => Math.max(maximum, connection.level), 0);
+    const hasTargetValidationError = formData.targetcomlvl < 1 ||
+        formData.targetcomlvl > formData.maxcomlvl;
+    const hasValidationError = formData.maxcomlvl < requiredMaximum || hasTargetValidationError;
 
     return createElement('div', {
         className: 'modal fade show',
@@ -439,23 +439,64 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                                         })
                                     ]),
 
-                                    // Is Level Summed Checkbox
-                                    createElement('div', {key: 'levelsummed-field', className: 'mb-3'}, [
-                                        createElement('div', {key: 'checkbox-wrapper', className: 'form-check'}, [
+                                    // Learning-objective target value.
+                                    createElement('div', {key: 'targetlevel-field', className: 'mb-3'}, [
+                                        createElement('label', {
+                                            key: 'targetlevel-label',
+                                            className: 'form-label'
+                                        }, str('targetcomlvl') + ' *'),
+                                        createElement('input', {
+                                            key: 'targetlevel-input',
+                                            type: 'number',
+                                            className: 'form-control',
+                                            min: 1,
+                                            max: formData.maxcomlvl,
+                                            value: formData.targetcomlvl,
+                                            onChange: (e) => handleChange('targetcomlvl', parseInt(e.target.value) || 1),
+                                            required: true,
+                                            disabled: saving
+                                        })
+                                    ]),
+
+                                    // Calculation method.
+                                    createElement('fieldset', {key: 'calculation-method', className: 'mb-3'}, [
+                                        createElement('legend', {
+                                            key: 'calculation-method-label',
+                                            className: 'col-form-label pt-0'
+                                        }, str('levelcalcmethod')),
+                                        createElement('div', {key: 'sum-wrapper', className: 'form-check'}, [
                                             createElement('input', {
-                                                key: 'levelsummed-input',
-                                                type: 'checkbox',
+                                                key: 'calculation-sum',
+                                                type: 'radio',
+                                                name: 'calculationmethod',
                                                 className: 'form-check-input',
-                                                id: 'islevelsummed',
+                                                id: 'calculationmethod-sum',
                                                 checked: formData.islevelsummed === 1,
-                                                onChange: (e) => handleChange('islevelsummed', e.target.checked ? 1 : 0),
+                                                onChange: () => handleChange('islevelsummed', 1),
                                                 disabled: saving
                                             }),
                                             createElement('label', {
-                                                key: 'levelsummed-label',
+                                                key: 'calculation-sum-label',
                                                 className: 'form-check-label',
-                                                htmlFor: 'islevelsummed'
-                                            }, str('islevelsummed'))
+                                                htmlFor: 'calculationmethod-sum'
+                                            }, str('usesum'))
+                                        ]),
+                                        createElement('div', {key: 'max-wrapper', className: 'form-check'}, [
+                                            createElement('input', {
+                                                key: 'calculation-max',
+                                                type: 'radio',
+                                                name: 'calculationmethod',
+                                                className: 'form-check-input',
+                                                id: 'calculationmethod-max',
+                                                checked: formData.islevelsummed === 0,
+                                                onChange: () => handleChange('islevelsummed', 0),
+                                                disabled: saving
+                                            }),
+                                            createElement('label', {
+                                                key: 'calculation-max-label',
+                                                className: 'form-check-label',
+                                                htmlFor: 'calculationmethod-max'
+                                            }, str('usemax'))
                                         ])
                                     ]),
 
@@ -465,8 +506,9 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                                         className: 'alert alert-warning',
                                         role: 'alert'
                                     },
-                                    `Maximum level must be at least ${numConnectedActivities} ` +
-                                    `(number of connected activities) when "Is Level Summed" is enabled.`
+                                    hasTargetValidationError
+                                        ? str('targetvalueerror')
+                                        : str('maxcontributionerror').replace('{$a}', requiredMaximum)
                                     ) : null
                                 ]),
 
@@ -511,7 +553,7 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                                     // Connected Activities Section
                                     createElement(RelationManager, {
                                         key: 'activities-manager',
-                                        title: str('connections') + ' ' + str('activities'),
+                                        title: str('activities'),
                                         addButtonText: str('addactivities'),
                                         addButtonClass: 'btn-outline-success',
                                         currentItems: currentConnections,
@@ -520,15 +562,17 @@ export const EditCompetency = ({show, competency, defaultParent, onClose}) => {
                                         onRemove: handleRemoveActivity,
                                         renderItem: (item) => {
                                             // Handle both connection objects (currentItems) and activity objects (availableItems)
-                                            if (item.activity) {
-                                                // Connection object with nested activity
-                                                return `${item.activity.name} (${item.activity.module})`;
-                                            } else if (item.name) {
-                                                // Raw activity object
-                                                return `${item.name} (${item.module})`;
-                                            } else {
+                                            const gradeItem = item.activity || item;
+                                            if (!gradeItem.name) {
                                                 return `Unknown (${item.id})`;
                                             }
+                                            const type = gradeItem.itemtype === 'manual'
+                                                ? str('manualgradeitem')
+                                                : gradeItem.module;
+                                            const passStatus = gradeItem.passconfigured
+                                                ? ''
+                                                : ` — ${str('nopassgrade')}`;
+                                            return `${gradeItem.name} (${type})${passStatus}`;
                                         },
                                         emptyMessage: str('noconnectedactivities'),
                                         selectorTitle: str('selectactivities'),

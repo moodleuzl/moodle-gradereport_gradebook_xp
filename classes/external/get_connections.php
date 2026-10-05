@@ -78,7 +78,8 @@ class get_connections extends external_api {
         foreach ($connections as $connection) {
             $result[] = [
                 'id' => $connection->id,
-                'activityid' => $connection->activityid,
+                'gradeitemid' => $connection->gradeitemid ?? 0,
+                'activityid' => $connection->activityid ?? 0,
                 'competencyid' => $connection->competencyid,
                 'level' => $connection->level
             ];
@@ -96,7 +97,8 @@ class get_connections extends external_api {
         return new external_multiple_structure(
             new external_single_structure([
                 'id' => new external_value(PARAM_INT, 'Connection ID'),
-                'activityid' => new external_value(PARAM_INT, 'Activity ID'),
+                'gradeitemid' => new external_value(PARAM_INT, 'Grade item ID'),
+                'activityid' => new external_value(PARAM_INT, 'Legacy activity ID'),
                 'competencyid' => new external_value(PARAM_INT, 'Competency ID'),
                 'level' => new external_value(PARAM_INT, 'Connection level')
             ])

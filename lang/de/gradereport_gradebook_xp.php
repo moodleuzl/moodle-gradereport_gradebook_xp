@@ -28,9 +28,9 @@ $string['deletecompetency'] = 'Kompetenz löschen';
 $string['id'] = 'ID';
 $string['name'] = 'Kompetenzname';
 $string['description'] = 'Kompetenzbeschreibung';
-$string['level'] = 'Kompetenzstufe';
+$string['level'] = 'Fortschrittsbeitrag';
 $string['connections'] = 'Verbindungen';
-$string['activities'] = 'Aktivitäten';
+$string['activities'] = 'Bewertungselemente';
 $string['assignments'] = 'Aufgaben';
 $string['quizzes'] = 'Tests';
 $string['vpls'] = 'VPLs';
@@ -45,10 +45,15 @@ $string['addcompetency'] = 'Kompetenz hinzufügen';
 $string['privacy:metadata'] = 'Das Gradebook XP Plugin speichert keine persönlichen Daten.';
 $string['export'] = 'Exportieren';
 $string['import'] = 'Importieren';
-$string['maxcomlvl'] = 'Maximale Kompetenzstufe';
-$string['levelcalcmethod'] = 'Berechnungsmethode für Kompetenzstufe';
-$string['usemax'] = 'Höchster Wert verwenden';
-$string['usesum'] = 'Alle Werte summieren';
+$string['maxcomlvl'] = 'Maximaler Fortschrittswert';
+$string['targetcomlvl'] = 'Zielwert zum Erreichen des Lernziels';
+$string['levelcalcmethod'] = 'Berechnungsart';
+$string['usemax'] = 'Höchsten erreichten Fortschrittsbeitrag verwenden';
+$string['usesum'] = 'Fortschrittsbeiträge addieren';
+$string['maxcontributionerror'] = 'Der maximale Fortschrittswert muss mindestens {$a} betragen.';
+$string['targetvalueerror'] = 'Der Lernziel-Zielwert muss zwischen 1 und dem maximalen Fortschrittswert liegen.';
+$string['manualgradeitem'] = 'Manuelles Bewertungselement';
+$string['nopassgrade'] = 'Keine Bestehensgrenze';
 $string['nonNumericError'] = 'Ungültige Eingabe. Bitte geben Sie nur Zahlen ein.';
 $string['strexceedslimit255'] = 'Bitte geben Sie maximal 255 Zeichen ein.';
 $string['strexceedslimit100'] = 'Bitte geben Sie maximal 100 Zeichen ein.';
@@ -110,14 +115,14 @@ $string['relationdeletefailed'] = 'Fehler beim Löschen der Relation';
 // Relations.
 $string['addparents'] = 'Übergeordnete hinzufügen';
 $string['addchildren'] = 'Untergeordnete hinzufügen';
-$string['addactivities'] = 'Aktivitäten hinzufügen';
+$string['addactivities'] = 'Bewertungselemente hinzufügen';
 $string['noparentcompetencies'] = 'Keine übergeordneten Kompetenzen';
 $string['nochildcompetencies'] = 'Keine untergeordneten Kompetenzen';
-$string['noconnectedactivities'] = 'Keine verbundenen Aktivitäten';
+$string['noconnectedactivities'] = 'Keine verbundenen Bewertungselemente';
 $string['selectcompetencies'] = 'Kompetenzen auswählen, um sie als {$a} hinzuzufügen:';
-$string['selectactivities'] = 'Aktivitäten zum Verbinden auswählen:';
+$string['selectactivities'] = 'Bewertungselemente zum Verbinden auswählen:';
 $string['searchcompetencies'] = 'Kompetenzen suchen...';
-$string['searchactivities'] = 'Aktivitäten suchen...';
+$string['searchactivities'] = 'Bewertungselemente suchen...';
 $string['addselected'] = 'Ausgewählte hinzufügen';
 $string['noitemsfound'] = 'Keine Einträge gefunden';
 
@@ -130,15 +135,15 @@ $string['confirmaction'] = 'Bestätigen';
 $string['root'] = 'Wurzel';
 
 // List Items.
-$string['maxlevel'] = 'Max. Stufe';
-$string['levelsummed'] = 'Stufe summiert';
+$string['maxlevel'] = 'Max. Fortschrittswert';
+$string['levelsummed'] = 'Fortschrittsbeiträge werden addiert';
 
 // Competency Form.
 $string['createandedit'] = 'Erstellen und Bearbeiten';
 $string['saving'] = 'Speichern...';
 $string['creating'] = 'Erstellen...';
 $string['updating'] = 'Aktualisieren...';
-$string['islevelsummed'] = 'Stufe wird summiert';
+$string['islevelsummed'] = 'Fortschrittsbeiträge werden addiert';
 $string['nochildcompetenciesfound'] = 'Keine untergeordneten Kompetenzen für "{$a}" gefunden.';
 
 // Search.
@@ -157,7 +162,8 @@ $string['nocompetenciesfound'] = 'Keine Kompetenzen gefunden';
 $string['addfirstcompetency'] = 'Fügen Sie Ihre erste Kompetenz hinzu';
 
 $string['chart_series_label_user'] = 'Sie';
-$string['chart_competencies_max_level'] = 'Maximale Stufe';
+$string['chart_series_label_target'] = 'Lernziel';
+$string['chart_competencies_max_level'] = 'Maximaler Fortschrittswert';
 $string['chart_series_label_success'] = 'Erfolg';
 $string['chart_series_label_average'] = 'Durchschnitt';
 $string['missing_data'] = 'Keine Daten verfügbar.';
@@ -167,8 +173,9 @@ $string['allusersnum'] = 'Alle Teilnehmer ({$a})';
 $string['notenoughcompetencies'] = 'Nicht genügend Kompetenzen ({$a} von 3) um das Diagramm anzuzeigen.';
 $string['backtotoplevel'] = 'Zurück zur obersten Ebene';
 $string['onelevelup'] = 'Eine Ebene nach oben';
-$string['sumallactivitylevels'] = '(Summe aller Aktivitätsstufen)';
-$string['highestsingleactivitylevel'] = '(Höchste einzelne Aktivitätsstufe)';
-$string['yourlevel'] = 'Ihre Stufe:';
-$string['maximumlevel_display'] = 'Maximale Stufe:';
-$string['levelcolon'] = 'Stufe:';
+$string['sumallactivitylevels'] = '(Fortschrittsbeiträge addiert)';
+$string['highestsingleactivitylevel'] = '(Höchster erreichter Fortschrittsbeitrag)';
+$string['yourlevel'] = 'Ihr Fortschrittswert:';
+$string['maximumlevel_display'] = 'Maximaler Fortschrittswert:';
+$string['targetlevel_display'] = 'Lernziel:';
+$string['levelcolon'] = 'Fortschrittsbeitrag:';

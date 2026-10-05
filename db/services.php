@@ -31,28 +31,28 @@ $functions = [
         'description' => 'Get all competencies for a course',
         'type' => 'read',
         'ajax' => true,
-        'capabilities' => 'moodle/grade:view',
+        'capabilities' => 'gradereport/gradebook_xp:view',
     ],
     'gradereport_gradebook_xp_create_competency' => [
         'classname' => 'gradereport_gradebook_xp\external\create_competency',
         'description' => 'Create a new competency',
         'type' => 'write',
         'ajax' => true,
-        'capabilities' => 'moodle/grade:manage',
+        'capabilities' => 'gradereport/gradebook_xp:manage',
     ],
     'gradereport_gradebook_xp_update_competency' => [
         'classname' => 'gradereport_gradebook_xp\external\update_competency',
         'description' => 'Update an existing competency',
         'type' => 'write',
         'ajax' => true,
-        'capabilities' => 'moodle/grade:manage',
+        'capabilities' => 'gradereport/gradebook_xp:manage',
     ],
     'gradereport_gradebook_xp_delete_competency' => [
         'classname' => 'gradereport_gradebook_xp\external\delete_competency',
         'description' => 'Delete a competency',
         'type' => 'write',
         'ajax' => true,
-        'capabilities' => 'moodle/grade:manage',
+        'capabilities' => 'gradereport/gradebook_xp:manage',
     ],
 
     // Relations CRUD.
@@ -61,21 +61,21 @@ $functions = [
         'description' => 'Get all relations for a course',
         'type' => 'read',
         'ajax' => true,
-        'capabilities' => 'moodle/grade:view',
+        'capabilities' => 'gradereport/gradebook_xp:view',
     ],
     'gradereport_gradebook_xp_create_relation' => [
         'classname' => 'gradereport_gradebook_xp\external\create_relation',
         'description' => 'Create a new relation between competencies',
         'type' => 'write',
         'ajax' => true,
-        'capabilities' => 'moodle/grade:manage',
+        'capabilities' => 'gradereport/gradebook_xp:manage',
     ],
     'gradereport_gradebook_xp_delete_relation' => [
         'classname' => 'gradereport_gradebook_xp\external\delete_relation',
         'description' => 'Delete a relation',
         'type' => 'write',
         'ajax' => true,
-        'capabilities' => 'moodle/grade:manage',
+        'capabilities' => 'gradereport/gradebook_xp:manage',
     ],
 
     // Connections CRUD.
@@ -84,30 +84,30 @@ $functions = [
         'description' => 'Get all connections for a course',
         'type' => 'read',
         'ajax' => true,
-        'capabilities' => 'moodle/grade:view',
+        'capabilities' => 'gradereport/gradebook_xp:view',
     ],
     'gradereport_gradebook_xp_create_connection' => [
         'classname' => 'gradereport_gradebook_xp\external\create_connection',
         'description' => 'Create a new activity-competency connection',
         'type' => 'write',
         'ajax' => true,
-        'capabilities' => 'moodle/grade:manage',
+        'capabilities' => 'gradereport/gradebook_xp:manage',
     ],
     'gradereport_gradebook_xp_delete_connection' => [
         'classname' => 'gradereport_gradebook_xp\external\delete_connection',
         'description' => 'Delete a connection',
         'type' => 'write',
         'ajax' => true,
-        'capabilities' => 'moodle/grade:manage',
+        'capabilities' => 'gradereport/gradebook_xp:manage',
     ],
 
     // Activities API.
     'gradereport_gradebook_xp_get_activities' => [
         'classname' => 'gradereport_gradebook_xp\external\get_activities',
-        'description' => 'Get all activities for a course',
+        'description' => 'Get selectable activity and manual grade items for a course',
         'type' => 'read',
         'ajax' => true,
-        'capabilities' => 'moodle/grade:view',
+        'capabilities' => 'gradereport/gradebook_xp:manage',
     ],
 ];
 
