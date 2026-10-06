@@ -198,5 +198,15 @@ function xmldb_gradereport_gradebook_xp_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2026091702, 'gradereport', 'gradebook_xp');
     }
 
+    if ($oldversion < 2026100600) {
+        // Moodle 5.2 Bootstrap compatibility for the interactive management interface.
+        upgrade_plugin_savepoint(true, 2026100600, 'gradereport', 'gradebook_xp');
+    }
+
+    if ($oldversion < 2026100601) {
+        // Add the JSON competency import interface.
+        upgrade_plugin_savepoint(true, 2026100601, 'gradereport', 'gradebook_xp');
+    }
+
     return true;
 }

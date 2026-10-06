@@ -255,6 +255,7 @@ export const CompetencyProvider = ({children, courseid}) => {
 
     const value = {
         // Data
+        courseid,
         competencies,
         activities,
         connections,

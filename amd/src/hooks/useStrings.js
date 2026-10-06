@@ -143,7 +143,24 @@ const STRING_KEYS = [
 
     // Export
     'exportdata',
-    'exportalldata'
+    'exportalldata',
+    'importpreview',
+    'importpreviewhelp',
+    'importinvalidfile',
+    'importfailed',
+    'importing',
+    'importnewcompetencies',
+    'importexistingcompetencies',
+    'importrelations',
+    'importmatchedconnections',
+    'importambiguousconnections',
+    'importmissingconnections',
+    'importunmatchedwarning',
+    'importcreatedcompetencies',
+    'importcreatedrelations',
+    'importcreatedconnections',
+    'importskippedconnections',
+    'importconnectionfailures'
 ];
 
 // Custom hook to use strings

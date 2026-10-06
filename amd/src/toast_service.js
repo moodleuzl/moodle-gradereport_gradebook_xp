@@ -63,9 +63,7 @@ export default class ToastService {
                 <div class="toast-body">
                     ${message}
                 </div>
-                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close"></button>
             </div>
         `;
 
@@ -75,6 +73,7 @@ export default class ToastService {
         const toastOptions = autoHide ? {autohide: true, delay: 3000} : {autohide: false};
         const bsToast = new Toast(toastElement, toastOptions);
         bsToast.show();
+        toastElement.querySelector('.btn-close').addEventListener('click', () => bsToast.hide());
 
         // Clean up after hiding
         toastElement.addEventListener('hidden.bs.toast', () => {

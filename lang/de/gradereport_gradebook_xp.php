@@ -153,6 +153,23 @@ $string['mincharacters'] = 'mind. 3 Zeichen';
 // Export.
 $string['exportdata'] = 'Exportieren';
 $string['exportalldata'] = 'Alle Daten als JSON exportieren';
+$string['importpreview'] = 'Importvorschau';
+$string['importpreviewhelp'] = 'Bitte prüfen Sie die Zuordnung, bevor Daten in den Kurs geschrieben werden. Bereits vorhandene Lernziele gleichen Namens werden wiederverwendet.';
+$string['importinvalidfile'] = 'Die Datei ist kein gültiger Gradebook-XP-JSON-Export.';
+$string['importfailed'] = 'Der Import konnte nicht vollständig ausgeführt werden.';
+$string['importing'] = 'Wird importiert …';
+$string['importnewcompetencies'] = 'Neue Lernziele';
+$string['importexistingcompetencies'] = 'Bereits vorhandene Lernziele';
+$string['importrelations'] = 'Hierarchiebeziehungen';
+$string['importmatchedconnections'] = 'Eindeutig zugeordnete Bewertungselemente';
+$string['importambiguousconnections'] = 'Mehrdeutige Bewertungselemente';
+$string['importmissingconnections'] = 'Nicht gefundene Bewertungselemente';
+$string['importunmatchedwarning'] = 'Mehrdeutige und nicht gefundene Bewertungselemente werden ausgelassen. Alte Aktivitäts-IDs werden niemals direkt übernommen.';
+$string['importcreatedcompetencies'] = 'Erstellte Lernziele';
+$string['importcreatedrelations'] = 'Erstellte Hierarchiebeziehungen';
+$string['importcreatedconnections'] = 'Erstellte Verbindungen';
+$string['importskippedconnections'] = 'Ausgelassene Verbindungen';
+$string['importconnectionfailures'] = 'Nicht erstellbare Verbindungen';
 
 // Loading.
 $string['loadingcompetencies'] = 'Kompetenzen werden geladen...';

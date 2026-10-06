@@ -1,10 +1,10 @@
 <script src="{{react_url}}"></script>
 <script src="{{react_dom_url}}"></script>
 
-<!-- Toast container wrapping the entire page content -->
-<div id="gb-xp-toast-container" class="toast-container position-relative w-100" style="min-height: 100vh;">
-    <div id="gradebook-xp-manage-react-app-container" class="react-app-wrapper">
-        <!-- React app will mount here -->
-    </div>
-    <!-- Toasts will be positioned absolutely within this container -->
+<!-- Keep notifications separate from the interactive application. Bootstrap 5's
+     toast-container disables pointer events on the container itself. -->
+<div id="gb-xp-toast-container" aria-live="polite" aria-atomic="true"></div>
+
+<div id="gradebook-xp-manage-react-app-container" class="react-app-wrapper">
+    <!-- React app will mount here -->
 </div>
