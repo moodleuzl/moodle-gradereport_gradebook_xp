@@ -27,6 +27,7 @@ import {CompetencyBreadcrumb} from 'gradereport_gradebook_xp/components/Competen
 import {CompetencyListItem} from 'gradereport_gradebook_xp/components/CompetencyListItem';
 import {EditCompetency} from 'gradereport_gradebook_xp/components/EditCompetency';
 import {ConfirmDialog} from 'gradereport_gradebook_xp/components/ConfirmDialog';
+import {ImportCompetencies} from 'gradereport_gradebook_xp/components/ImportCompetencies';
 
 /**
  * CompetencyTreeView component for hierarchical competency navigation.
@@ -247,12 +248,15 @@ export const CompetencyTreeView = () => {
         return createElement('div', {}, [
             createElement('div', {key: 'empty-state', className: 'text-center py-5'}, [
                 createElement('h4', {key: 'no-data', className: 'text-muted mb-3'}, str('nocompetenciesfound')),
-                createElement('button', {
-                    key: 'add-first',
-                    type: 'button',
-                    className: 'btn btn-primary',
-                    onClick: handleAddCompetency
-                }, str('addfirstcompetency'))
+                createElement('div', {key: 'actions', className: 'd-flex gap-2 justify-content-center'}, [
+                    createElement('button', {
+                        key: 'add-first',
+                        type: 'button',
+                        className: 'btn btn-primary',
+                        onClick: handleAddCompetency
+                    }, str('addfirstcompetency')),
+                    createElement(ImportCompetencies, {key: 'import'})
+                ])
             ]),
             createElement(EditCompetency, {
                 key: 'edit-modal',
@@ -341,16 +345,19 @@ export const CompetencyTreeView = () => {
                     ) : null
                 ]),
 
-            // Export button
-            createElement('button', {
-                key: 'export-button',
-                type: 'button',
-                className: 'btn btn-outline-secondary ml-3',
-                onClick: handleExportData,
-                title: str('exportalldata')
-            }, [
-                createElement('i', {key: 'icon', className: 'fa fa-download mr-2'}),
-                str('exportdata')
+            createElement('div', {key: 'transfer-actions', className: 'd-flex gap-2 ml-3'}, [
+                createElement(ImportCompetencies, {key: 'import'}),
+                // Export button
+                createElement('button', {
+                    key: 'export-button',
+                    type: 'button',
+                    className: 'btn btn-outline-secondary',
+                    onClick: handleExportData,
+                    title: str('exportalldata')
+                }, [
+                    createElement('i', {key: 'icon', className: 'fa fa-download mr-2'}),
+                    str('exportdata')
+                ])
             ])
         ]),
 

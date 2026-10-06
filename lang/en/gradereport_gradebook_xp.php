@@ -153,6 +153,23 @@ $string['mincharacters'] = 'min 3 characters';
 // Export.
 $string['exportdata'] = 'Export';
 $string['exportalldata'] = 'Export all data as JSON';
+$string['importpreview'] = 'Import preview';
+$string['importpreviewhelp'] = 'Review the mapping before data is written to the course. Existing competencies with the same name will be reused.';
+$string['importinvalidfile'] = 'The file is not a valid Gradebook XP JSON export.';
+$string['importfailed'] = 'The import could not be completed.';
+$string['importing'] = 'Importing …';
+$string['importnewcompetencies'] = 'New competencies';
+$string['importexistingcompetencies'] = 'Existing competencies';
+$string['importrelations'] = 'Hierarchy relations';
+$string['importmatchedconnections'] = 'Uniquely matched grade items';
+$string['importambiguousconnections'] = 'Ambiguous grade items';
+$string['importmissingconnections'] = 'Missing grade items';
+$string['importunmatchedwarning'] = 'Ambiguous and missing grade items will be skipped. Legacy activity IDs are never reused directly.';
+$string['importcreatedcompetencies'] = 'Created competencies';
+$string['importcreatedrelations'] = 'Created hierarchy relations';
+$string['importcreatedconnections'] = 'Created connections';
+$string['importskippedconnections'] = 'Skipped connections';
+$string['importconnectionfailures'] = 'Connections that could not be created';
 
 // Loading.
 $string['loadingcompetencies'] = 'Loading competencies...';
