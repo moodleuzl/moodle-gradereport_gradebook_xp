@@ -22,6 +22,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $string['pluginname'] = 'Gradebook XP';
+$string['gradebook_xp:view'] = 'Gradebook XP anzeigen';
+$string['gradebook_xp:manage'] = 'Kompetenzen in Gradebook XP verwalten';
 $string['newcompetency'] = 'Neue Kompetenz';
 $string['editcompetency'] = 'Kompetenz bearbeiten';
 $string['deletecompetency'] = 'Kompetenz löschen';
@@ -76,6 +78,14 @@ $string['allusers'] = 'Alle Benutzer';
 $string['selectauser'] = 'Benutzer auswählen';
 $string['viewinguser'] = 'Benutzer anzeigen: {$a}';
 $string['nocompetencies'] = 'Für diesen Kurs wurden keine Kompetenzen definiert.';
+
+// Errors.
+$string['competencynotfound'] = 'Die Kompetenz wurde nicht gefunden.';
+$string['competenciesnotsamecourse'] = 'Die Kompetenzen müssen zum selben Kurs gehören.';
+$string['relationnotfound'] = 'Die Kompetenzbeziehung wurde nicht gefunden.';
+$string['connectionnotfound'] = 'Die Verbindung zwischen Bewertungselement und Kompetenz wurde nicht gefunden.';
+$string['circularrelation'] = 'Eine zyklische Kompetenzbeziehung kann nicht angelegt werden.';
+$string['selfrelation'] = 'Eine Kompetenz kann nicht sich selbst übergeordnet sein.';
 
 // UI Actions.
 $string['cancel'] = 'Abbrechen';

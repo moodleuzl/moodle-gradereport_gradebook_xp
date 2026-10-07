@@ -22,6 +22,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $string['pluginname'] = 'Gradebook XP';
+$string['gradebook_xp:view'] = 'View Gradebook XP';
+$string['gradebook_xp:manage'] = 'Manage Gradebook XP competencies';
 $string['newcompetency'] = 'New competency';
 $string['editcompetency'] = 'Edit competency';
 $string['deletecompetency'] = 'Delete competency';
@@ -76,6 +78,14 @@ $string['allusers'] = 'All users';
 $string['selectauser'] = 'Select a user';
 $string['viewinguser'] = 'Viewing user: {$a}';
 $string['nocompetencies'] = 'No competencies have been defined for this course.';
+
+// Errors.
+$string['competencynotfound'] = 'The competency was not found.';
+$string['competenciesnotsamecourse'] = 'The competencies must belong to the same course.';
+$string['relationnotfound'] = 'The competency relation was not found.';
+$string['connectionnotfound'] = 'The connection between the grade item and competency was not found.';
+$string['circularrelation'] = 'A circular competency relation cannot be created.';
+$string['selfrelation'] = 'A competency cannot be its own parent.';
 
 // UI Actions.
 $string['cancel'] = 'Cancel';
