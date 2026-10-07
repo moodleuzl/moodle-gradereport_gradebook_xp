@@ -33,9 +33,8 @@ use core_external\external_single_structure;
 use context_course;
 use moodle_exception;
 use stdClass;
-
-require_once(__DIR__ . '/../../db/competencies.php');
-require_once(__DIR__ . '/../../db/relations.php');
+use gradereport_gradebook_xp\competencies;
+use gradereport_gradebook_xp\relations;
 
 /**
  * External API for creating competencies.
@@ -104,7 +103,7 @@ class create_competency extends external_api {
 
         $parent = null;
         if ($params['parentid'] > 0) {
-            $parent = get_competency($params['parentid']);
+            $parent = competencies::get_competency($params['parentid']);
             if (!$parent || (int)$parent->courseid !== (int)$params['courseid']) {
                 throw new moodle_exception('invalidparameter', 'error', '', 'Parent competency is not in this course');
             }
@@ -122,13 +121,13 @@ class create_competency extends external_api {
         // Insert the competency and its initial parent relation atomically.
         global $DB;
         $transaction = $DB->start_delegated_transaction();
-        $competencyid = insert_competency($competency);
+        $competencyid = competencies::insert_competency($competency);
         $relationid = 0;
         if ($parent) {
             $relation = new stdClass();
             $relation->parentid = (int)$parent->id;
             $relation->childid = $competencyid;
-            $relationid = insert_relation($relation);
+            $relationid = relations::insert_relation($relation);
         }
         $transaction->allow_commit();
 

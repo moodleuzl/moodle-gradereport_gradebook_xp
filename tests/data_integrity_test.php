@@ -13,9 +13,7 @@ namespace gradereport_gradebook_xp;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__ . '/../db/competencies.php');
-require_once(__DIR__ . '/../db/connections.php');
-require_once(__DIR__ . '/../db/activities.php');
+global $CFG;
 require_once($CFG->libdir . '/gradelib.php');
 
 /**
@@ -38,7 +36,7 @@ class data_integrity_test extends \advanced_testcase {
         ]);
         $gradeitem->insert();
 
-        $items = get_all_activities($course->id);
+        $items = activities::get_all_activities($course->id);
 
         $this->assertArrayHasKey($gradeitem->id, $items);
         $this->assertEquals('manual', $items[$gradeitem->id]->itemtype);
@@ -86,7 +84,7 @@ class data_integrity_test extends \advanced_testcase {
             'level' => 1,
         ]);
 
-        delete_competency($childid);
+        competencies::delete_competency($childid);
 
         $this->assertFalse($DB->record_exists('gradereport_gradebook_xp_competencies', ['id' => $childid]));
         $this->assertFalse($DB->record_exists('gradereport_gradebook_xp_relations', ['childid' => $childid]));
@@ -116,13 +114,13 @@ class data_integrity_test extends \advanced_testcase {
             'islevelsummed' => 1,
         ]);
 
-        $firstid = insert_connection((object)[
+        $firstid = connections::insert_connection((object)[
             'activityid' => null,
             'gradeitemid' => $gradeitem->id,
             'competencyid' => $competencyid,
             'level' => 1,
         ]);
-        $secondid = insert_connection((object)[
+        $secondid = connections::insert_connection((object)[
             'activityid' => null,
             'gradeitemid' => $gradeitem->id,
             'competencyid' => $competencyid,

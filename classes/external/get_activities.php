@@ -33,8 +33,7 @@ use core_external\external_single_structure;
 use core_external\external_multiple_structure;
 use context_course;
 use moodle_exception;
-
-require_once(__DIR__ . '/../../db/activities.php');
+use gradereport_gradebook_xp\activities;
 
 /**
  * External API for getting activities.
@@ -71,7 +70,7 @@ class get_activities extends external_api {
         require_capability('gradereport/gradebook_xp:manage', $context);
 
         // Get activities.
-        $activities = get_all_activities($params['courseid']);
+        $activities = activities::get_all_activities($params['courseid']);
 
         // Convert to array format for JSON response.
         $result = [];

@@ -29,11 +29,6 @@ namespace gradereport_gradebook_xp;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__ . '/../db/competencies.php');
-require_once(__DIR__ . '/../db/relations.php');
-require_once(__DIR__ . '/../db/connections.php');
-require_once(__DIR__ . '/../db/activities.php');
-
 require_once($CFG->libdir.'/gradelib.php');
 require_once($CFG->dirroot.'/grade/lib.php');
 require_once($CFG->dirroot.'/grade/report/user/lib.php');
@@ -202,7 +197,7 @@ class course_data_manager {
      */
     public function get_competencies(): array {
         if ($this->competencies === null) {
-            $competenciesraw = get_competencies($this->courseid);
+            $competenciesraw = competencies::get_competencies($this->courseid);
             $this->competencies = [];
             foreach ($competenciesraw as $competency) {
                 $this->competencies[$competency->id] = $competency;
@@ -231,7 +226,7 @@ class course_data_manager {
      */
     public function get_relations(): array {
         if ($this->relations === null) {
-            $relationsraw = get_relations($this->courseid);
+            $relationsraw = relations::get_relations($this->courseid);
             $this->relations = [];
             foreach ($relationsraw as $relation) {
                 $this->relations[$relation->id] = $relation;
@@ -248,7 +243,7 @@ class course_data_manager {
      */
     public function get_connections(): array {
         if ($this->connections === null) {
-            $connectionsraw = get_connections($this->courseid);
+            $connectionsraw = connections::get_connections($this->courseid);
             $this->connections = [];
             foreach ($connectionsraw as $connection) {
                 $this->connections[$connection->id] = $connection;
@@ -465,7 +460,7 @@ class course_data_manager {
      */
     public function get_activities(): array {
         if ($this->activities === null) {
-            $activitiesraw = get_all_activities($this->courseid);
+            $activitiesraw = activities::get_all_activities($this->courseid);
             $this->activities = [];
             foreach ($activitiesraw as $activity) {
                 $this->activities[$activity->id] = $activity;

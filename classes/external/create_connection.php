@@ -33,9 +33,9 @@ use core_external\external_single_structure;
 use context_course;
 use moodle_exception;
 use stdClass;
+use gradereport_gradebook_xp\competencies;
+use gradereport_gradebook_xp\connections;
 
-require_once(__DIR__ . '/../../db/competencies.php');
-require_once(__DIR__ . '/../../db/connections.php');
 require_once($CFG->libdir . '/gradelib.php');
 
 /**
@@ -75,7 +75,7 @@ class create_connection extends external_api {
         ]);
 
         // Validate competency exists.
-        $competency = get_competency($params['competencyid']);
+        $competency = competencies::get_competency($params['competencyid']);
         if (!$competency) {
             throw new moodle_exception('competencynotfound', 'gradereport_gradebook_xp');
         }
@@ -102,7 +102,7 @@ class create_connection extends external_api {
         }
 
         if ((int)$competency->islevelsummed === 1) {
-            $existing = get_connection($params['gradeitemid'], $params['competencyid']);
+            $existing = connections::get_connection($params['gradeitemid'], $params['competencyid']);
             $sql = "SELECT COALESCE(SUM(level), 0)
                       FROM {gradereport_gradebook_xp_connections}
                      WHERE competencyid = :competencyid";
@@ -128,7 +128,7 @@ class create_connection extends external_api {
         $connection->level = $params['level'];
 
         // Insert connection.
-        $connectionid = insert_connection($connection);
+        $connectionid = connections::insert_connection($connection);
 
         return [
             'id' => $connectionid,

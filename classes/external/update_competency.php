@@ -33,8 +33,7 @@ use core_external\external_single_structure;
 use context_course;
 use moodle_exception;
 use stdClass;
-
-require_once(__DIR__ . '/../../db/competencies.php');
+use gradereport_gradebook_xp\competencies;
 
 /**
  * External API for updating competencies.
@@ -82,7 +81,7 @@ class update_competency extends external_api {
         ]);
 
         // Get existing competency to validate course access.
-        $existing = get_competency($params['id']);
+        $existing = competencies::get_competency($params['id']);
         if (!$existing) {
             throw new moodle_exception('competencynotfound', 'gradereport_gradebook_xp');
         }
@@ -131,7 +130,7 @@ class update_competency extends external_api {
         $competency->islevelsummed = $params['islevelsummed'];
 
         // Update competency.
-        update_competency($competency);
+        competencies::update_competency($competency);
 
         return [
             'id' => $competency->id,

@@ -32,8 +32,7 @@ use core_external\external_value;
 use core_external\external_single_structure;
 use context_course;
 use moodle_exception;
-
-require_once(__DIR__ . '/../../db/competencies.php');
+use gradereport_gradebook_xp\competencies;
 
 /**
  * External API for deleting competencies.
@@ -65,7 +64,7 @@ class delete_competency extends external_api {
         ]);
 
         // Get existing competency to validate course access.
-        $existing = get_competency($params['id']);
+        $existing = competencies::get_competency($params['id']);
         if (!$existing) {
             throw new moodle_exception('competencynotfound', 'gradereport_gradebook_xp');
         }
@@ -76,7 +75,7 @@ class delete_competency extends external_api {
         require_capability('gradereport/gradebook_xp:manage', $context);
 
         // Delete competency.
-        delete_competency($params['id']);
+        competencies::delete_competency($params['id']);
 
         return ['success' => true];
     }

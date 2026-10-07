@@ -32,9 +32,8 @@ use core_external\external_value;
 use core_external\external_single_structure;
 use context_course;
 use moodle_exception;
-
-require_once(__DIR__ . '/../../db/competencies.php');
-require_once(__DIR__ . '/../../db/relations.php');
+use gradereport_gradebook_xp\competencies;
+use gradereport_gradebook_xp\relations;
 
 /**
  * External API for deleting relations.
@@ -66,13 +65,13 @@ class delete_relation extends external_api {
         ]);
 
         // Get existing relation to validate access.
-        $existing = get_relation($params['id']);
+        $existing = relations::get_relation($params['id']);
         if (!$existing) {
             throw new moodle_exception('relationnotfound', 'gradereport_gradebook_xp');
         }
 
         // Get parent competency to validate course access.
-        $parent = get_competency($existing->parentid);
+        $parent = competencies::get_competency($existing->parentid);
         if (!$parent) {
             throw new moodle_exception('competencynotfound', 'gradereport_gradebook_xp');
         }
@@ -83,7 +82,7 @@ class delete_relation extends external_api {
         require_capability('gradereport/gradebook_xp:manage', $context);
 
         // Delete relation.
-        delete_relation($params['id']);
+        relations::delete_relation($params['id']);
 
         return ['success' => true];
     }

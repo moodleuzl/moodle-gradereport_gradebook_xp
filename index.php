@@ -24,7 +24,6 @@
 
 require_once('../../../config.php');
 require_once($CFG->dirroot . '/grade/lib.php');
-require_once('./lib.php');
 
 use \core_grades\output\general_action_bar;
 

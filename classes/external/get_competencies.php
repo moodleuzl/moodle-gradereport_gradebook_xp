@@ -33,8 +33,7 @@ use core_external\external_single_structure;
 use core_external\external_multiple_structure;
 use context_course;
 use moodle_exception;
-
-require_once(__DIR__ . '/../../db/competencies.php');
+use gradereport_gradebook_xp\competencies;
 
 /**
  * External API for getting competencies.
@@ -71,7 +70,7 @@ class get_competencies extends external_api {
         require_capability('gradereport/gradebook_xp:view', $context);
 
         // Get competencies.
-        $competencies = get_competencies($params['courseid']);
+        $competencies = competencies::get_competencies($params['courseid']);
 
         // Convert to array format for JSON response.
         $result = [];

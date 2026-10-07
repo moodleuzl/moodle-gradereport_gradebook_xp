@@ -33,9 +33,8 @@ use core_external\external_single_structure;
 use context_course;
 use moodle_exception;
 use stdClass;
-
-require_once(__DIR__ . '/../../db/competencies.php');
-require_once(__DIR__ . '/../../db/relations.php');
+use gradereport_gradebook_xp\competencies;
+use gradereport_gradebook_xp\relations;
 
 /**
  * External API for creating relations.
@@ -70,8 +69,8 @@ class create_relation extends external_api {
         ]);
 
         // Validate both competencies exist and get course context.
-        $parent = get_competency($params['parentid']);
-        $child = get_competency($params['childid']);
+        $parent = competencies::get_competency($params['parentid']);
+        $child = competencies::get_competency($params['childid']);
 
         if (!$parent || !$child) {
             throw new moodle_exception('competencynotfound', 'gradereport_gradebook_xp');
@@ -92,7 +91,7 @@ class create_relation extends external_api {
         $relation->childid = $params['childid'];
 
         // Insert relation.
-        $relationid = insert_relation($relation);
+        $relationid = relations::insert_relation($relation);
 
         return [
             'id' => $relationid,

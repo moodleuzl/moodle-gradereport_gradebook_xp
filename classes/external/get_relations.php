@@ -33,8 +33,7 @@ use core_external\external_single_structure;
 use core_external\external_multiple_structure;
 use context_course;
 use moodle_exception;
-
-require_once(__DIR__ . '/../../db/relations.php');
+use gradereport_gradebook_xp\relations;
 
 /**
  * External API for getting relations.
@@ -71,7 +70,7 @@ class get_relations extends external_api {
         require_capability('gradereport/gradebook_xp:view', $context);
 
         // Get relations.
-        $relations = get_relations($params['courseid']);
+        $relations = relations::get_relations($params['courseid']);
 
         // Convert to array format for JSON response.
         $result = [];
