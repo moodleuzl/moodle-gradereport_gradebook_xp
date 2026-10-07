@@ -37,6 +37,7 @@ $competencyparentid = optional_param('competencyparentid', null, PARAM_INT);
 $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 require_login($course->id);
 $context = context_course::instance($course->id);
+require_capability('gradereport/gradebook_xp:view', $context);
 
 // Set up page URL with parameters.
 $url = new moodle_url('/grade/report/gradebook_xp/index.php', ['id' => $courseid]);
@@ -69,6 +70,16 @@ if ($userid != $USER->id && !has_capability('moodle/grade:viewall', $context)) {
 // If userid is specified, validate the user exists and user has access to view their grades.
 $targetuser = null;
 if ($userid !== null) {
+    if ($userid != $USER->id) {
+        $defaultgradeshowactiveenrol = !empty($CFG->grade_report_showonlyactiveenrol);
+        $showonlyactiveenrol = get_user_preferences('grade_report_showonlyactiveenrol', $defaultgradeshowactiveenrol);
+        $showonlyactiveenrol = $showonlyactiveenrol || !has_capability('moodle/course:viewsuspendedusers', $context);
+        grade_regrade_final_grades_if_required($course);
+        $gradableusers = get_gradable_users($courseid, null, $showonlyactiveenrol);
+        if (!array_key_exists($userid, $gradableusers)) {
+            throw new moodle_exception('nopermissions', 'error', '', 'view user grades');
+        }
+    }
     $targetuser = $DB->get_record('user', ['id' => $userid], '*', MUST_EXIST);
 }
 
