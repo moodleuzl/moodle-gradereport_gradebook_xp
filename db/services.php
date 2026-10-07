@@ -128,7 +128,7 @@ $services = [
             'gradereport_gradebook_xp_get_activities',
         ],
         'restrictedusers' => 0,
-        'enabled' => 1,
+        'enabled' => 0,
         'shortname' => 'gradebook_xp_api',
         'downloadfiles' => 0,
         'uploadfiles' => 0,
